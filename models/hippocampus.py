@@ -8,13 +8,18 @@ class GridCellModule(nn.Module):
     def __init__(self, period: int):
         super().__init__()
         self.period = period
+        # Phase 2D pour chaque module (x, y)
         self.register_buffer('phase', torch.zeros(1, 2))
         
     def forward(self, velocity: torch.Tensor = None) -> torch.Tensor:
         if velocity is not None:
             self.phase = (self.phase + velocity) % self.period
         freq = 2 * np.pi / self.period
-        return torch.cat([torch.sin(self.phase * freq), torch.cos(self.phase * freq)], dim=-1)
+        # Sinus et cosinus pour chaque dimension de la phase (2D → 4D)
+        return torch.cat([
+            torch.sin(self.phase * freq), 
+            torch.cos(self.phase * freq)
+        ], dim=-1)  # Shape: [1, 4]
 
 class HippocampalScaffold(nn.Module):
     """Vector-HaSH: Scaffold fixe + projections aléatoires + retour appris"""
@@ -23,7 +28,8 @@ class HippocampalScaffold(nn.Module):
         self.config = config
         self.grid_modules = nn.ModuleList([GridCellModule(p) for p in config.grid_periods])
         
-        grid_dim = sum([4 * p for p in config.grid_periods])
+        # Chaque module retourne 4 dimensions (sin/cos pour x/y)
+        grid_dim = len(config.grid_periods) * 4
         # Projection fixe aléatoire Grille → Hippocampe
         self.W_grid_to_hpc = nn.Linear(grid_dim, config.hpc_size, bias=False)
         self._init_fixed_projection()

@@ -159,6 +159,13 @@ class HebbianConsolidation:
         self.config = config
         self.device = device
         self.consolidation_counter = 0
+        # Exposer nodes et graph pour compatibilité avec l'agent
+        self.nodes = self.graph.nodes
+        self.graph_dict = self.graph  # Alias pour agent.memory_graph.graph
+        
+    def add_node(self, node_id: str, data: dict, embedding: np.ndarray):
+        """Ajoute un nœud au graphe (alias pour add_episode)"""
+        self.graph.add_node(node_id, data, embedding)
         
     def add_episode(self, episode_id: str, data: dict, embedding: np.ndarray):
         """Ajoute un épisode et met à jour les connexions hebbiennes"""
