@@ -1,0 +1,7 @@
+```
+# Documentation
+document/
+
+# Original rules preserved
+*.log
+```
