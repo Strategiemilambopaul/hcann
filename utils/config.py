@@ -8,6 +8,7 @@ class HCANNConfig:
     use_language: bool = True
     semantic_dim: int = 256
     clip_model: str = "openai/clip-vit-base-patch32"
+    use_mock_encoder: bool = True  # Éviter le téléchargement CLIP si espace disque insuffisant
     
     # 🧠 Hippocampe & Scaffold (Vector-HaSH)
     grid_periods: List[int] = None

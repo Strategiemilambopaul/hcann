@@ -1,4 +1,4 @@
-from .agent import HCANNStream
+from .agent import HCANN_Agent
 from .api import app
 
-__all__ = ["HCANNStream", "app"]
+__all__ = ["HCANN_Agent", "app"]

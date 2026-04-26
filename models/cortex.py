@@ -7,16 +7,29 @@ class MultimodalEncoder(nn.Module):
     """VLEM: Encodeurs sémantiques gelés (CLIP vision & texte)"""
     def __init__(self, config):
         super().__init__()
-        self.clip = CLIPModel.from_pretrained(config.clip_model)
-        self.clip_proc = CLIPProcessor.from_pretrained(config.clip_model)
+        self.config = config
+        self.use_mock = getattr(config, 'use_mock_encoder', False)
+        
+        if not self.use_mock:
+            self.clip = CLIPModel.from_pretrained(config.clip_model)
+            self.clip_proc = CLIPProcessor.from_pretrained(config.clip_model)
+            self._freeze_clip()
+        else:
+            # Mock encoder pour tests sans téléchargement
+            self.clip = None
+            self.clip_proc = None
+            
         self.vision_proj = nn.Linear(512, config.semantic_dim)
         self.text_proj = nn.Linear(512, config.semantic_dim)
-        self._freeze_clip()
         
     def _freeze_clip(self):
-        for p in self.clip.parameters(): p.requires_grad = False
+        if self.clip:
+            for p in self.clip.parameters(): p.requires_grad = False
         
     def forward(self, images=None, texts=None):
+        if self.use_mock:
+            return self._mock_forward(images, texts)
+            
         embeddings = []
         if images is not None:
             v = self.clip.get_image_features(pixel_values=images)
@@ -27,6 +40,22 @@ class MultimodalEncoder(nn.Module):
             t = self.clip.get_text_features(**inputs)
             embeddings.append(F.normalize(self.text_proj(t.float()), dim=-1))
         if not embeddings: raise ValueError("Aucune modalité fournie")
+        return torch.stack(embeddings).mean(dim=0) if len(embeddings) > 1 else embeddings[0]
+    
+    def _mock_forward(self, images=None, texts=None):
+        """Mock encoder pour tests - retourne des embeddings aléatoires normalisés"""
+        embeddings = []
+        batch_size = 1
+        if images is not None:
+            batch_size = images.shape[0] if isinstance(images, torch.Tensor) else 1
+            v = torch.randn(batch_size, 512, device=self.vision_proj.weight.device)
+            embeddings.append(F.normalize(self.vision_proj(v), dim=-1))
+        if texts is not None:
+            batch_size = len(texts) if isinstance(texts, list) else 1
+            t = torch.randn(batch_size, 512, device=self.text_proj.weight.device)
+            embeddings.append(F.normalize(self.text_proj(t), dim=-1))
+        if not embeddings:
+            return torch.randn(1, self.config.semantic_dim, device=self.vision_proj.weight.device)
         return torch.stack(embeddings).mean(dim=0) if len(embeddings) > 1 else embeddings[0]
 
 class WorkingMemory(nn.Module):
