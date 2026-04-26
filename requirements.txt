@@ -1,0 +1,11 @@
+# 1. Installer dépendances (ajout pandas & tensorboard)
+pip install torch torchvision numpy tqdm tensorboard pandas
+
+# 2. Lancer l'expérience complète
+python main.py
+
+# 3. Visualiser les courbes
+tensorboard --logdir runs/
+
+# 4. Lancer le benchmark comparatif
+python benchmark.py
