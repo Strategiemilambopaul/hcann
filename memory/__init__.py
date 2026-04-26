@@ -1,4 +1,9 @@
-from .replay_buffer import ExperienceReplayBuffer
-from .consolidation import ConsolidationManager
+from .consolidation import HebbianMemoryGraph, HebbianConsolidation
+from .replay_buffer import EpisodicBuffer, ExperienceReplayBuffer
 
-__all__ = ["ExperienceReplayBuffer", "ConsolidationManager"]
+__all__ = [
+    "HebbianMemoryGraph",
+    "HebbianConsolidation", 
+    "EpisodicBuffer",
+    "ExperienceReplayBuffer"
+]

@@ -1,4 +1,4 @@
-from .data_utils import create_incremental_loader
+from .data_utils import MultimodalDataset, get_dataloader
 from .config import HCANNConfig
 
-__all__ = ["create_incremental_loader", "HCANNConfig"]
+__all__ = ["MultimodalDataset", "get_dataloader", "HCANNConfig"]
