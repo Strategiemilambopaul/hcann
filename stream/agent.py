@@ -1,24 +1,47 @@
-import cv2
 import torch
 import torch.nn.functional as F
 import numpy as np
 import time
 import threading
 from collections import defaultdict, deque
-from sklearn.metrics.pairwise import cosine_similarity
 
 # Importation des modules HCANN existants
 from models.hcann import HCANN
 from memory.consolidation import HebbianConsolidation
 from utils.config import HCANNConfig
 
-# Importations pour la vision et l'audio
+# sklearn optionnel
+try:
+    from sklearn.metrics.pairwise import cosine_similarity
+    SKLEARN_AVAILABLE = True
+except ImportError:
+    SKLEARN_AVAILABLE = False
+    cosine_similarity = None
+
+# Importations pour la vision et l'audio (optionnelles)
+try:
+    import cv2
+    CV2_AVAILABLE = True
+except ImportError:
+    CV2_AVAILABLE = False
+
 try:
     import whisper
-    from insightface.app import FaceAnalysis
-    from sentence_transformers import SentenceTransformer
+    WHISPER_AVAILABLE = True
 except ImportError:
-    print("⚠️ Libraries manquantes. Certaines fonctionnalités seront simulées.")
+    WHISPER_AVAILABLE = False
+
+try:
+    from insightface.app import FaceAnalysis
+    FACE_AVAILABLE = True
+except ImportError:
+    FACE_AVAILABLE = False
+
+try:
+    from sentence_transformers import SentenceTransformer
+    TEXT_AVAILABLE = True
+except ImportError:
+    TEXT_AVAILABLE = False
 
 class HCANN_Agent:
     """
@@ -60,32 +83,44 @@ class HCANN_Agent:
     def _init_perception_tools(self):
         """Initialise les outils de perception (Vision + Audio + Texte)"""
         # --- Vision : InsightFace ---
-        try:
-            self.face_app = FaceAnalysis(
-                name='buffalo_l', 
-                providers=['CUDAExecutionProvider', 'CPUExecutionProvider']
-            )
-            self.face_app.prepare(ctx_id=0 if self.device.type == 'cuda' else -1, det_size=(640, 640))
-            print("👤 InsightFace chargé.")
-        except Exception as e:
-            print(f"❌ InsightFace: {e}")
+        if FACE_AVAILABLE:
+            try:
+                self.face_app = FaceAnalysis(
+                    name='buffalo_l', 
+                    providers=['CUDAExecutionProvider', 'CPUExecutionProvider']
+                )
+                self.face_app.prepare(ctx_id=0 if self.device.type == 'cuda' else -1, det_size=(640, 640))
+                print("👤 InsightFace chargé.")
+            except Exception as e:
+                print(f"❌ InsightFace: {e}")
+                self.face_app = None
+        else:
+            print("⚠️ InsightFace non disponible (simulé)")
             self.face_app = None
         
         # --- Audio : Whisper ---
-        try:
-            self.whisper_model = whisper.load_model("base", device=self.device)
-            print("🎙️ Whisper chargé.")
-        except Exception as e:
-            print(f"❌ Whisper: {e}")
+        if WHISPER_AVAILABLE:
+            try:
+                self.whisper_model = whisper.load_model("base", device=self.device)
+                print("🎙️ Whisper chargé.")
+            except Exception as e:
+                print(f"❌ Whisper: {e}")
+                self.whisper_model = None
+        else:
+            print("⚠️ Whisper non disponible (simulé)")
             self.whisper_model = None
         
         # --- Texte : Sentence Transformer pour embeddings ---
-        try:
-            self.text_encoder = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
-            self.text_encoder.to(self.device)
-            print("📝 Text encoder chargé.")
-        except Exception as e:
-            print(f"❌ Text encoder: {e}")
+        if TEXT_AVAILABLE:
+            try:
+                self.text_encoder = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
+                self.text_encoder.to(self.device)
+                print("📝 Text encoder chargé.")
+            except Exception as e:
+                print(f"❌ Text encoder: {e}")
+                self.text_encoder = None
+        else:
+            print("⚠️ Sentence Transformer non disponible (simulé)")
             self.text_encoder = None
 
     # ========== MÉTHODE PRINCIPALE DE TRAITEMENT ==========
@@ -330,29 +365,33 @@ class HCANN_Agent:
         Encode les inputs multimodaux en état hippocampique via HCANN
         """
         # --- 1. Encodage visuel (via le cortex du modèle) ---
-        # Convertir frame en tensor et normaliser
-        frame_tensor = torch.from_numpy(frame).float().permute(2, 0, 1) / 255.0
-        if frame_tensor.shape[0] == 3:  # RGB
-            frame_tensor = frame_tensor.to(self.device)
-            
-            # Passage par le cortex pour features visuelles
-            with torch.no_grad():
-                # Note: adapter selon l'interface réelle de ton CortexModule
-                if hasattr(self.model, 'cortex'):
-                    visual_features = self.model.cortex(frame_tensor.unsqueeze(0))
-                    if isinstance(visual_features, tuple):
-                        visual_features = visual_features[0]  # Prendre logits ou features
-                else:
-                    # Fallback: pooling simple
-                    visual_features = F.adaptive_avg_pool2d(frame_tensor, (1, 1)).flatten()
-        else:
-            visual_features = torch.zeros(self.config.hpc_size, device=self.device)
+        # Utiliser directement l'encoder du modèle HCANN
+        with torch.no_grad():
+            frame_tensor = torch.from_numpy(frame).float().permute(2, 0, 1).unsqueeze(0) / 255.0
+            if frame_tensor.shape[1] == 3:  # RGB
+                frame_tensor = frame_tensor.to(self.device)
+                # Passage par l'encoder multimodal
+                try:
+                    visual_embedding = self.model.encoder(images=frame_tensor, texts=None)
+                    visual_features = visual_embedding.squeeze(0)
+                except Exception as e:
+                    # Fallback en cas d'erreur
+                    visual_features = torch.randn(self.config.semantic_dim, device=self.device)
+            else:
+                visual_features = torch.zeros(self.config.semantic_dim, device=self.device)
         
         # --- 2. Encodage textuel ---
-        text_embedding = self._text_to_embedding(text) if text else torch.zeros(self.config.hpc_size, device=self.device)
+        text_embedding = self._text_to_embedding(text) if text else torch.zeros(self.config.semantic_dim, device=self.device)
         
-        # --- 3. Fusion multimodale (simple averaging pour l'exemple) ---
-        # Dans une version avancée: utiliser l'EntorhinalGateway de VLEM
+        # --- 3. Fusion multimodale (simple averaging) ---
+        # Assurer que les deux embeddings ont la même dimension
+        if visual_features.shape != text_embedding.shape:
+            # Projection si nécessaire
+            if visual_features.shape[0] != self.config.semantic_dim:
+                visual_features = F.adaptive_avg_pool1d(visual_features.unsqueeze(0), self.config.semantic_dim).squeeze(0)
+            if text_embedding.shape[0] != self.config.semantic_dim:
+                text_embedding = F.adaptive_avg_pool1d(text_embedding.unsqueeze(0), self.config.semantic_dim).squeeze(0)
+        
         fused_embedding = (visual_features + text_embedding) / 2
         fused_embedding = F.normalize(fused_embedding, dim=0)
         
@@ -360,7 +399,10 @@ class HCANN_Agent:
         with torch.no_grad():
             # Velocity = 0 pour l'instant (pas de mouvement temporel explicite)
             velocity = torch.zeros(1, 2, device=self.device)
-            hpc_state, _ = self.model.hippocampus(fused_embedding.unsqueeze(0), velocity=velocity)
+            hpc_state, grid_state = self.model.hippocampus(velocity=velocity)
+            # Ajouter l'information sémantique via projection
+            sens_to_hpc = self.model.W_sens_to_hpc(fused_embedding.unsqueeze(0))
+            hpc_state = hpc_state + sens_to_hpc
         
         return hpc_state.squeeze(0)  # Retourne [hpc_size]
 

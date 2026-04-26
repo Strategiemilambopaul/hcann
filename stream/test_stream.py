@@ -1,21 +1,30 @@
-from stream.agent import HCANNStream
+from stream.agent import HCANN_Agent
 from utils.config import HCANNConfig
 import time
 
 def main():
     config = HCANNConfig()
-    agent = HCANNStream(config)
+    agent = HCANN_Agent(config)
     
     try:
-        agent.start()
-        print("Agent démarré. Appuyez sur Ctrl+C pour arrêter.")
+        print("Agent démarré. Test de traitement...")
         
-        while True:
-            time.sleep(1)
-            
+        # Test simple sans webcam
+        import numpy as np
+        for i in range(5):
+            dummy_frame = np.random.randint(0, 255, (480, 640, 3), dtype=np.uint8)
+            dummy_audio = np.random.randn(16000).astype(np.float32) * 0.01
+            agent.process_step(dummy_frame, dummy_audio)
+            time.sleep(0.1)
+        
+        # Test de requête
+        response = agent.query_memory("Qui était présent ?")
+        print(response)
+        
     except KeyboardInterrupt:
         print("\nArrêt de l'agent...")
-        agent.stop()
+    finally:
+        agent.cleanup()
 
 if __name__ == "__main__":
     main()
