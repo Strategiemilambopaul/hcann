@@ -21,8 +21,9 @@ class EpisodicBuffer:
         
     def sample(self, n: int = 32) -> Optional[Dict[str, torch.Tensor]]:
         """Échantillonne un batch d'épisodes pour la consolidation"""
-        if len(self.buffer) < n:
+        if len(self.buffer) == 0:
             return None
+        n = min(n, len(self.buffer))
         batch = random.sample(list(self.buffer), n)
         return {
             'sem': torch.stack([b['sem'] for b in batch]),

@@ -1,0 +1,2559 @@
+{
+  "timestamp": "2026-09-09T12:09:19",
+  "unit": "episodic_completion",
+  "encoder": "clip",
+  "k": 5,
+  "seed": 0,
+  "n_episodes": 4,
+  "clip_cue": {
+    "n_queries": 12,
+    "systems": {
+      "rag": {
+        "n_queries": 12,
+        "confusion_at_1": 0.25,
+        "hit": 0.75,
+        "pair_at_2": 0.9166666666666666,
+        "n_uncommitted": 0,
+        "by_query": {
+          "image_crop": {
+            "n_queries": 4,
+            "confusion_at_1": 0.25,
+            "hit": 0.75,
+            "pair_at_2": 1.0,
+            "n_uncommitted": 0,
+            "n": 4
+          },
+          "noisy_image": {
+            "n_queries": 4,
+            "confusion_at_1": 0.0,
+            "hit": 1.0,
+            "pair_at_2": 1.0,
+            "n_uncommitted": 0,
+            "n": 4
+          },
+          "partial_text": {
+            "n_queries": 4,
+            "confusion_at_1": 0.5,
+            "hit": 0.5,
+            "pair_at_2": 0.75,
+            "n_uncommitted": 0,
+            "n": 4
+          }
+        }
+      },
+      "lexical": {
+        "n_queries": 12,
+        "confusion_at_1": 0.5,
+        "hit": 0.5,
+        "pair_at_2": 0.6666666666666666,
+        "n_uncommitted": 0,
+        "by_query": {
+          "image_crop": {
+            "n_queries": 4,
+            "confusion_at_1": 0.75,
+            "hit": 0.25,
+            "pair_at_2": 0.5,
+            "n_uncommitted": 0,
+            "n": 4
+          },
+          "noisy_image": {
+            "n_queries": 4,
+            "confusion_at_1": 0.75,
+            "hit": 0.25,
+            "pair_at_2": 0.5,
+            "n_uncommitted": 0,
+            "n": 4
+          },
+          "partial_text": {
+            "n_queries": 4,
+            "confusion_at_1": 0.0,
+            "hit": 1.0,
+            "pair_at_2": 1.0,
+            "n_uncommitted": 0,
+            "n": 4
+          }
+        }
+      },
+      "dg_knn": {
+        "n_queries": 12,
+        "confusion_at_1": 0.75,
+        "hit": 0.25,
+        "pair_at_2": 0.6666666666666666,
+        "n_uncommitted": 0,
+        "by_query": {
+          "image_crop": {
+            "n_queries": 4,
+            "confusion_at_1": 1.0,
+            "hit": 0.0,
+            "pair_at_2": 0.5,
+            "n_uncommitted": 0,
+            "n": 4
+          },
+          "noisy_image": {
+            "n_queries": 4,
+            "confusion_at_1": 0.5,
+            "hit": 0.5,
+            "pair_at_2": 0.75,
+            "n_uncommitted": 0,
+            "n": 4
+          },
+          "partial_text": {
+            "n_queries": 4,
+            "confusion_at_1": 0.75,
+            "hit": 0.25,
+            "pair_at_2": 0.75,
+            "n_uncommitted": 0,
+            "n": 4
+          }
+        }
+      },
+      "ca3": {
+        "n_queries": 12,
+        "confusion_at_1": 0.75,
+        "hit": 0.25,
+        "pair_at_2": 0.4166666666666667,
+        "n_uncommitted": 0,
+        "by_query": {
+          "image_crop": {
+            "n_queries": 4,
+            "confusion_at_1": 1.0,
+            "hit": 0.0,
+            "pair_at_2": 0.5,
+            "n_uncommitted": 0,
+            "n": 4
+          },
+          "noisy_image": {
+            "n_queries": 4,
+            "confusion_at_1": 0.5,
+            "hit": 0.5,
+            "pair_at_2": 0.5,
+            "n_uncommitted": 0,
+            "n": 4
+          },
+          "partial_text": {
+            "n_queries": 4,
+            "confusion_at_1": 0.75,
+            "hit": 0.25,
+            "pair_at_2": 0.25,
+            "n_uncommitted": 0,
+            "n": 4
+          }
+        }
+      },
+      "hcann": {
+        "n_queries": 12,
+        "confusion_at_1": 0.25,
+        "hit": 0.75,
+        "pair_at_2": 0.9166666666666666,
+        "n_uncommitted": 0,
+        "by_query": {
+          "image_crop": {
+            "n_queries": 4,
+            "confusion_at_1": 0.25,
+            "hit": 0.75,
+            "pair_at_2": 1.0,
+            "n_uncommitted": 0,
+            "n": 4
+          },
+          "noisy_image": {
+            "n_queries": 4,
+            "confusion_at_1": 0.0,
+            "hit": 1.0,
+            "pair_at_2": 1.0,
+            "n_uncommitted": 0,
+            "n": 4
+          },
+          "partial_text": {
+            "n_queries": 4,
+            "confusion_at_1": 0.5,
+            "hit": 0.5,
+            "pair_at_2": 0.75,
+            "n_uncommitted": 0,
+            "n": 4
+          }
+        }
+      }
+    },
+    "rag_confusion_at_1": 0.25,
+    "hcann_confusion_at_1": 0.25,
+    "rag_hit_at_1": 0.75,
+    "hcann_hit_at_1": 0.75,
+    "rag_pair_at_2": 0.9166666666666666,
+    "lexical_confusion_at_1": 0.5,
+    "lexical_hit_at_1": 0.5,
+    "lexical_pair_at_2": 0.6666666666666666,
+    "merge_confusion_at_1": 0.0,
+    "merge_hit_at_1": 0.0,
+    "merge_pair_at_2": 0.0,
+    "ca3_confusion_at_1": 0.75,
+    "ca3_hit_at_1": 0.25,
+    "ca3_pair_at_2": 0.4166666666666667,
+    "hcann_pair_at_2": 0.9166666666666666,
+    "hcann_ambiguous": 0,
+    "hcann_ca3": 0,
+    "dg_tiebreak_used": 0,
+    "by_query": {
+      "image_crop": {
+        "n": 4,
+        "rag_confusion_at_1": 0.25,
+        "lexical_confusion_at_1": 0.75,
+        "merge_confusion_at_1": 0.0,
+        "ca3_confusion_at_1": 1.0,
+        "hcann_confusion_at_1": 0.25,
+        "rag_hit_at_1": 0.75,
+        "lexical_hit_at_1": 0.25,
+        "merge_hit_at_1": 0.0,
+        "ca3_hit_at_1": 0.0,
+        "hcann_hit_at_1": 0.75,
+        "rag_pair_at_2": 1.0,
+        "lexical_pair_at_2": 0.5,
+        "merge_pair_at_2": 0.0,
+        "ca3_pair_at_2": 0.5,
+        "hcann_pair_at_2": 1.0,
+        "hcann_ambiguous": 0,
+        "hcann_ca3": 0
+      },
+      "noisy_image": {
+        "n": 4,
+        "rag_confusion_at_1": 0.0,
+        "lexical_confusion_at_1": 0.75,
+        "merge_confusion_at_1": 0.0,
+        "ca3_confusion_at_1": 0.5,
+        "hcann_confusion_at_1": 0.0,
+        "rag_hit_at_1": 1.0,
+        "lexical_hit_at_1": 0.25,
+        "merge_hit_at_1": 0.0,
+        "ca3_hit_at_1": 0.5,
+        "hcann_hit_at_1": 1.0,
+        "rag_pair_at_2": 1.0,
+        "lexical_pair_at_2": 0.5,
+        "merge_pair_at_2": 0.0,
+        "ca3_pair_at_2": 0.5,
+        "hcann_pair_at_2": 1.0,
+        "hcann_ambiguous": 0,
+        "hcann_ca3": 0
+      },
+      "partial_text": {
+        "n": 4,
+        "rag_confusion_at_1": 0.5,
+        "lexical_confusion_at_1": 0.0,
+        "merge_confusion_at_1": 0.0,
+        "ca3_confusion_at_1": 0.75,
+        "hcann_confusion_at_1": 0.5,
+        "rag_hit_at_1": 0.5,
+        "lexical_hit_at_1": 1.0,
+        "merge_hit_at_1": 0.0,
+        "ca3_hit_at_1": 0.25,
+        "hcann_hit_at_1": 0.5,
+        "rag_pair_at_2": 0.75,
+        "lexical_pair_at_2": 1.0,
+        "merge_pair_at_2": 0.0,
+        "ca3_pair_at_2": 0.25,
+        "hcann_pair_at_2": 0.75,
+        "hcann_ambiguous": 0,
+        "hcann_ca3": 0
+      }
+    },
+    "note": "Cue CLIP (crop / texte partiel / image bruitée) : ce n'est pas un fragment du motif CA3. Hopfield n'a rien à compléter."
+  },
+  "pattern_cue": {
+    "n_queries": 12,
+    "systems": {
+      "dg_knn": {
+        "n_queries": 12,
+        "confusion_at_1": 0.0,
+        "hit": 1.0,
+        "pair_at_2": 1.0,
+        "n_uncommitted": 0,
+        "by_query": {
+          "masked_dg": {
+            "n_queries": 4,
+            "confusion_at_1": 0.0,
+            "hit": 1.0,
+            "pair_at_2": 1.0,
+            "n_uncommitted": 0,
+            "n": 4
+          },
+          "mixed_dg": {
+            "n_queries": 4,
+            "confusion_at_1": 0.0,
+            "hit": 1.0,
+            "pair_at_2": 1.0,
+            "n_uncommitted": 0,
+            "n": 4
+          },
+          "noisy_dg": {
+            "n_queries": 4,
+            "confusion_at_1": 0.0,
+            "hit": 1.0,
+            "pair_at_2": 1.0,
+            "n_uncommitted": 0,
+            "n": 4
+          }
+        }
+      },
+      "ca3": {
+        "n_queries": 12,
+        "confusion_at_1": 0.0,
+        "hit": 1.0,
+        "pair_at_2": 1.0,
+        "n_uncommitted": 0,
+        "by_query": {
+          "masked_dg": {
+            "n_queries": 4,
+            "confusion_at_1": 0.0,
+            "hit": 1.0,
+            "pair_at_2": 1.0,
+            "n_uncommitted": 0,
+            "n": 4
+          },
+          "mixed_dg": {
+            "n_queries": 4,
+            "confusion_at_1": 0.0,
+            "hit": 1.0,
+            "pair_at_2": 1.0,
+            "n_uncommitted": 0,
+            "n": 4
+          },
+          "noisy_dg": {
+            "n_queries": 4,
+            "confusion_at_1": 0.0,
+            "hit": 1.0,
+            "pair_at_2": 1.0,
+            "n_uncommitted": 0,
+            "n": 4
+          }
+        }
+      }
+    },
+    "rag_confusion_at_1": 0.0,
+    "hcann_confusion_at_1": 0.0,
+    "rag_hit_at_1": 0.0,
+    "hcann_hit_at_1": 0.0,
+    "rag_pair_at_2": 0.0,
+    "lexical_confusion_at_1": 0.0,
+    "lexical_hit_at_1": 0.0,
+    "lexical_pair_at_2": 0.0,
+    "merge_confusion_at_1": 0.0,
+    "merge_hit_at_1": 0.0,
+    "merge_pair_at_2": 0.0,
+    "ca3_confusion_at_1": 0.0,
+    "ca3_hit_at_1": 1.0,
+    "ca3_pair_at_2": 1.0,
+    "hcann_pair_at_2": 0.0,
+    "hcann_ambiguous": 0,
+    "hcann_ca3": 0,
+    "dg_tiebreak_used": 0,
+    "by_query": {
+      "masked_dg": {
+        "n": 4,
+        "rag_confusion_at_1": 0.0,
+        "lexical_confusion_at_1": 0.0,
+        "merge_confusion_at_1": 0.0,
+        "ca3_confusion_at_1": 0.0,
+        "hcann_confusion_at_1": 0.0,
+        "rag_hit_at_1": 0.0,
+        "lexical_hit_at_1": 0.0,
+        "merge_hit_at_1": 0.0,
+        "ca3_hit_at_1": 1.0,
+        "hcann_hit_at_1": 0.0,
+        "rag_pair_at_2": 0.0,
+        "lexical_pair_at_2": 0.0,
+        "merge_pair_at_2": 0.0,
+        "ca3_pair_at_2": 1.0,
+        "hcann_pair_at_2": 0.0,
+        "hcann_ambiguous": 0,
+        "hcann_ca3": 0
+      },
+      "mixed_dg": {
+        "n": 4,
+        "rag_confusion_at_1": 0.0,
+        "lexical_confusion_at_1": 0.0,
+        "merge_confusion_at_1": 0.0,
+        "ca3_confusion_at_1": 0.0,
+        "hcann_confusion_at_1": 0.0,
+        "rag_hit_at_1": 0.0,
+        "lexical_hit_at_1": 0.0,
+        "merge_hit_at_1": 0.0,
+        "ca3_hit_at_1": 1.0,
+        "hcann_hit_at_1": 0.0,
+        "rag_pair_at_2": 0.0,
+        "lexical_pair_at_2": 0.0,
+        "merge_pair_at_2": 0.0,
+        "ca3_pair_at_2": 1.0,
+        "hcann_pair_at_2": 0.0,
+        "hcann_ambiguous": 0,
+        "hcann_ca3": 0
+      },
+      "noisy_dg": {
+        "n": 4,
+        "rag_confusion_at_1": 0.0,
+        "lexical_confusion_at_1": 0.0,
+        "merge_confusion_at_1": 0.0,
+        "ca3_confusion_at_1": 0.0,
+        "hcann_confusion_at_1": 0.0,
+        "rag_hit_at_1": 0.0,
+        "lexical_hit_at_1": 0.0,
+        "merge_hit_at_1": 0.0,
+        "ca3_hit_at_1": 1.0,
+        "hcann_hit_at_1": 0.0,
+        "rag_pair_at_2": 0.0,
+        "lexical_pair_at_2": 0.0,
+        "merge_pair_at_2": 0.0,
+        "ca3_pair_at_2": 1.0,
+        "hcann_pair_at_2": 0.0,
+        "hcann_ambiguous": 0,
+        "hcann_ca3": 0
+      }
+    },
+    "note": "Cue = DG stocké (bruit, masque, mélange 60/40). Hit CA3 100% vs k-NN DG 100%. Statut : attracteur DG, pas mieux que le cosine dans le même espace."
+  },
+  "summary": {
+    "n_queries": 12,
+    "systems": {
+      "dg_knn": {
+        "n_queries": 12,
+        "confusion_at_1": 0.0,
+        "hit": 1.0,
+        "pair_at_2": 1.0,
+        "n_uncommitted": 0,
+        "by_query": {
+          "masked_dg": {
+            "n_queries": 4,
+            "confusion_at_1": 0.0,
+            "hit": 1.0,
+            "pair_at_2": 1.0,
+            "n_uncommitted": 0,
+            "n": 4
+          },
+          "mixed_dg": {
+            "n_queries": 4,
+            "confusion_at_1": 0.0,
+            "hit": 1.0,
+            "pair_at_2": 1.0,
+            "n_uncommitted": 0,
+            "n": 4
+          },
+          "noisy_dg": {
+            "n_queries": 4,
+            "confusion_at_1": 0.0,
+            "hit": 1.0,
+            "pair_at_2": 1.0,
+            "n_uncommitted": 0,
+            "n": 4
+          }
+        }
+      },
+      "ca3": {
+        "n_queries": 12,
+        "confusion_at_1": 0.0,
+        "hit": 1.0,
+        "pair_at_2": 1.0,
+        "n_uncommitted": 0,
+        "by_query": {
+          "masked_dg": {
+            "n_queries": 4,
+            "confusion_at_1": 0.0,
+            "hit": 1.0,
+            "pair_at_2": 1.0,
+            "n_uncommitted": 0,
+            "n": 4
+          },
+          "mixed_dg": {
+            "n_queries": 4,
+            "confusion_at_1": 0.0,
+            "hit": 1.0,
+            "pair_at_2": 1.0,
+            "n_uncommitted": 0,
+            "n": 4
+          },
+          "noisy_dg": {
+            "n_queries": 4,
+            "confusion_at_1": 0.0,
+            "hit": 1.0,
+            "pair_at_2": 1.0,
+            "n_uncommitted": 0,
+            "n": 4
+          }
+        }
+      }
+    },
+    "rag_confusion_at_1": 0.0,
+    "hcann_confusion_at_1": 0.0,
+    "rag_hit_at_1": 0.0,
+    "hcann_hit_at_1": 0.0,
+    "rag_pair_at_2": 0.0,
+    "lexical_confusion_at_1": 0.0,
+    "lexical_hit_at_1": 0.0,
+    "lexical_pair_at_2": 0.0,
+    "merge_confusion_at_1": 0.0,
+    "merge_hit_at_1": 0.0,
+    "merge_pair_at_2": 0.0,
+    "ca3_confusion_at_1": 0.0,
+    "ca3_hit_at_1": 1.0,
+    "ca3_pair_at_2": 1.0,
+    "hcann_pair_at_2": 0.0,
+    "hcann_ambiguous": 0,
+    "hcann_ca3": 0,
+    "dg_tiebreak_used": 0,
+    "by_query": {
+      "masked_dg": {
+        "n": 4,
+        "rag_confusion_at_1": 0.0,
+        "lexical_confusion_at_1": 0.0,
+        "merge_confusion_at_1": 0.0,
+        "ca3_confusion_at_1": 0.0,
+        "hcann_confusion_at_1": 0.0,
+        "rag_hit_at_1": 0.0,
+        "lexical_hit_at_1": 0.0,
+        "merge_hit_at_1": 0.0,
+        "ca3_hit_at_1": 1.0,
+        "hcann_hit_at_1": 0.0,
+        "rag_pair_at_2": 0.0,
+        "lexical_pair_at_2": 0.0,
+        "merge_pair_at_2": 0.0,
+        "ca3_pair_at_2": 1.0,
+        "hcann_pair_at_2": 0.0,
+        "hcann_ambiguous": 0,
+        "hcann_ca3": 0
+      },
+      "mixed_dg": {
+        "n": 4,
+        "rag_confusion_at_1": 0.0,
+        "lexical_confusion_at_1": 0.0,
+        "merge_confusion_at_1": 0.0,
+        "ca3_confusion_at_1": 0.0,
+        "hcann_confusion_at_1": 0.0,
+        "rag_hit_at_1": 0.0,
+        "lexical_hit_at_1": 0.0,
+        "merge_hit_at_1": 0.0,
+        "ca3_hit_at_1": 1.0,
+        "hcann_hit_at_1": 0.0,
+        "rag_pair_at_2": 0.0,
+        "lexical_pair_at_2": 0.0,
+        "merge_pair_at_2": 0.0,
+        "ca3_pair_at_2": 1.0,
+        "hcann_pair_at_2": 0.0,
+        "hcann_ambiguous": 0,
+        "hcann_ca3": 0
+      },
+      "noisy_dg": {
+        "n": 4,
+        "rag_confusion_at_1": 0.0,
+        "lexical_confusion_at_1": 0.0,
+        "merge_confusion_at_1": 0.0,
+        "ca3_confusion_at_1": 0.0,
+        "hcann_confusion_at_1": 0.0,
+        "rag_hit_at_1": 0.0,
+        "lexical_hit_at_1": 0.0,
+        "merge_hit_at_1": 0.0,
+        "ca3_hit_at_1": 1.0,
+        "hcann_hit_at_1": 0.0,
+        "rag_pair_at_2": 0.0,
+        "lexical_pair_at_2": 0.0,
+        "merge_pair_at_2": 0.0,
+        "ca3_pair_at_2": 1.0,
+        "hcann_pair_at_2": 0.0,
+        "hcann_ambiguous": 0,
+        "hcann_ca3": 0
+      }
+    },
+    "note": "Cue = DG stocké (bruit, masque, mélange 60/40). Hit CA3 100% vs k-NN DG 100%. Statut : attracteur DG, pas mieux que le cosine dans le même espace."
+  },
+  "rows": [
+    {
+      "target_id": "shop_mardi_colis",
+      "query": "noisy_dg",
+      "systems": {
+        "dg_knn": {
+          "top1": "shop_mardi_colis",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "dg_knn",
+          "top": [
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.2148
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1453
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.1382
+            }
+          ]
+        },
+        "ca3": {
+          "top1": "shop_mardi_colis",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ca3_complete",
+          "top": [
+            {
+              "id": "shop_mardi_colis",
+              "score": 1.0
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1739
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.1716
+            }
+          ]
+        }
+      }
+    },
+    {
+      "target_id": "shop_mardi_colis",
+      "query": "masked_dg",
+      "systems": {
+        "dg_knn": {
+          "top1": "shop_mardi_colis",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "dg_knn",
+          "top": [
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6299
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.1982
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1397
+            }
+          ]
+        },
+        "ca3": {
+          "top1": "shop_mardi_colis",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ca3_complete",
+          "top": [
+            {
+              "id": "shop_mardi_colis",
+              "score": 1.0
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1739
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.1715
+            }
+          ]
+        }
+      }
+    },
+    {
+      "target_id": "shop_mardi_colis",
+      "query": "mixed_dg",
+      "systems": {
+        "dg_knn": {
+          "top1": "shop_mardi_colis",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "dg_knn",
+          "top": [
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.8612
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.647
+            },
+            {
+              "id": "distract_park",
+              "score": 0.269
+            }
+          ]
+        },
+        "ca3": {
+          "top1": "shop_mardi_colis",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ca3_complete",
+          "top": [
+            {
+              "id": "shop_mardi_colis",
+              "score": 1.0
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1739
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.1715
+            }
+          ]
+        }
+      }
+    },
+    {
+      "target_id": "vet_momo",
+      "query": "noisy_dg",
+      "systems": {
+        "dg_knn": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "dg_knn",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": -0.0116
+            },
+            {
+              "id": "distract_park",
+              "score": -0.0436
+            },
+            {
+              "id": "box_entree",
+              "score": -0.0753
+            }
+          ]
+        },
+        "ca3": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ca3_complete",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 1.0
+            },
+            {
+              "id": "box_entree",
+              "score": 0.3111
+            },
+            {
+              "id": "distract_park",
+              "score": 0.2665
+            }
+          ]
+        }
+      }
+    },
+    {
+      "target_id": "vet_momo",
+      "query": "masked_dg",
+      "systems": {
+        "dg_knn": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "dg_knn",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 0.7893
+            },
+            {
+              "id": "distract_park",
+              "score": 0.2679
+            },
+            {
+              "id": "box_entree",
+              "score": 0.1919
+            }
+          ]
+        },
+        "ca3": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ca3_complete",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 1.0
+            },
+            {
+              "id": "box_entree",
+              "score": 0.311
+            },
+            {
+              "id": "distract_park",
+              "score": 0.2665
+            }
+          ]
+        }
+      }
+    },
+    {
+      "target_id": "vet_momo",
+      "query": "mixed_dg",
+      "systems": {
+        "dg_knn": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "dg_knn",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 0.8848
+            },
+            {
+              "id": "box_entree",
+              "score": 0.7152
+            },
+            {
+              "id": "distract_park",
+              "score": 0.2727
+            }
+          ]
+        },
+        "ca3": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ca3_complete",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 1.0
+            },
+            {
+              "id": "box_entree",
+              "score": 0.311
+            },
+            {
+              "id": "distract_park",
+              "score": 0.2665
+            }
+          ]
+        }
+      }
+    },
+    {
+      "target_id": "box_entree",
+      "query": "noisy_dg",
+      "systems": {
+        "dg_knn": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "dg_knn",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 0.2701
+            },
+            {
+              "id": "distract_park",
+              "score": 0.0945
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.0253
+            }
+          ]
+        },
+        "ca3": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ca3_complete",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 1.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.3111
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1641
+            }
+          ]
+        }
+      }
+    },
+    {
+      "target_id": "box_entree",
+      "query": "masked_dg",
+      "systems": {
+        "dg_knn": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "dg_knn",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 0.7888
+            },
+            {
+              "id": "distract_park",
+              "score": 0.2052
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.1846
+            }
+          ]
+        },
+        "ca3": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ca3_complete",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 1.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.3111
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1641
+            }
+          ]
+        }
+      }
+    },
+    {
+      "target_id": "box_entree",
+      "query": "mixed_dg",
+      "systems": {
+        "dg_knn": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "dg_knn",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 0.8598
+            },
+            {
+              "id": "distract_park",
+              "score": 0.643
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.3746
+            }
+          ]
+        },
+        "ca3": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ca3_complete",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 1.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.3111
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1641
+            }
+          ]
+        }
+      }
+    },
+    {
+      "target_id": "distract_park",
+      "query": "noisy_dg",
+      "systems": {
+        "dg_knn": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "dg_knn",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.052
+            },
+            {
+              "id": "box_entree",
+              "score": -0.0223
+            },
+            {
+              "id": "vet_momo",
+              "score": -0.0491
+            }
+          ]
+        },
+        "ca3": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ca3_complete",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 1.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.2665
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.1739
+            }
+          ]
+        }
+      }
+    },
+    {
+      "target_id": "distract_park",
+      "query": "masked_dg",
+      "systems": {
+        "dg_knn": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "dg_knn",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.675
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.2101
+            },
+            {
+              "id": "box_entree",
+              "score": 0.0801
+            }
+          ]
+        },
+        "ca3": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ca3_complete",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 1.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.2665
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.1739
+            }
+          ]
+        }
+      }
+    },
+    {
+      "target_id": "distract_park",
+      "query": "mixed_dg",
+      "systems": {
+        "dg_knn": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "dg_knn",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.8616
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6483
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.291
+            }
+          ]
+        },
+        "ca3": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ca3_complete",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 1.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.2665
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.1739
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "clip_rows": [
+    {
+      "target_id": "shop_mardi_colis",
+      "query": "partial_text",
+      "systems": {
+        "rag": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 0.6082
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.5887
+            },
+            {
+              "id": "distract_park",
+              "score": 0.5452
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "shop_mardi_colis",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "shop_mardi_colis",
+              "score": 1.0
+            },
+            {
+              "id": "distract_park",
+              "score": 0.0
+            },
+            {
+              "id": "box_entree",
+              "score": 0.0
+            }
+          ]
+        },
+        "dg_knn": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "dg_knn",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 0.2535
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.2047
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.1442
+            }
+          ]
+        },
+        "ca3": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "ca3_complete",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 1.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.3111
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1641
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "semantic",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 0.6082
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.5887
+            },
+            {
+              "id": "distract_park",
+              "score": 0.5452
+            }
+          ]
+        }
+      }
+    },
+    {
+      "target_id": "shop_mardi_colis",
+      "query": "image_crop",
+      "systems": {
+        "rag": {
+          "top1": "shop_mardi_colis",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6593
+            },
+            {
+              "id": "box_entree",
+              "score": 0.5749
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.5198
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.0
+            },
+            {
+              "id": "box_entree",
+              "score": 0.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.0
+            }
+          ]
+        },
+        "dg_knn": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "dg_knn",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 0.2935
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.2612
+            },
+            {
+              "id": "distract_park",
+              "score": 0.2588
+            }
+          ]
+        },
+        "ca3": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "ca3_complete",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 1.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.316
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1657
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "shop_mardi_colis",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "semantic",
+          "top": [
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6593
+            },
+            {
+              "id": "box_entree",
+              "score": 0.5749
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.5198
+            }
+          ]
+        }
+      }
+    },
+    {
+      "target_id": "shop_mardi_colis",
+      "query": "noisy_image",
+      "systems": {
+        "rag": {
+          "top1": "shop_mardi_colis",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6558
+            },
+            {
+              "id": "box_entree",
+              "score": 0.5837
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.5667
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.0
+            },
+            {
+              "id": "box_entree",
+              "score": 0.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.0
+            }
+          ]
+        },
+        "dg_knn": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "dg_knn",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 0.3691
+            },
+            {
+              "id": "box_entree",
+              "score": 0.2921
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.1793
+            }
+          ]
+        },
+        "ca3": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "ca3_complete",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 1.0
+            },
+            {
+              "id": "box_entree",
+              "score": 0.3111
+            },
+            {
+              "id": "distract_park",
+              "score": 0.2665
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "shop_mardi_colis",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "semantic",
+          "top": [
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6558
+            },
+            {
+              "id": "box_entree",
+              "score": 0.5837
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.5667
+            }
+          ]
+        }
+      }
+    },
+    {
+      "target_id": "vet_momo",
+      "query": "partial_text",
+      "systems": {
+        "rag": {
+          "top1": "shop_mardi_colis",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.5781
+            },
+            {
+              "id": "box_entree",
+              "score": 0.5679
+            },
+            {
+              "id": "distract_park",
+              "score": 0.5549
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 1.0
+            },
+            {
+              "id": "distract_park",
+              "score": 0.0
+            },
+            {
+              "id": "box_entree",
+              "score": 0.0
+            }
+          ]
+        },
+        "dg_knn": {
+          "top1": "shop_mardi_colis",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "dg_knn",
+          "top": [
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.304
+            },
+            {
+              "id": "box_entree",
+              "score": 0.1852
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.1063
+            }
+          ]
+        },
+        "ca3": {
+          "top1": "shop_mardi_colis",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "ca3_complete",
+          "top": [
+            {
+              "id": "shop_mardi_colis",
+              "score": 1.0
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1739
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.1715
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "shop_mardi_colis",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "semantic",
+          "top": [
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.5781
+            },
+            {
+              "id": "box_entree",
+              "score": 0.5679
+            },
+            {
+              "id": "distract_park",
+              "score": 0.5549
+            }
+          ]
+        }
+      }
+    },
+    {
+      "target_id": "vet_momo",
+      "query": "image_crop",
+      "systems": {
+        "rag": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 0.6793
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.5791
+            },
+            {
+              "id": "box_entree",
+              "score": 0.5081
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.0
+            },
+            {
+              "id": "box_entree",
+              "score": 0.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.0
+            }
+          ]
+        },
+        "dg_knn": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "dg_knn",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.3191
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.2868
+            },
+            {
+              "id": "box_entree",
+              "score": 0.1899
+            }
+          ]
+        },
+        "ca3": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "ca3_complete",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 1.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.2667
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.1739
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "semantic",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 0.6793
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.5791
+            },
+            {
+              "id": "box_entree",
+              "score": 0.5081
+            }
+          ]
+        }
+      }
+    },
+    {
+      "target_id": "vet_momo",
+      "query": "noisy_image",
+      "systems": {
+        "rag": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 0.6974
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.5515
+            },
+            {
+              "id": "box_entree",
+              "score": 0.5112
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.0
+            },
+            {
+              "id": "box_entree",
+              "score": 0.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.0
+            }
+          ]
+        },
+        "dg_knn": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "dg_knn",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 0.3078
+            },
+            {
+              "id": "distract_park",
+              "score": 0.2979
+            },
+            {
+              "id": "box_entree",
+              "score": 0.2499
+            }
+          ]
+        },
+        "ca3": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ca3_complete",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 1.0
+            },
+            {
+              "id": "box_entree",
+              "score": 0.3111
+            },
+            {
+              "id": "distract_park",
+              "score": 0.2666
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "semantic",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 0.6974
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.5515
+            },
+            {
+              "id": "box_entree",
+              "score": 0.5112
+            }
+          ]
+        }
+      }
+    },
+    {
+      "target_id": "box_entree",
+      "query": "partial_text",
+      "systems": {
+        "rag": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 0.6203
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.5785
+            },
+            {
+              "id": "distract_park",
+              "score": 0.5333
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 1.0
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6667
+            },
+            {
+              "id": "distract_park",
+              "score": 0.3333
+            }
+          ]
+        },
+        "dg_knn": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "dg_knn",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 0.2309
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.1458
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.1319
+            }
+          ]
+        },
+        "ca3": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ca3_complete",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 1.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.3111
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1641
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "semantic",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 0.6203
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.5785
+            },
+            {
+              "id": "distract_park",
+              "score": 0.5333
+            }
+          ]
+        }
+      }
+    },
+    {
+      "target_id": "box_entree",
+      "query": "image_crop",
+      "systems": {
+        "rag": {
+          "top1": "shop_mardi_colis",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6246
+            },
+            {
+              "id": "box_entree",
+              "score": 0.5848
+            },
+            {
+              "id": "distract_park",
+              "score": 0.5734
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.0
+            },
+            {
+              "id": "box_entree",
+              "score": 0.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.0
+            }
+          ]
+        },
+        "dg_knn": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "dg_knn",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 0.2739
+            },
+            {
+              "id": "distract_park",
+              "score": 0.2328
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.1923
+            }
+          ]
+        },
+        "ca3": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "ca3_complete",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 1.0
+            },
+            {
+              "id": "box_entree",
+              "score": 0.3111
+            },
+            {
+              "id": "distract_park",
+              "score": 0.2665
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "shop_mardi_colis",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "semantic",
+          "top": [
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6246
+            },
+            {
+              "id": "box_entree",
+              "score": 0.5848
+            },
+            {
+              "id": "distract_park",
+              "score": 0.5734
+            }
+          ]
+        }
+      }
+    },
+    {
+      "target_id": "box_entree",
+      "query": "noisy_image",
+      "systems": {
+        "rag": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 0.6658
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6228
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.5351
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.0
+            },
+            {
+              "id": "box_entree",
+              "score": 0.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.0
+            }
+          ]
+        },
+        "dg_knn": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "dg_knn",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.2756
+            },
+            {
+              "id": "box_entree",
+              "score": 0.2644
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.22
+            }
+          ]
+        },
+        "ca3": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "ca3_complete",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 1.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.2711
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.175
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "semantic",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 0.6658
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6228
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.5351
+            }
+          ]
+        }
+      }
+    },
+    {
+      "target_id": "distract_park",
+      "query": "partial_text",
+      "systems": {
+        "rag": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.5828
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.5313
+            },
+            {
+              "id": "box_entree",
+              "score": 0.5025
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 1.0
+            },
+            {
+              "id": "box_entree",
+              "score": 0.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.0
+            }
+          ]
+        },
+        "dg_knn": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "dg_knn",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 0.229
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1851
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.1578
+            }
+          ]
+        },
+        "ca3": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "ca3_complete",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 1.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.3112
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1642
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "semantic",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.5828
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.5313
+            },
+            {
+              "id": "box_entree",
+              "score": 0.5025
+            }
+          ]
+        }
+      }
+    },
+    {
+      "target_id": "distract_park",
+      "query": "image_crop",
+      "systems": {
+        "rag": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.6903
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.4934
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.4799
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.0
+            },
+            {
+              "id": "box_entree",
+              "score": 0.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.0
+            }
+          ]
+        },
+        "dg_knn": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "dg_knn",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 0.3373
+            },
+            {
+              "id": "distract_park",
+              "score": 0.33
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.2988
+            }
+          ]
+        },
+        "ca3": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "ca3_complete",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 1.0
+            },
+            {
+              "id": "box_entree",
+              "score": 0.3112
+            },
+            {
+              "id": "distract_park",
+              "score": 0.267
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "semantic",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.6903
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.4934
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.4799
+            }
+          ]
+        }
+      }
+    },
+    {
+      "target_id": "distract_park",
+      "query": "noisy_image",
+      "systems": {
+        "rag": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.5268
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.4946
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.482
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.0
+            },
+            {
+              "id": "box_entree",
+              "score": 0.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.0
+            }
+          ]
+        },
+        "dg_knn": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "dg_knn",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.3287
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.2232
+            },
+            {
+              "id": "box_entree",
+              "score": 0.2212
+            }
+          ]
+        },
+        "ca3": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ca3_complete",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 1.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.2665
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.1739
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "semantic",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.5268
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.4946
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.482
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

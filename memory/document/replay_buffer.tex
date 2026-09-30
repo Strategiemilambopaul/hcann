@@ -1,0 +1,166 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{geometry}
+\usepackage{microtype}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\geometry{top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm}
+\hypersetup{hidelinks,pdftitle={Documentation Replay Buffer HCANN}}
+
+\title{Documentation du Buffer Épisodique}
+\author{Projet HCANN-Agent}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Module Tampon (\texttt{replay\_buffer.py})}
+
+\subsection{Objectif du module}
+Le module fournit un tampon FIFO pour stocker temporairement les épisodes avant consolidation lente cortex$\rightarrow$hippocampe.
+
+\begin{itemize}
+    \item \textbf{EpisodicBuffer}: buffer principal avec capacité bornée;
+    \item \textbf{ExperienceReplayBuffer}: alias de compatibilité avec du code existant.
+\end{itemize}
+
+\subsection{Structure d'un épisode}
+Chaque entrée stockée contient:
+\begin{itemize}
+    \item \texttt{sem}: embedding sémantique (tenseur PyTorch);
+    \item \texttt{hpc}: état hippocampique (tenseur PyTorch);
+    \item \texttt{meta}: métadonnées (dictionnaire);
+    \item \texttt{ts}: timestamp (float Unix).
+\end{itemize}
+
+\subsection{Politique mémoire}
+Le buffer s'appuie sur \texttt{collections.deque(maxlen=capacity)}:
+\begin{equation}
+|\mathcal{B}| \le C,
+\end{equation}
+où $C$ est la capacité.  
+Lorsqu'un nouvel épisode arrive et que $|\mathcal{B}|=C$, le plus ancien est évincé automatiquement (FIFO).
+
+\subsection{Vue théorique (mémoire de rejeu)}
+Le buffer réalise une fenêtre temporelle glissante:
+\begin{equation}
+\mathcal{B}_t = \{x_{t-C+1}, \dots, x_t\},
+\end{equation}
+avec un épisode:
+\begin{equation}
+x_t=(\mathbf{s}_t,\mathbf{h}_t,m_t,\tau_t).
+\end{equation}
+Ici, $\mathbf{s}_t$ est l'état sémantique, $\mathbf{h}_t$ l'état hippocampique, $m_t$ les métadonnées et $\tau_t$ le temps.
+
+L'entraînement lent approxime une espérance empirique:
+\begin{equation}
+\mathcal{L}_{\text{slow}}
+= \mathbb{E}_{x\sim \mathcal{D}_{recent}}[\ell(x)]
+\approx \frac{1}{n}\sum_{x_i \sim \mathcal{B}_t}\ell(x_i).
+\end{equation}
+
+\subsection{1) Ajout d'épisode}
+\paragraph{\texttt{push(sem\_embed, hpc\_state, metadata=None)}}
+\begin{itemize}[leftmargin=*]
+    \item détache les tenseurs du graphe de gradients (\texttt{detach()});
+    \item les copie sur CPU (\texttt{cpu()}) pour alléger la VRAM;
+    \item ajoute une entrée timestampée dans le buffer.
+\end{itemize}
+
+\subsection{2) Échantillonnage pour consolidation}
+\paragraph{\texttt{sample(n=32)}}
+\begin{itemize}[leftmargin=*]
+    \item si $|\mathcal{B}| < n$: retourne \texttt{None};
+    \item sinon: tirage aléatoire uniforme sans remise de $n$ épisodes;
+    \item sortie sous forme batch:
+\end{itemize}
+\begin{align}
+\texttt{sem} &\in \mathbb{R}^{n \times d_s},\\
+\texttt{hpc} &\in \mathbb{R}^{n \times d_h}.
+\end{align}
+Les champs \texttt{meta} et \texttt{ts} sont retournés en listes parallèles.
+
+Si la taille courante est $M=|\mathcal{B}|$ et $n\le M$, la probabilité d'inclusion d'un épisode sous tirage uniforme sans remise est:
+\begin{equation}
+\mathbb{P}(x_i \in \text{batch}) = \frac{n}{M}.
+\end{equation}
+
+\subsection{3) Accès récent et maintenance}
+\begin{itemize}
+    \item \texttt{get\_recent(n)}: retourne les $n$ épisodes les plus récents;
+    \item \texttt{clear()}: vide complètement le buffer;
+    \item \texttt{\_\_len\_\_()}: taille courante.
+\end{itemize}
+
+\subsection{Correspondance implémentation}
+\begin{itemize}
+    \item \texttt{\_\_init\_\_}: création de \texttt{deque(maxlen=capacity)};
+    \item \texttt{push}: sérialisation légère (\texttt{detach/cpu}) + insertion;
+    \item \texttt{sample}: \texttt{random.sample} + \texttt{torch.stack};
+    \item \texttt{ExperienceReplayBuffer}: héritage direct sans surcharge.
+\end{itemize}
+
+\subsection{Rendu computationnel (coûts)}
+\begin{itemize}
+    \item \texttt{push}: $O(1)$ amorti (ajout et éventuelle éviction FIFO);
+    \item \texttt{sample}: $O(n)$ pour le tirage + $O(n d_s + n d_h)$ pour la construction tensorielle;
+    \item \texttt{get\_recent(n)}: $O(n)$.
+\end{itemize}
+
+Correspondance théorie$\leftrightarrow$implémentation:
+\begin{itemize}
+    \item mémoire glissante bornée $\rightarrow$ \texttt{deque(maxlen=capacity)};
+    \item rejeu stochastique $\rightarrow$ \texttt{random.sample};
+    \item mini-batch pour consolidation $\rightarrow$ \texttt{torch.stack} des composantes \texttt{sem/hpc}.
+\end{itemize}
+
+\subsection{Interface détaillée}
+
+\paragraph{\texttt{EpisodicBuffer(capacity=2000)}}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Entrée}: capacité maximale.
+    \item \textbf{Effet}: initialise un buffer borné FIFO.
+\end{itemize}
+
+\paragraph{\texttt{push(sem\_embed, hpc\_state, metadata=None)}}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Entrées}: deux tenseurs + métadonnées optionnelles.
+    \item \textbf{Effet}: ajoute un épisode prêt pour le replay.
+\end{itemize}
+
+\paragraph{\texttt{sample(n=32)}}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Entrée}: taille batch souhaitée.
+    \item \textbf{Sortie}: dictionnaire de batch ou \texttt{None}.
+\end{itemize}
+
+\paragraph{\texttt{get\_recent(n=10)}}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Sortie}: liste des derniers épisodes (ordre chronologique).
+\end{itemize}
+
+\paragraph{\texttt{clear()}}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Effet}: supprime tout le contenu du tampon.
+\end{itemize}
+
+\paragraph{\texttt{ExperienceReplayBuffer}}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Rôle}: compatibilité descendante; API identique à \texttt{EpisodicBuffer}.
+\end{itemize}
+
+\subsection{Intégration dans la boucle d'apprentissage}
+Cycle typique:
+\begin{enumerate}[leftmargin=*]
+    \item encodage rapide d'un épisode $(sem, hpc)$;
+    \item insertion via \texttt{push};
+    \item tous les \texttt{consolidation\_freq} pas, tirage via \texttt{sample};
+    \item optimisation de la perte de consolidation lente sur le batch.
+\end{enumerate}
+
+\end{document}

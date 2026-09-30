@@ -1,42 +1,69 @@
 import torch
 import torch.nn as nn
-from .hippocampus import HippocampalScaffold
-from .cortex import MultimodalEncoder, WorkingMemory, EntorhinalGateway
+from .entorhinal import EntorhinalCortex
+from .hippocampus import TrisynapticHippocampus
+from .cortex import MultimodalEncoder, WorkingMemory
+
 
 class HCANN(nn.Module):
-    """Architecture HCANN Multimodale Bio-inspirée"""
+    """Architecture HCANN : boucle trisynaptique + néocortex multimodal."""
+
     def __init__(self, config):
         super().__init__()
         self.config = config
-        
+
         self.encoder = MultimodalEncoder(config)
-        self.hippocampus = HippocampalScaffold(config)
+        self.ec = EntorhinalCortex(config)
+        self.hippocampus = TrisynapticHippocampus(config)
         self.wm = WorkingMemory(config)
-        self.entorhinal = EntorhinalGateway(config)
-        
-        # Hétéro-association (Vector-HaSH)
-        self.W_sens_to_hpc = nn.Linear(config.semantic_dim, config.hpc_size)
-        self.W_hpc_to_sens = nn.Linear(config.hpc_size, config.semantic_dim)
-        
-        # Optimiseurs séparés (CLS theory)
-        self.scaffold_opt = torch.optim.SGD(list(self.hippocampus.parameters()) + 
-                                            [self.W_sens_to_hpc.weight, self.W_hpc_to_sens.weight], 
-                                            lr=config.scaffold_lr)
-        self.cortex_opt = torch.optim.Adam([p for n, p in self.named_parameters() 
-                                            if 'hippocampus' not in n and 'encoder' not in n], 
-                                           lr=config.hetero_lr)
-                                           
-    def fast_encode(self, images=None, texts=None, velocity=None):
-        """Phase rapide : encodage multimodal + activation scaffold"""
+
+    def fast_encode(self, images=None, texts=None, velocity=None, store=True, episode_keys=None):
+        """
+        Phase rapide : néocortex -> EC (SDR) -> boucle trisynaptique.
+
+        Returns:
+            ca3_state, sem, wm_state, novelty, dg_code, extras dict
+        """
         sem = self.encoder(images, texts)
         wm_state, _ = self.wm(sem)
-        sens_to_hpc = self.W_sens_to_hpc(sem)
-        hpc_state, _ = self.hippocampus(velocity)
-        # Fusion additive rapide
-        return hpc_state + sens_to_hpc, sem, wm_state
-    
+        sdr_ec = self.ec(sem)
+
+        if velocity is None:
+            velocity = torch.zeros(sem.size(0), 2, device=sem.device)
+
+        hpc_out = self.hippocampus(
+            sdr_ec, sem, velocity=velocity, store=store, episode_keys=episode_keys
+        )
+
+        return (
+            hpc_out["ca3_state"],
+            sem,
+            wm_state,
+            hpc_out["novelty"],
+            hpc_out["dg_code"],
+            hpc_out,
+        )
+
+    @torch.no_grad()
+    def local_hebb_update(self, sem_target: torch.Tensor, hpc_state: torch.Tensor) -> float:
+        """Mise à jour Hebb locale Subiculum (appelée par DreamingPhase)."""
+        return self.hippocampus.subiculum.hebb_update(hpc_state, sem_target)
+
     def slow_consolidate(self, hpc_target, sem_input):
-        """Phase lente : hétéro-association cortex↔hippocampe"""
-        pred_sem = self.W_hpc_to_sens(hpc_target)
-        loss_hetero = nn.functional.mse_loss(pred_sem, sem_input.detach())
-        return loss_hetero
+        """Deprecated : déléguer à DreamingPhase. Conservé pour compatibilité API."""
+        delta_norm = 0.0
+        for i in range(hpc_target.size(0)):
+            delta_norm += self.local_hebb_update(sem_input[i], hpc_target[i])
+        return delta_norm / max(hpc_target.size(0), 1)
+
+    @property
+    def subiculum(self):
+        return self.hippocampus.subiculum
+
+    @property
+    def ca1(self):
+        return self.hippocampus.ca1
+
+    @property
+    def ca3(self):
+        return self.hippocampus.ca3

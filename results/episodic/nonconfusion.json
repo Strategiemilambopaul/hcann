@@ -1,0 +1,5756 @@
+{
+  "timestamp": "2026-09-09T11:30:15",
+  "unit": "episodic_nonconfusion",
+  "encoder": "clip",
+  "k": 5,
+  "tie_margin": 0.05,
+  "dg_mix": 0.4,
+  "twin_min_sim": 0.85,
+  "tiebreak": "auto",
+  "seed": 0,
+  "n_episodes": 12,
+  "summary": {
+    "n_queries": 32,
+    "systems": {
+      "rag": {
+        "n_queries": 32,
+        "confusion_at_1": 0.28125,
+        "hit": 0.65625,
+        "pair_at_2": 0.78125,
+        "n_uncommitted": 0,
+        "by_query": {
+          "degraded_image": {
+            "n_queries": 8,
+            "confusion_at_1": 0.25,
+            "hit": 0.5,
+            "pair_at_2": 0.5,
+            "n_uncommitted": 0,
+            "n": 8
+          },
+          "identity_cue": {
+            "n_queries": 8,
+            "confusion_at_1": 0.0,
+            "hit": 1.0,
+            "pair_at_2": 0.875,
+            "n_uncommitted": 0,
+            "n": 8
+          },
+          "image+shared_caption": {
+            "n_queries": 8,
+            "confusion_at_1": 0.375,
+            "hit": 0.625,
+            "pair_at_2": 1.0,
+            "n_uncommitted": 0,
+            "n": 8
+          },
+          "shared_caption": {
+            "n_queries": 8,
+            "confusion_at_1": 0.5,
+            "hit": 0.5,
+            "pair_at_2": 0.75,
+            "n_uncommitted": 0,
+            "n": 8
+          }
+        }
+      },
+      "lexical": {
+        "n_queries": 32,
+        "confusion_at_1": 0.25,
+        "hit": 0.5,
+        "pair_at_2": 0.75,
+        "n_uncommitted": 0,
+        "by_query": {
+          "degraded_image": {
+            "n_queries": 8,
+            "confusion_at_1": 0.0,
+            "hit": 0.0,
+            "pair_at_2": 0.0,
+            "n_uncommitted": 0,
+            "n": 8
+          },
+          "identity_cue": {
+            "n_queries": 8,
+            "confusion_at_1": 0.0,
+            "hit": 1.0,
+            "pair_at_2": 1.0,
+            "n_uncommitted": 0,
+            "n": 8
+          },
+          "image+shared_caption": {
+            "n_queries": 8,
+            "confusion_at_1": 0.5,
+            "hit": 0.5,
+            "pair_at_2": 1.0,
+            "n_uncommitted": 0,
+            "n": 8
+          },
+          "shared_caption": {
+            "n_queries": 8,
+            "confusion_at_1": 0.5,
+            "hit": 0.5,
+            "pair_at_2": 1.0,
+            "n_uncommitted": 0,
+            "n": 8
+          }
+        }
+      },
+      "merge": {
+        "n_queries": 32,
+        "confusion_at_1": 0.375,
+        "hit": 0.375,
+        "pair_at_2": 0.0,
+        "n_uncommitted": 0,
+        "by_query": {
+          "degraded_image": {
+            "n_queries": 8,
+            "confusion_at_1": 0.0,
+            "hit": 0.0,
+            "pair_at_2": 0.0,
+            "n_uncommitted": 0,
+            "n": 8
+          },
+          "identity_cue": {
+            "n_queries": 8,
+            "confusion_at_1": 0.5,
+            "hit": 0.5,
+            "pair_at_2": 0.0,
+            "n_uncommitted": 0,
+            "n": 8
+          },
+          "image+shared_caption": {
+            "n_queries": 8,
+            "confusion_at_1": 0.5,
+            "hit": 0.5,
+            "pair_at_2": 0.0,
+            "n_uncommitted": 0,
+            "n": 8
+          },
+          "shared_caption": {
+            "n_queries": 8,
+            "confusion_at_1": 0.5,
+            "hit": 0.5,
+            "pair_at_2": 0.0,
+            "n_uncommitted": 0,
+            "n": 8
+          }
+        }
+      },
+      "hcann": {
+        "n_queries": 32,
+        "confusion_at_1": 0.125,
+        "hit": 0.8125,
+        "pair_at_2": 0.9375,
+        "n_uncommitted": 16,
+        "by_query": {
+          "degraded_image": {
+            "n_queries": 8,
+            "confusion_at_1": 0.0,
+            "hit": 0.75,
+            "pair_at_2": 0.75,
+            "n_uncommitted": 8,
+            "n": 8
+          },
+          "identity_cue": {
+            "n_queries": 8,
+            "confusion_at_1": 0.0,
+            "hit": 1.0,
+            "pair_at_2": 1.0,
+            "n_uncommitted": 0,
+            "n": 8
+          },
+          "image+shared_caption": {
+            "n_queries": 8,
+            "confusion_at_1": 0.25,
+            "hit": 0.75,
+            "pair_at_2": 1.0,
+            "n_uncommitted": 4,
+            "n": 8
+          },
+          "shared_caption": {
+            "n_queries": 8,
+            "confusion_at_1": 0.25,
+            "hit": 0.75,
+            "pair_at_2": 1.0,
+            "n_uncommitted": 4,
+            "n": 8
+          }
+        }
+      }
+    },
+    "rag_confusion_at_1": 0.28125,
+    "hcann_confusion_at_1": 0.125,
+    "rag_hit_at_1": 0.65625,
+    "hcann_hit_at_1": 0.8125,
+    "rag_pair_at_2": 0.78125,
+    "lexical_confusion_at_1": 0.25,
+    "lexical_hit_at_1": 0.5,
+    "lexical_pair_at_2": 0.75,
+    "merge_confusion_at_1": 0.375,
+    "merge_hit_at_1": 0.375,
+    "merge_pair_at_2": 0.0,
+    "ca3_confusion_at_1": 0.0,
+    "ca3_hit_at_1": 0.0,
+    "ca3_pair_at_2": 0.0,
+    "hcann_pair_at_2": 0.9375,
+    "hcann_ambiguous": 16,
+    "hcann_ca3": 8,
+    "dg_tiebreak_used": 32,
+    "by_query": {
+      "degraded_image": {
+        "n": 8,
+        "rag_confusion_at_1": 0.25,
+        "lexical_confusion_at_1": 0.0,
+        "merge_confusion_at_1": 0.0,
+        "ca3_confusion_at_1": 0.0,
+        "hcann_confusion_at_1": 0.0,
+        "rag_hit_at_1": 0.5,
+        "lexical_hit_at_1": 0.0,
+        "merge_hit_at_1": 0.0,
+        "ca3_hit_at_1": 0.0,
+        "hcann_hit_at_1": 0.75,
+        "rag_pair_at_2": 0.5,
+        "lexical_pair_at_2": 0.0,
+        "merge_pair_at_2": 0.0,
+        "ca3_pair_at_2": 0.0,
+        "hcann_pair_at_2": 0.75,
+        "hcann_ambiguous": 8,
+        "hcann_ca3": 0
+      },
+      "identity_cue": {
+        "n": 8,
+        "rag_confusion_at_1": 0.0,
+        "lexical_confusion_at_1": 0.0,
+        "merge_confusion_at_1": 0.5,
+        "ca3_confusion_at_1": 0.0,
+        "hcann_confusion_at_1": 0.0,
+        "rag_hit_at_1": 1.0,
+        "lexical_hit_at_1": 1.0,
+        "merge_hit_at_1": 0.5,
+        "ca3_hit_at_1": 0.0,
+        "hcann_hit_at_1": 1.0,
+        "rag_pair_at_2": 0.875,
+        "lexical_pair_at_2": 1.0,
+        "merge_pair_at_2": 0.0,
+        "ca3_pair_at_2": 0.0,
+        "hcann_pair_at_2": 1.0,
+        "hcann_ambiguous": 0,
+        "hcann_ca3": 0
+      },
+      "image+shared_caption": {
+        "n": 8,
+        "rag_confusion_at_1": 0.375,
+        "lexical_confusion_at_1": 0.5,
+        "merge_confusion_at_1": 0.5,
+        "ca3_confusion_at_1": 0.0,
+        "hcann_confusion_at_1": 0.25,
+        "rag_hit_at_1": 0.625,
+        "lexical_hit_at_1": 0.5,
+        "merge_hit_at_1": 0.5,
+        "ca3_hit_at_1": 0.0,
+        "hcann_hit_at_1": 0.75,
+        "rag_pair_at_2": 1.0,
+        "lexical_pair_at_2": 1.0,
+        "merge_pair_at_2": 0.0,
+        "ca3_pair_at_2": 0.0,
+        "hcann_pair_at_2": 1.0,
+        "hcann_ambiguous": 4,
+        "hcann_ca3": 4
+      },
+      "shared_caption": {
+        "n": 8,
+        "rag_confusion_at_1": 0.5,
+        "lexical_confusion_at_1": 0.5,
+        "merge_confusion_at_1": 0.5,
+        "ca3_confusion_at_1": 0.0,
+        "hcann_confusion_at_1": 0.25,
+        "rag_hit_at_1": 0.5,
+        "lexical_hit_at_1": 0.5,
+        "merge_hit_at_1": 0.5,
+        "ca3_hit_at_1": 0.0,
+        "hcann_hit_at_1": 0.75,
+        "rag_pair_at_2": 0.75,
+        "lexical_pair_at_2": 1.0,
+        "merge_pair_at_2": 0.0,
+        "ca3_pair_at_2": 0.0,
+        "hcann_pair_at_2": 1.0,
+        "hcann_ambiguous": 4,
+        "hcann_ca3": 4
+      }
+    },
+    "note": "Mètre : épisode vécu. Quatre barres — lexical, merge (fusion Jaccard), RAG cosine, HCANN — même journal. HCANN réduit la confusion exclusive vs RAG. Complétion CA3 sur 8 requête(s). Hit HCANN >= RAG. Lexical ignore l'image. Merge fusionne les légendes trop proches (geste Mem0)."
+  },
+  "rows": [
+    {
+      "pair_id": "white_shop",
+      "target_id": "shop_mardi_colis",
+      "twin_id": "shop_jeudi_facture",
+      "identity": "package Tuesday",
+      "query": "shared_caption",
+      "systems": {
+        "rag": {
+          "top1": "shop_jeudi_facture",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "shop_jeudi_facture",
+              "score": 0.6872
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6837
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.6758
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "shop_jeudi_facture",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "shop_jeudi_facture",
+              "score": 1.0
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 1.0
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.5714
+            }
+          ]
+        },
+        "merge": {
+          "top1": "shop_mardi_colis",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "shop_mardi_colis",
+              "score": 1.0
+            },
+            {
+              "id": "shop_retour_cle",
+              "score": 0.5714
+            },
+            {
+              "id": "box_entree",
+              "score": 0.2857
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "shop_jeudi_facture",
+          "committed": false,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ambiguous_twins",
+          "top": [
+            {
+              "id": "shop_jeudi_facture",
+              "score": 2.6872
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 2.6837
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.6758
+            }
+          ]
+        }
+      },
+      "hcann_top1": "shop_jeudi_facture",
+      "rag_top1": "shop_jeudi_facture",
+      "hcann_path": "ambiguous_twins",
+      "hcann_ambiguous": true,
+      "hcann_hit": true,
+      "rag_hit": false,
+      "hcann_confused": false,
+      "rag_confused": true,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": true,
+      "hcann_top": [
+        {
+          "id": "shop_jeudi_facture",
+          "score": 2.6872
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 2.6837
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.6758
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "shop_jeudi_facture",
+          "score": 0.6872
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.6837
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.6758
+        }
+      ],
+      "lexical_top1": "shop_jeudi_facture",
+      "lexical_hit": false,
+      "lexical_confused": true,
+      "lexical_pair_at_2": true,
+      "lexical_top": [
+        {
+          "id": "shop_jeudi_facture",
+          "score": 1.0
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 1.0
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.5714
+        }
+      ],
+      "merge_top1": "shop_mardi_colis",
+      "merge_hit": true,
+      "merge_confused": false,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "shop_mardi_colis",
+          "score": 1.0
+        },
+        {
+          "id": "shop_retour_cle",
+          "score": 0.5714
+        },
+        {
+          "id": "box_entree",
+          "score": 0.2857
+        }
+      ]
+    },
+    {
+      "pair_id": "white_shop",
+      "target_id": "shop_mardi_colis",
+      "twin_id": "shop_jeudi_facture",
+      "identity": "package Tuesday",
+      "query": "identity_cue",
+      "systems": {
+        "rag": {
+          "top1": "shop_mardi_colis",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6868
+            },
+            {
+              "id": "shop_jeudi_facture",
+              "score": 0.6824
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.67
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "shop_mardi_colis",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "shop_mardi_colis",
+              "score": 1.0
+            },
+            {
+              "id": "shop_jeudi_facture",
+              "score": 0.7778
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.4444
+            }
+          ]
+        },
+        "merge": {
+          "top1": "shop_mardi_colis",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "shop_mardi_colis",
+              "score": 1.0
+            },
+            {
+              "id": "shop_retour_cle",
+              "score": 0.4444
+            },
+            {
+              "id": "box_entree",
+              "score": 0.2222
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "shop_mardi_colis",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "identity",
+          "top": [
+            {
+              "id": "shop_mardi_colis",
+              "score": 2.6868
+            },
+            {
+              "id": "shop_jeudi_facture",
+              "score": 2.2379
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.67
+            }
+          ]
+        }
+      },
+      "hcann_top1": "shop_mardi_colis",
+      "rag_top1": "shop_mardi_colis",
+      "hcann_path": "identity",
+      "hcann_ambiguous": false,
+      "hcann_hit": true,
+      "rag_hit": true,
+      "hcann_confused": false,
+      "rag_confused": false,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": true,
+      "hcann_top": [
+        {
+          "id": "shop_mardi_colis",
+          "score": 2.6868
+        },
+        {
+          "id": "shop_jeudi_facture",
+          "score": 2.2379
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.67
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.6868
+        },
+        {
+          "id": "shop_jeudi_facture",
+          "score": 0.6824
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.67
+        }
+      ],
+      "lexical_top1": "shop_mardi_colis",
+      "lexical_hit": true,
+      "lexical_confused": false,
+      "lexical_pair_at_2": true,
+      "lexical_top": [
+        {
+          "id": "shop_mardi_colis",
+          "score": 1.0
+        },
+        {
+          "id": "shop_jeudi_facture",
+          "score": 0.7778
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.4444
+        }
+      ],
+      "merge_top1": "shop_mardi_colis",
+      "merge_hit": true,
+      "merge_confused": false,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "shop_mardi_colis",
+          "score": 1.0
+        },
+        {
+          "id": "shop_retour_cle",
+          "score": 0.4444
+        },
+        {
+          "id": "box_entree",
+          "score": 0.2222
+        }
+      ]
+    },
+    {
+      "pair_id": "white_shop",
+      "target_id": "shop_mardi_colis",
+      "twin_id": "shop_jeudi_facture",
+      "identity": "package Tuesday",
+      "query": "image+shared_caption",
+      "systems": {
+        "rag": {
+          "top1": "shop_jeudi_facture",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "shop_jeudi_facture",
+              "score": 0.9739
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.973
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.9562
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "shop_jeudi_facture",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "shop_jeudi_facture",
+              "score": 1.0
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 1.0
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.5714
+            }
+          ]
+        },
+        "merge": {
+          "top1": "shop_mardi_colis",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "shop_mardi_colis",
+              "score": 1.0
+            },
+            {
+              "id": "shop_retour_cle",
+              "score": 0.5714
+            },
+            {
+              "id": "box_entree",
+              "score": 0.2857
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "shop_jeudi_facture",
+          "committed": false,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ambiguous_twins",
+          "top": [
+            {
+              "id": "shop_jeudi_facture",
+              "score": 2.9739
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 2.973
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.9562
+            }
+          ]
+        }
+      },
+      "hcann_top1": "shop_jeudi_facture",
+      "rag_top1": "shop_jeudi_facture",
+      "hcann_path": "ambiguous_twins",
+      "hcann_ambiguous": true,
+      "hcann_hit": true,
+      "rag_hit": false,
+      "hcann_confused": false,
+      "rag_confused": true,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": true,
+      "hcann_top": [
+        {
+          "id": "shop_jeudi_facture",
+          "score": 2.9739
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 2.973
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.9562
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "shop_jeudi_facture",
+          "score": 0.9739
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.973
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.9562
+        }
+      ],
+      "lexical_top1": "shop_jeudi_facture",
+      "lexical_hit": false,
+      "lexical_confused": true,
+      "lexical_pair_at_2": true,
+      "lexical_top": [
+        {
+          "id": "shop_jeudi_facture",
+          "score": 1.0
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 1.0
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.5714
+        }
+      ],
+      "merge_top1": "shop_mardi_colis",
+      "merge_hit": true,
+      "merge_confused": false,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "shop_mardi_colis",
+          "score": 1.0
+        },
+        {
+          "id": "shop_retour_cle",
+          "score": 0.5714
+        },
+        {
+          "id": "box_entree",
+          "score": 0.2857
+        }
+      ]
+    },
+    {
+      "pair_id": "white_shop",
+      "target_id": "shop_mardi_colis",
+      "twin_id": "shop_jeudi_facture",
+      "identity": "package Tuesday",
+      "query": "degraded_image",
+      "systems": {
+        "rag": {
+          "top1": "shop_retour_cle",
+          "committed": true,
+          "confused": false,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "shop_retour_cle",
+              "score": 0.6601
+            },
+            {
+              "id": "shop_jeudi_facture",
+              "score": 0.6574
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6558
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.0
+            },
+            {
+              "id": "distract_note",
+              "score": 0.0
+            },
+            {
+              "id": "distract_red",
+              "score": 0.0
+            }
+          ]
+        },
+        "merge": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.0
+            },
+            {
+              "id": "distract_note",
+              "score": 0.0
+            },
+            {
+              "id": "distract_red",
+              "score": 0.0
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "shop_retour_cle",
+          "committed": false,
+          "confused": false,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "ambiguous_twins",
+          "top": [
+            {
+              "id": "shop_retour_cle",
+              "score": 0.6601
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.6375
+            },
+            {
+              "id": "shop_jeudi_facture",
+              "score": 0.6574
+            }
+          ]
+        }
+      },
+      "hcann_top1": "shop_retour_cle",
+      "rag_top1": "shop_retour_cle",
+      "hcann_path": "ambiguous_twins",
+      "hcann_ambiguous": true,
+      "hcann_hit": false,
+      "rag_hit": false,
+      "hcann_confused": false,
+      "rag_confused": false,
+      "hcann_pair_at_2": false,
+      "rag_pair_at_2": false,
+      "hcann_top": [
+        {
+          "id": "shop_retour_cle",
+          "score": 0.6601
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.6375
+        },
+        {
+          "id": "shop_jeudi_facture",
+          "score": 0.6574
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "shop_retour_cle",
+          "score": 0.6601
+        },
+        {
+          "id": "shop_jeudi_facture",
+          "score": 0.6574
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.6558
+        }
+      ],
+      "lexical_top1": "distract_park",
+      "lexical_hit": false,
+      "lexical_confused": false,
+      "lexical_pair_at_2": false,
+      "lexical_top": [
+        {
+          "id": "distract_park",
+          "score": 0.0
+        },
+        {
+          "id": "distract_note",
+          "score": 0.0
+        },
+        {
+          "id": "distract_red",
+          "score": 0.0
+        }
+      ],
+      "merge_top1": "distract_park",
+      "merge_hit": false,
+      "merge_confused": false,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "distract_park",
+          "score": 0.0
+        },
+        {
+          "id": "distract_note",
+          "score": 0.0
+        },
+        {
+          "id": "distract_red",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "pair_id": "white_shop",
+      "target_id": "shop_jeudi_facture",
+      "twin_id": "shop_mardi_colis",
+      "identity": "invoice Thursday",
+      "query": "shared_caption",
+      "systems": {
+        "rag": {
+          "top1": "shop_jeudi_facture",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "shop_jeudi_facture",
+              "score": 0.6872
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6837
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.6758
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "shop_jeudi_facture",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "shop_jeudi_facture",
+              "score": 1.0
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 1.0
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.5714
+            }
+          ]
+        },
+        "merge": {
+          "top1": "shop_mardi_colis",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "shop_mardi_colis",
+              "score": 1.0
+            },
+            {
+              "id": "shop_retour_cle",
+              "score": 0.5714
+            },
+            {
+              "id": "box_entree",
+              "score": 0.2857
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "shop_jeudi_facture",
+          "committed": false,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ambiguous_twins",
+          "top": [
+            {
+              "id": "shop_jeudi_facture",
+              "score": 2.6872
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 2.6837
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.6758
+            }
+          ]
+        }
+      },
+      "hcann_top1": "shop_jeudi_facture",
+      "rag_top1": "shop_jeudi_facture",
+      "hcann_path": "ambiguous_twins",
+      "hcann_ambiguous": true,
+      "hcann_hit": true,
+      "rag_hit": true,
+      "hcann_confused": false,
+      "rag_confused": false,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": true,
+      "hcann_top": [
+        {
+          "id": "shop_jeudi_facture",
+          "score": 2.6872
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 2.6837
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.6758
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "shop_jeudi_facture",
+          "score": 0.6872
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.6837
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.6758
+        }
+      ],
+      "lexical_top1": "shop_jeudi_facture",
+      "lexical_hit": true,
+      "lexical_confused": false,
+      "lexical_pair_at_2": true,
+      "lexical_top": [
+        {
+          "id": "shop_jeudi_facture",
+          "score": 1.0
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 1.0
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.5714
+        }
+      ],
+      "merge_top1": "shop_mardi_colis",
+      "merge_hit": false,
+      "merge_confused": true,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "shop_mardi_colis",
+          "score": 1.0
+        },
+        {
+          "id": "shop_retour_cle",
+          "score": 0.5714
+        },
+        {
+          "id": "box_entree",
+          "score": 0.2857
+        }
+      ]
+    },
+    {
+      "pair_id": "white_shop",
+      "target_id": "shop_jeudi_facture",
+      "twin_id": "shop_mardi_colis",
+      "identity": "invoice Thursday",
+      "query": "identity_cue",
+      "systems": {
+        "rag": {
+          "top1": "shop_jeudi_facture",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "shop_jeudi_facture",
+              "score": 0.6891
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6832
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.6626
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "shop_jeudi_facture",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "shop_jeudi_facture",
+              "score": 1.0
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.7778
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.4444
+            }
+          ]
+        },
+        "merge": {
+          "top1": "shop_mardi_colis",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "shop_mardi_colis",
+              "score": 1.0
+            },
+            {
+              "id": "shop_retour_cle",
+              "score": 0.4444
+            },
+            {
+              "id": "box_entree",
+              "score": 0.2222
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "shop_jeudi_facture",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "identity",
+          "top": [
+            {
+              "id": "shop_jeudi_facture",
+              "score": 2.6891
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 2.2387
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.6626
+            }
+          ]
+        }
+      },
+      "hcann_top1": "shop_jeudi_facture",
+      "rag_top1": "shop_jeudi_facture",
+      "hcann_path": "identity",
+      "hcann_ambiguous": false,
+      "hcann_hit": true,
+      "rag_hit": true,
+      "hcann_confused": false,
+      "rag_confused": false,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": true,
+      "hcann_top": [
+        {
+          "id": "shop_jeudi_facture",
+          "score": 2.6891
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 2.2387
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.6626
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "shop_jeudi_facture",
+          "score": 0.6891
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.6832
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.6626
+        }
+      ],
+      "lexical_top1": "shop_jeudi_facture",
+      "lexical_hit": true,
+      "lexical_confused": false,
+      "lexical_pair_at_2": true,
+      "lexical_top": [
+        {
+          "id": "shop_jeudi_facture",
+          "score": 1.0
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.7778
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.4444
+        }
+      ],
+      "merge_top1": "shop_mardi_colis",
+      "merge_hit": false,
+      "merge_confused": true,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "shop_mardi_colis",
+          "score": 1.0
+        },
+        {
+          "id": "shop_retour_cle",
+          "score": 0.4444
+        },
+        {
+          "id": "box_entree",
+          "score": 0.2222
+        }
+      ]
+    },
+    {
+      "pair_id": "white_shop",
+      "target_id": "shop_jeudi_facture",
+      "twin_id": "shop_mardi_colis",
+      "identity": "invoice Thursday",
+      "query": "image+shared_caption",
+      "systems": {
+        "rag": {
+          "top1": "shop_jeudi_facture",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "shop_jeudi_facture",
+              "score": 0.9756
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.9717
+            },
+            {
+              "id": "shop_retour_cle",
+              "score": 0.9552
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "shop_jeudi_facture",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "shop_jeudi_facture",
+              "score": 1.0
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 1.0
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.5714
+            }
+          ]
+        },
+        "merge": {
+          "top1": "shop_mardi_colis",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "shop_mardi_colis",
+              "score": 1.0
+            },
+            {
+              "id": "shop_retour_cle",
+              "score": 0.5714
+            },
+            {
+              "id": "box_entree",
+              "score": 0.2857
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "shop_jeudi_facture",
+          "committed": false,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ambiguous_twins",
+          "top": [
+            {
+              "id": "shop_jeudi_facture",
+              "score": 2.9756
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 2.9717
+            },
+            {
+              "id": "shop_retour_cle",
+              "score": 0.9552
+            }
+          ]
+        }
+      },
+      "hcann_top1": "shop_jeudi_facture",
+      "rag_top1": "shop_jeudi_facture",
+      "hcann_path": "ambiguous_twins",
+      "hcann_ambiguous": true,
+      "hcann_hit": true,
+      "rag_hit": true,
+      "hcann_confused": false,
+      "rag_confused": false,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": true,
+      "hcann_top": [
+        {
+          "id": "shop_jeudi_facture",
+          "score": 2.9756
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 2.9717
+        },
+        {
+          "id": "shop_retour_cle",
+          "score": 0.9552
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "shop_jeudi_facture",
+          "score": 0.9756
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.9717
+        },
+        {
+          "id": "shop_retour_cle",
+          "score": 0.9552
+        }
+      ],
+      "lexical_top1": "shop_jeudi_facture",
+      "lexical_hit": true,
+      "lexical_confused": false,
+      "lexical_pair_at_2": true,
+      "lexical_top": [
+        {
+          "id": "shop_jeudi_facture",
+          "score": 1.0
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 1.0
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.5714
+        }
+      ],
+      "merge_top1": "shop_mardi_colis",
+      "merge_hit": false,
+      "merge_confused": true,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "shop_mardi_colis",
+          "score": 1.0
+        },
+        {
+          "id": "shop_retour_cle",
+          "score": 0.5714
+        },
+        {
+          "id": "box_entree",
+          "score": 0.2857
+        }
+      ]
+    },
+    {
+      "pair_id": "white_shop",
+      "target_id": "shop_jeudi_facture",
+      "twin_id": "shop_mardi_colis",
+      "identity": "invoice Thursday",
+      "query": "degraded_image",
+      "systems": {
+        "rag": {
+          "top1": "shop_jeudi_facture",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": false,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "shop_jeudi_facture",
+              "score": 0.6544
+            },
+            {
+              "id": "shop_retour_cle",
+              "score": 0.6539
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6521
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.0
+            },
+            {
+              "id": "distract_note",
+              "score": 0.0
+            },
+            {
+              "id": "distract_red",
+              "score": 0.0
+            }
+          ]
+        },
+        "merge": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.0
+            },
+            {
+              "id": "distract_note",
+              "score": 0.0
+            },
+            {
+              "id": "distract_red",
+              "score": 0.0
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "shop_jeudi_facture",
+          "committed": false,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ambiguous_twins",
+          "top": [
+            {
+              "id": "shop_jeudi_facture",
+              "score": 0.6544
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6521
+            },
+            {
+              "id": "shop_retour_cle",
+              "score": 0.6539
+            }
+          ]
+        }
+      },
+      "hcann_top1": "shop_jeudi_facture",
+      "rag_top1": "shop_jeudi_facture",
+      "hcann_path": "ambiguous_twins",
+      "hcann_ambiguous": true,
+      "hcann_hit": true,
+      "rag_hit": true,
+      "hcann_confused": false,
+      "rag_confused": false,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": false,
+      "hcann_top": [
+        {
+          "id": "shop_jeudi_facture",
+          "score": 0.6544
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.6521
+        },
+        {
+          "id": "shop_retour_cle",
+          "score": 0.6539
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "shop_jeudi_facture",
+          "score": 0.6544
+        },
+        {
+          "id": "shop_retour_cle",
+          "score": 0.6539
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.6521
+        }
+      ],
+      "lexical_top1": "distract_park",
+      "lexical_hit": false,
+      "lexical_confused": false,
+      "lexical_pair_at_2": false,
+      "lexical_top": [
+        {
+          "id": "distract_park",
+          "score": 0.0
+        },
+        {
+          "id": "distract_note",
+          "score": 0.0
+        },
+        {
+          "id": "distract_red",
+          "score": 0.0
+        }
+      ],
+      "merge_top1": "distract_park",
+      "merge_hit": false,
+      "merge_confused": false,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "distract_park",
+          "score": 0.0
+        },
+        {
+          "id": "distract_note",
+          "score": 0.0
+        },
+        {
+          "id": "distract_red",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "pair_id": "vet_cat",
+      "target_id": "vet_momo",
+      "twin_id": "vet_luna",
+      "identity": "Momo",
+      "query": "shared_caption",
+      "systems": {
+        "rag": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 0.6957
+            },
+            {
+              "id": "vet_luna",
+              "score": 0.6943
+            },
+            {
+              "id": "box_entree",
+              "score": 0.4759
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "vet_luna",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "vet_luna",
+              "score": 1.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 1.0
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1667
+            }
+          ]
+        },
+        "merge": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 1.0
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1667
+            },
+            {
+              "id": "distract_red",
+              "score": 0.1667
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "vet_momo",
+          "committed": false,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ambiguous_twins",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 2.6957
+            },
+            {
+              "id": "vet_luna",
+              "score": 2.6943
+            },
+            {
+              "id": "box_entree",
+              "score": 0.4759
+            }
+          ]
+        }
+      },
+      "hcann_top1": "vet_momo",
+      "rag_top1": "vet_momo",
+      "hcann_path": "ambiguous_twins",
+      "hcann_ambiguous": true,
+      "hcann_hit": true,
+      "rag_hit": true,
+      "hcann_confused": false,
+      "rag_confused": false,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": true,
+      "hcann_top": [
+        {
+          "id": "vet_momo",
+          "score": 2.6957
+        },
+        {
+          "id": "vet_luna",
+          "score": 2.6943
+        },
+        {
+          "id": "box_entree",
+          "score": 0.4759
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "vet_momo",
+          "score": 0.6957
+        },
+        {
+          "id": "vet_luna",
+          "score": 0.6943
+        },
+        {
+          "id": "box_entree",
+          "score": 0.4759
+        }
+      ],
+      "lexical_top1": "vet_luna",
+      "lexical_hit": false,
+      "lexical_confused": true,
+      "lexical_pair_at_2": true,
+      "lexical_top": [
+        {
+          "id": "vet_luna",
+          "score": 1.0
+        },
+        {
+          "id": "vet_momo",
+          "score": 1.0
+        },
+        {
+          "id": "distract_park",
+          "score": 0.1667
+        }
+      ],
+      "merge_top1": "vet_momo",
+      "merge_hit": true,
+      "merge_confused": false,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "vet_momo",
+          "score": 1.0
+        },
+        {
+          "id": "distract_park",
+          "score": 0.1667
+        },
+        {
+          "id": "distract_red",
+          "score": 0.1667
+        }
+      ]
+    },
+    {
+      "pair_id": "vet_cat",
+      "target_id": "vet_momo",
+      "twin_id": "vet_luna",
+      "identity": "Momo",
+      "query": "identity_cue",
+      "systems": {
+        "rag": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 0.7152
+            },
+            {
+              "id": "vet_luna",
+              "score": 0.7076
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.467
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 1.0
+            },
+            {
+              "id": "vet_luna",
+              "score": 0.8571
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1429
+            }
+          ]
+        },
+        "merge": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 1.0
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1429
+            },
+            {
+              "id": "distract_red",
+              "score": 0.1429
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "identity",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 2.7152
+            },
+            {
+              "id": "vet_luna",
+              "score": 2.4219
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.467
+            }
+          ]
+        }
+      },
+      "hcann_top1": "vet_momo",
+      "rag_top1": "vet_momo",
+      "hcann_path": "identity",
+      "hcann_ambiguous": false,
+      "hcann_hit": true,
+      "rag_hit": true,
+      "hcann_confused": false,
+      "rag_confused": false,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": true,
+      "hcann_top": [
+        {
+          "id": "vet_momo",
+          "score": 2.7152
+        },
+        {
+          "id": "vet_luna",
+          "score": 2.4219
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.467
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "vet_momo",
+          "score": 0.7152
+        },
+        {
+          "id": "vet_luna",
+          "score": 0.7076
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.467
+        }
+      ],
+      "lexical_top1": "vet_momo",
+      "lexical_hit": true,
+      "lexical_confused": false,
+      "lexical_pair_at_2": true,
+      "lexical_top": [
+        {
+          "id": "vet_momo",
+          "score": 1.0
+        },
+        {
+          "id": "vet_luna",
+          "score": 0.8571
+        },
+        {
+          "id": "distract_park",
+          "score": 0.1429
+        }
+      ],
+      "merge_top1": "vet_momo",
+      "merge_hit": true,
+      "merge_confused": false,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "vet_momo",
+          "score": 1.0
+        },
+        {
+          "id": "distract_park",
+          "score": 0.1429
+        },
+        {
+          "id": "distract_red",
+          "score": 0.1429
+        }
+      ]
+    },
+    {
+      "pair_id": "vet_cat",
+      "target_id": "vet_momo",
+      "twin_id": "vet_luna",
+      "identity": "Momo",
+      "query": "image+shared_caption",
+      "systems": {
+        "rag": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 0.9863
+            },
+            {
+              "id": "vet_luna",
+              "score": 0.981
+            },
+            {
+              "id": "distract_blue",
+              "score": 0.6985
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "vet_luna",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "vet_luna",
+              "score": 1.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 1.0
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1667
+            }
+          ]
+        },
+        "merge": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 1.0
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1667
+            },
+            {
+              "id": "distract_red",
+              "score": 0.1667
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "vet_momo",
+          "committed": false,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ambiguous_twins",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 2.9863
+            },
+            {
+              "id": "vet_luna",
+              "score": 2.981
+            },
+            {
+              "id": "distract_blue",
+              "score": 0.6985
+            }
+          ]
+        }
+      },
+      "hcann_top1": "vet_momo",
+      "rag_top1": "vet_momo",
+      "hcann_path": "ambiguous_twins",
+      "hcann_ambiguous": true,
+      "hcann_hit": true,
+      "rag_hit": true,
+      "hcann_confused": false,
+      "rag_confused": false,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": true,
+      "hcann_top": [
+        {
+          "id": "vet_momo",
+          "score": 2.9863
+        },
+        {
+          "id": "vet_luna",
+          "score": 2.981
+        },
+        {
+          "id": "distract_blue",
+          "score": 0.6985
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "vet_momo",
+          "score": 0.9863
+        },
+        {
+          "id": "vet_luna",
+          "score": 0.981
+        },
+        {
+          "id": "distract_blue",
+          "score": 0.6985
+        }
+      ],
+      "lexical_top1": "vet_luna",
+      "lexical_hit": false,
+      "lexical_confused": true,
+      "lexical_pair_at_2": true,
+      "lexical_top": [
+        {
+          "id": "vet_luna",
+          "score": 1.0
+        },
+        {
+          "id": "vet_momo",
+          "score": 1.0
+        },
+        {
+          "id": "distract_park",
+          "score": 0.1667
+        }
+      ],
+      "merge_top1": "vet_momo",
+      "merge_hit": true,
+      "merge_confused": false,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "vet_momo",
+          "score": 1.0
+        },
+        {
+          "id": "distract_park",
+          "score": 0.1667
+        },
+        {
+          "id": "distract_red",
+          "score": 0.1667
+        }
+      ]
+    },
+    {
+      "pair_id": "vet_cat",
+      "target_id": "vet_momo",
+      "twin_id": "vet_luna",
+      "identity": "Momo",
+      "query": "degraded_image",
+      "systems": {
+        "rag": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 0.6974
+            },
+            {
+              "id": "vet_luna",
+              "score": 0.6947
+            },
+            {
+              "id": "distract_blue",
+              "score": 0.5813
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.0
+            },
+            {
+              "id": "distract_note",
+              "score": 0.0
+            },
+            {
+              "id": "distract_red",
+              "score": 0.0
+            }
+          ]
+        },
+        "merge": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.0
+            },
+            {
+              "id": "distract_note",
+              "score": 0.0
+            },
+            {
+              "id": "distract_red",
+              "score": 0.0
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "vet_momo",
+          "committed": false,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ambiguous_twins",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 0.6974
+            },
+            {
+              "id": "vet_luna",
+              "score": 0.6947
+            },
+            {
+              "id": "distract_blue",
+              "score": 0.5813
+            }
+          ]
+        }
+      },
+      "hcann_top1": "vet_momo",
+      "rag_top1": "vet_momo",
+      "hcann_path": "ambiguous_twins",
+      "hcann_ambiguous": true,
+      "hcann_hit": true,
+      "rag_hit": true,
+      "hcann_confused": false,
+      "rag_confused": false,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": true,
+      "hcann_top": [
+        {
+          "id": "vet_momo",
+          "score": 0.6974
+        },
+        {
+          "id": "vet_luna",
+          "score": 0.6947
+        },
+        {
+          "id": "distract_blue",
+          "score": 0.5813
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "vet_momo",
+          "score": 0.6974
+        },
+        {
+          "id": "vet_luna",
+          "score": 0.6947
+        },
+        {
+          "id": "distract_blue",
+          "score": 0.5813
+        }
+      ],
+      "lexical_top1": "distract_park",
+      "lexical_hit": false,
+      "lexical_confused": false,
+      "lexical_pair_at_2": false,
+      "lexical_top": [
+        {
+          "id": "distract_park",
+          "score": 0.0
+        },
+        {
+          "id": "distract_note",
+          "score": 0.0
+        },
+        {
+          "id": "distract_red",
+          "score": 0.0
+        }
+      ],
+      "merge_top1": "distract_park",
+      "merge_hit": false,
+      "merge_confused": false,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "distract_park",
+          "score": 0.0
+        },
+        {
+          "id": "distract_note",
+          "score": 0.0
+        },
+        {
+          "id": "distract_red",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "pair_id": "vet_cat",
+      "target_id": "vet_luna",
+      "twin_id": "vet_momo",
+      "identity": "Luna",
+      "query": "shared_caption",
+      "systems": {
+        "rag": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 0.6957
+            },
+            {
+              "id": "vet_luna",
+              "score": 0.6943
+            },
+            {
+              "id": "box_entree",
+              "score": 0.4759
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "vet_luna",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "vet_luna",
+              "score": 1.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 1.0
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1667
+            }
+          ]
+        },
+        "merge": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 1.0
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1667
+            },
+            {
+              "id": "distract_red",
+              "score": 0.1667
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "vet_momo",
+          "committed": false,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ambiguous_twins",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 2.6957
+            },
+            {
+              "id": "vet_luna",
+              "score": 2.6943
+            },
+            {
+              "id": "box_entree",
+              "score": 0.4759
+            }
+          ]
+        }
+      },
+      "hcann_top1": "vet_momo",
+      "rag_top1": "vet_momo",
+      "hcann_path": "ambiguous_twins",
+      "hcann_ambiguous": true,
+      "hcann_hit": true,
+      "rag_hit": false,
+      "hcann_confused": false,
+      "rag_confused": true,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": true,
+      "hcann_top": [
+        {
+          "id": "vet_momo",
+          "score": 2.6957
+        },
+        {
+          "id": "vet_luna",
+          "score": 2.6943
+        },
+        {
+          "id": "box_entree",
+          "score": 0.4759
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "vet_momo",
+          "score": 0.6957
+        },
+        {
+          "id": "vet_luna",
+          "score": 0.6943
+        },
+        {
+          "id": "box_entree",
+          "score": 0.4759
+        }
+      ],
+      "lexical_top1": "vet_luna",
+      "lexical_hit": true,
+      "lexical_confused": false,
+      "lexical_pair_at_2": true,
+      "lexical_top": [
+        {
+          "id": "vet_luna",
+          "score": 1.0
+        },
+        {
+          "id": "vet_momo",
+          "score": 1.0
+        },
+        {
+          "id": "distract_park",
+          "score": 0.1667
+        }
+      ],
+      "merge_top1": "vet_momo",
+      "merge_hit": false,
+      "merge_confused": true,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "vet_momo",
+          "score": 1.0
+        },
+        {
+          "id": "distract_park",
+          "score": 0.1667
+        },
+        {
+          "id": "distract_red",
+          "score": 0.1667
+        }
+      ]
+    },
+    {
+      "pair_id": "vet_cat",
+      "target_id": "vet_luna",
+      "twin_id": "vet_momo",
+      "identity": "Luna",
+      "query": "identity_cue",
+      "systems": {
+        "rag": {
+          "top1": "vet_luna",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "vet_luna",
+              "score": 0.7137
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.6958
+            },
+            {
+              "id": "box_entree",
+              "score": 0.4877
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "vet_luna",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "vet_luna",
+              "score": 1.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.8571
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1429
+            }
+          ]
+        },
+        "merge": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 1.0
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1429
+            },
+            {
+              "id": "distract_red",
+              "score": 0.1429
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "vet_luna",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "identity",
+          "top": [
+            {
+              "id": "vet_luna",
+              "score": 2.7137
+            },
+            {
+              "id": "vet_momo",
+              "score": 2.4101
+            },
+            {
+              "id": "box_entree",
+              "score": 0.4877
+            }
+          ]
+        }
+      },
+      "hcann_top1": "vet_luna",
+      "rag_top1": "vet_luna",
+      "hcann_path": "identity",
+      "hcann_ambiguous": false,
+      "hcann_hit": true,
+      "rag_hit": true,
+      "hcann_confused": false,
+      "rag_confused": false,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": true,
+      "hcann_top": [
+        {
+          "id": "vet_luna",
+          "score": 2.7137
+        },
+        {
+          "id": "vet_momo",
+          "score": 2.4101
+        },
+        {
+          "id": "box_entree",
+          "score": 0.4877
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "vet_luna",
+          "score": 0.7137
+        },
+        {
+          "id": "vet_momo",
+          "score": 0.6958
+        },
+        {
+          "id": "box_entree",
+          "score": 0.4877
+        }
+      ],
+      "lexical_top1": "vet_luna",
+      "lexical_hit": true,
+      "lexical_confused": false,
+      "lexical_pair_at_2": true,
+      "lexical_top": [
+        {
+          "id": "vet_luna",
+          "score": 1.0
+        },
+        {
+          "id": "vet_momo",
+          "score": 0.8571
+        },
+        {
+          "id": "distract_park",
+          "score": 0.1429
+        }
+      ],
+      "merge_top1": "vet_momo",
+      "merge_hit": false,
+      "merge_confused": true,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "vet_momo",
+          "score": 1.0
+        },
+        {
+          "id": "distract_park",
+          "score": 0.1429
+        },
+        {
+          "id": "distract_red",
+          "score": 0.1429
+        }
+      ]
+    },
+    {
+      "pair_id": "vet_cat",
+      "target_id": "vet_luna",
+      "twin_id": "vet_momo",
+      "identity": "Luna",
+      "query": "image+shared_caption",
+      "systems": {
+        "rag": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 0.9861
+            },
+            {
+              "id": "vet_luna",
+              "score": 0.9817
+            },
+            {
+              "id": "distract_blue",
+              "score": 0.6964
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "vet_luna",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "vet_luna",
+              "score": 1.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 1.0
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1667
+            }
+          ]
+        },
+        "merge": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 1.0
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1667
+            },
+            {
+              "id": "distract_red",
+              "score": 0.1667
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "vet_momo",
+          "committed": false,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ambiguous_twins",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 2.9861
+            },
+            {
+              "id": "vet_luna",
+              "score": 2.9817
+            },
+            {
+              "id": "distract_blue",
+              "score": 0.6964
+            }
+          ]
+        }
+      },
+      "hcann_top1": "vet_momo",
+      "rag_top1": "vet_momo",
+      "hcann_path": "ambiguous_twins",
+      "hcann_ambiguous": true,
+      "hcann_hit": true,
+      "rag_hit": false,
+      "hcann_confused": false,
+      "rag_confused": true,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": true,
+      "hcann_top": [
+        {
+          "id": "vet_momo",
+          "score": 2.9861
+        },
+        {
+          "id": "vet_luna",
+          "score": 2.9817
+        },
+        {
+          "id": "distract_blue",
+          "score": 0.6964
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "vet_momo",
+          "score": 0.9861
+        },
+        {
+          "id": "vet_luna",
+          "score": 0.9817
+        },
+        {
+          "id": "distract_blue",
+          "score": 0.6964
+        }
+      ],
+      "lexical_top1": "vet_luna",
+      "lexical_hit": true,
+      "lexical_confused": false,
+      "lexical_pair_at_2": true,
+      "lexical_top": [
+        {
+          "id": "vet_luna",
+          "score": 1.0
+        },
+        {
+          "id": "vet_momo",
+          "score": 1.0
+        },
+        {
+          "id": "distract_park",
+          "score": 0.1667
+        }
+      ],
+      "merge_top1": "vet_momo",
+      "merge_hit": false,
+      "merge_confused": true,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "vet_momo",
+          "score": 1.0
+        },
+        {
+          "id": "distract_park",
+          "score": 0.1667
+        },
+        {
+          "id": "distract_red",
+          "score": 0.1667
+        }
+      ]
+    },
+    {
+      "pair_id": "vet_cat",
+      "target_id": "vet_luna",
+      "twin_id": "vet_momo",
+      "identity": "Luna",
+      "query": "degraded_image",
+      "systems": {
+        "rag": {
+          "top1": "vet_momo",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 0.6996
+            },
+            {
+              "id": "vet_luna",
+              "score": 0.6942
+            },
+            {
+              "id": "distract_blue",
+              "score": 0.582
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.0
+            },
+            {
+              "id": "distract_note",
+              "score": 0.0
+            },
+            {
+              "id": "distract_red",
+              "score": 0.0
+            }
+          ]
+        },
+        "merge": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.0
+            },
+            {
+              "id": "distract_note",
+              "score": 0.0
+            },
+            {
+              "id": "distract_red",
+              "score": 0.0
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "vet_momo",
+          "committed": false,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ambiguous_twins",
+          "top": [
+            {
+              "id": "vet_momo",
+              "score": 0.6996
+            },
+            {
+              "id": "vet_luna",
+              "score": 0.6942
+            },
+            {
+              "id": "distract_blue",
+              "score": 0.582
+            }
+          ]
+        }
+      },
+      "hcann_top1": "vet_momo",
+      "rag_top1": "vet_momo",
+      "hcann_path": "ambiguous_twins",
+      "hcann_ambiguous": true,
+      "hcann_hit": true,
+      "rag_hit": false,
+      "hcann_confused": false,
+      "rag_confused": true,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": true,
+      "hcann_top": [
+        {
+          "id": "vet_momo",
+          "score": 0.6996
+        },
+        {
+          "id": "vet_luna",
+          "score": 0.6942
+        },
+        {
+          "id": "distract_blue",
+          "score": 0.582
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "vet_momo",
+          "score": 0.6996
+        },
+        {
+          "id": "vet_luna",
+          "score": 0.6942
+        },
+        {
+          "id": "distract_blue",
+          "score": 0.582
+        }
+      ],
+      "lexical_top1": "distract_park",
+      "lexical_hit": false,
+      "lexical_confused": false,
+      "lexical_pair_at_2": false,
+      "lexical_top": [
+        {
+          "id": "distract_park",
+          "score": 0.0
+        },
+        {
+          "id": "distract_note",
+          "score": 0.0
+        },
+        {
+          "id": "distract_red",
+          "score": 0.0
+        }
+      ],
+      "merge_top1": "distract_park",
+      "merge_hit": false,
+      "merge_confused": false,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "distract_park",
+          "score": 0.0
+        },
+        {
+          "id": "distract_note",
+          "score": 0.0
+        },
+        {
+          "id": "distract_red",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "pair_id": "delivery_box",
+      "target_id": "box_entree",
+      "twin_id": "box_cour",
+      "identity": "entrance",
+      "query": "shared_caption",
+      "systems": {
+        "rag": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 0.7037
+            },
+            {
+              "id": "box_cour",
+              "score": 0.6787
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.5714
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "box_cour",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "box_cour",
+              "score": 1.0
+            },
+            {
+              "id": "box_entree",
+              "score": 1.0
+            },
+            {
+              "id": "vet_luna",
+              "score": 0.2857
+            }
+          ]
+        },
+        "merge": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 1.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.2857
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.2857
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ca3",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 2.7037
+            },
+            {
+              "id": "box_cour",
+              "score": 2.6787
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.5714
+            }
+          ]
+        }
+      },
+      "hcann_top1": "box_entree",
+      "rag_top1": "box_entree",
+      "hcann_path": "ca3",
+      "hcann_ambiguous": false,
+      "hcann_hit": true,
+      "rag_hit": true,
+      "hcann_confused": false,
+      "rag_confused": false,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": true,
+      "hcann_top": [
+        {
+          "id": "box_entree",
+          "score": 2.7037
+        },
+        {
+          "id": "box_cour",
+          "score": 2.6787
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.5714
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "box_entree",
+          "score": 0.7037
+        },
+        {
+          "id": "box_cour",
+          "score": 0.6787
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.5714
+        }
+      ],
+      "lexical_top1": "box_cour",
+      "lexical_hit": false,
+      "lexical_confused": true,
+      "lexical_pair_at_2": true,
+      "lexical_top": [
+        {
+          "id": "box_cour",
+          "score": 1.0
+        },
+        {
+          "id": "box_entree",
+          "score": 1.0
+        },
+        {
+          "id": "vet_luna",
+          "score": 0.2857
+        }
+      ],
+      "merge_top1": "box_entree",
+      "merge_hit": true,
+      "merge_confused": false,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "box_entree",
+          "score": 1.0
+        },
+        {
+          "id": "vet_momo",
+          "score": 0.2857
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.2857
+        }
+      ]
+    },
+    {
+      "pair_id": "delivery_box",
+      "target_id": "box_entree",
+      "twin_id": "box_cour",
+      "identity": "entrance",
+      "query": "identity_cue",
+      "systems": {
+        "rag": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 0.6988
+            },
+            {
+              "id": "box_cour",
+              "score": 0.6705
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.5754
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 1.0
+            },
+            {
+              "id": "box_cour",
+              "score": 0.875
+            },
+            {
+              "id": "vet_luna",
+              "score": 0.25
+            }
+          ]
+        },
+        "merge": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 1.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.25
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.25
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "identity",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 2.6988
+            },
+            {
+              "id": "box_cour",
+              "score": 2.4205
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.5754
+            }
+          ]
+        }
+      },
+      "hcann_top1": "box_entree",
+      "rag_top1": "box_entree",
+      "hcann_path": "identity",
+      "hcann_ambiguous": false,
+      "hcann_hit": true,
+      "rag_hit": true,
+      "hcann_confused": false,
+      "rag_confused": false,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": true,
+      "hcann_top": [
+        {
+          "id": "box_entree",
+          "score": 2.6988
+        },
+        {
+          "id": "box_cour",
+          "score": 2.4205
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.5754
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "box_entree",
+          "score": 0.6988
+        },
+        {
+          "id": "box_cour",
+          "score": 0.6705
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.5754
+        }
+      ],
+      "lexical_top1": "box_entree",
+      "lexical_hit": true,
+      "lexical_confused": false,
+      "lexical_pair_at_2": true,
+      "lexical_top": [
+        {
+          "id": "box_entree",
+          "score": 1.0
+        },
+        {
+          "id": "box_cour",
+          "score": 0.875
+        },
+        {
+          "id": "vet_luna",
+          "score": 0.25
+        }
+      ],
+      "merge_top1": "box_entree",
+      "merge_hit": true,
+      "merge_confused": false,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "box_entree",
+          "score": 1.0
+        },
+        {
+          "id": "vet_momo",
+          "score": 0.25
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.25
+        }
+      ]
+    },
+    {
+      "pair_id": "delivery_box",
+      "target_id": "box_entree",
+      "twin_id": "box_cour",
+      "identity": "entrance",
+      "query": "image+shared_caption",
+      "systems": {
+        "rag": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 0.9925
+            },
+            {
+              "id": "box_cour",
+              "score": 0.9746
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.8449
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "box_cour",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "box_cour",
+              "score": 1.0
+            },
+            {
+              "id": "box_entree",
+              "score": 1.0
+            },
+            {
+              "id": "vet_luna",
+              "score": 0.2857
+            }
+          ]
+        },
+        "merge": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 1.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.2857
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.2857
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ca3",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 2.9925
+            },
+            {
+              "id": "box_cour",
+              "score": 2.9746
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.8449
+            }
+          ]
+        }
+      },
+      "hcann_top1": "box_entree",
+      "rag_top1": "box_entree",
+      "hcann_path": "ca3",
+      "hcann_ambiguous": false,
+      "hcann_hit": true,
+      "rag_hit": true,
+      "hcann_confused": false,
+      "rag_confused": false,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": true,
+      "hcann_top": [
+        {
+          "id": "box_entree",
+          "score": 2.9925
+        },
+        {
+          "id": "box_cour",
+          "score": 2.9746
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.8449
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "box_entree",
+          "score": 0.9925
+        },
+        {
+          "id": "box_cour",
+          "score": 0.9746
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.8449
+        }
+      ],
+      "lexical_top1": "box_cour",
+      "lexical_hit": false,
+      "lexical_confused": true,
+      "lexical_pair_at_2": true,
+      "lexical_top": [
+        {
+          "id": "box_cour",
+          "score": 1.0
+        },
+        {
+          "id": "box_entree",
+          "score": 1.0
+        },
+        {
+          "id": "vet_luna",
+          "score": 0.2857
+        }
+      ],
+      "merge_top1": "box_entree",
+      "merge_hit": true,
+      "merge_confused": false,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "box_entree",
+          "score": 1.0
+        },
+        {
+          "id": "vet_momo",
+          "score": 0.2857
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.2857
+        }
+      ]
+    },
+    {
+      "pair_id": "delivery_box",
+      "target_id": "box_entree",
+      "twin_id": "box_cour",
+      "identity": "entrance",
+      "query": "degraded_image",
+      "systems": {
+        "rag": {
+          "top1": "box_cour",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "box_cour",
+              "score": 0.6669
+            },
+            {
+              "id": "box_entree",
+              "score": 0.6658
+            },
+            {
+              "id": "distract_red",
+              "score": 0.636
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.0
+            },
+            {
+              "id": "distract_note",
+              "score": 0.0
+            },
+            {
+              "id": "distract_red",
+              "score": 0.0
+            }
+          ]
+        },
+        "merge": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.0
+            },
+            {
+              "id": "distract_note",
+              "score": 0.0
+            },
+            {
+              "id": "distract_red",
+              "score": 0.0
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "box_cour",
+          "committed": false,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ambiguous_twins",
+          "top": [
+            {
+              "id": "box_cour",
+              "score": 0.6669
+            },
+            {
+              "id": "box_entree",
+              "score": 0.6658
+            },
+            {
+              "id": "distract_red",
+              "score": 0.636
+            }
+          ]
+        }
+      },
+      "hcann_top1": "box_cour",
+      "rag_top1": "box_cour",
+      "hcann_path": "ambiguous_twins",
+      "hcann_ambiguous": true,
+      "hcann_hit": true,
+      "rag_hit": false,
+      "hcann_confused": false,
+      "rag_confused": true,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": true,
+      "hcann_top": [
+        {
+          "id": "box_cour",
+          "score": 0.6669
+        },
+        {
+          "id": "box_entree",
+          "score": 0.6658
+        },
+        {
+          "id": "distract_red",
+          "score": 0.636
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "box_cour",
+          "score": 0.6669
+        },
+        {
+          "id": "box_entree",
+          "score": 0.6658
+        },
+        {
+          "id": "distract_red",
+          "score": 0.636
+        }
+      ],
+      "lexical_top1": "distract_park",
+      "lexical_hit": false,
+      "lexical_confused": false,
+      "lexical_pair_at_2": false,
+      "lexical_top": [
+        {
+          "id": "distract_park",
+          "score": 0.0
+        },
+        {
+          "id": "distract_note",
+          "score": 0.0
+        },
+        {
+          "id": "distract_red",
+          "score": 0.0
+        }
+      ],
+      "merge_top1": "distract_park",
+      "merge_hit": false,
+      "merge_confused": false,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "distract_park",
+          "score": 0.0
+        },
+        {
+          "id": "distract_note",
+          "score": 0.0
+        },
+        {
+          "id": "distract_red",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "pair_id": "delivery_box",
+      "target_id": "box_cour",
+      "twin_id": "box_entree",
+      "identity": "courtyard",
+      "query": "shared_caption",
+      "systems": {
+        "rag": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 0.7037
+            },
+            {
+              "id": "box_cour",
+              "score": 0.6787
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.5714
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "box_cour",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "box_cour",
+              "score": 1.0
+            },
+            {
+              "id": "box_entree",
+              "score": 1.0
+            },
+            {
+              "id": "vet_luna",
+              "score": 0.2857
+            }
+          ]
+        },
+        "merge": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 1.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.2857
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.2857
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "ca3",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 2.7037
+            },
+            {
+              "id": "box_cour",
+              "score": 2.6787
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.5714
+            }
+          ]
+        }
+      },
+      "hcann_top1": "box_entree",
+      "rag_top1": "box_entree",
+      "hcann_path": "ca3",
+      "hcann_ambiguous": false,
+      "hcann_hit": false,
+      "rag_hit": false,
+      "hcann_confused": true,
+      "rag_confused": true,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": true,
+      "hcann_top": [
+        {
+          "id": "box_entree",
+          "score": 2.7037
+        },
+        {
+          "id": "box_cour",
+          "score": 2.6787
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.5714
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "box_entree",
+          "score": 0.7037
+        },
+        {
+          "id": "box_cour",
+          "score": 0.6787
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.5714
+        }
+      ],
+      "lexical_top1": "box_cour",
+      "lexical_hit": true,
+      "lexical_confused": false,
+      "lexical_pair_at_2": true,
+      "lexical_top": [
+        {
+          "id": "box_cour",
+          "score": 1.0
+        },
+        {
+          "id": "box_entree",
+          "score": 1.0
+        },
+        {
+          "id": "vet_luna",
+          "score": 0.2857
+        }
+      ],
+      "merge_top1": "box_entree",
+      "merge_hit": false,
+      "merge_confused": true,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "box_entree",
+          "score": 1.0
+        },
+        {
+          "id": "vet_momo",
+          "score": 0.2857
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.2857
+        }
+      ]
+    },
+    {
+      "pair_id": "delivery_box",
+      "target_id": "box_cour",
+      "twin_id": "box_entree",
+      "identity": "courtyard",
+      "query": "identity_cue",
+      "systems": {
+        "rag": {
+          "top1": "box_cour",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "box_cour",
+              "score": 0.6881
+            },
+            {
+              "id": "box_entree",
+              "score": 0.6711
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.5535
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "box_cour",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "box_cour",
+              "score": 1.0
+            },
+            {
+              "id": "box_entree",
+              "score": 0.875
+            },
+            {
+              "id": "vet_luna",
+              "score": 0.25
+            }
+          ]
+        },
+        "merge": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 1.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.25
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.25
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "box_cour",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "identity",
+          "top": [
+            {
+              "id": "box_cour",
+              "score": 2.6881
+            },
+            {
+              "id": "box_entree",
+              "score": 2.4211
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.5535
+            }
+          ]
+        }
+      },
+      "hcann_top1": "box_cour",
+      "rag_top1": "box_cour",
+      "hcann_path": "identity",
+      "hcann_ambiguous": false,
+      "hcann_hit": true,
+      "rag_hit": true,
+      "hcann_confused": false,
+      "rag_confused": false,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": true,
+      "hcann_top": [
+        {
+          "id": "box_cour",
+          "score": 2.6881
+        },
+        {
+          "id": "box_entree",
+          "score": 2.4211
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.5535
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "box_cour",
+          "score": 0.6881
+        },
+        {
+          "id": "box_entree",
+          "score": 0.6711
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.5535
+        }
+      ],
+      "lexical_top1": "box_cour",
+      "lexical_hit": true,
+      "lexical_confused": false,
+      "lexical_pair_at_2": true,
+      "lexical_top": [
+        {
+          "id": "box_cour",
+          "score": 1.0
+        },
+        {
+          "id": "box_entree",
+          "score": 0.875
+        },
+        {
+          "id": "vet_luna",
+          "score": 0.25
+        }
+      ],
+      "merge_top1": "box_entree",
+      "merge_hit": false,
+      "merge_confused": true,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "box_entree",
+          "score": 1.0
+        },
+        {
+          "id": "vet_momo",
+          "score": 0.25
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.25
+        }
+      ]
+    },
+    {
+      "pair_id": "delivery_box",
+      "target_id": "box_cour",
+      "twin_id": "box_entree",
+      "identity": "courtyard",
+      "query": "image+shared_caption",
+      "systems": {
+        "rag": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 0.9905
+            },
+            {
+              "id": "box_cour",
+              "score": 0.9754
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.8409
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "box_cour",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "box_cour",
+              "score": 1.0
+            },
+            {
+              "id": "box_entree",
+              "score": 1.0
+            },
+            {
+              "id": "vet_luna",
+              "score": 0.2857
+            }
+          ]
+        },
+        "merge": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 1.0
+            },
+            {
+              "id": "vet_momo",
+              "score": 0.2857
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.2857
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "box_entree",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "ca3",
+          "top": [
+            {
+              "id": "box_entree",
+              "score": 2.9905
+            },
+            {
+              "id": "box_cour",
+              "score": 2.9754
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.8409
+            }
+          ]
+        }
+      },
+      "hcann_top1": "box_entree",
+      "rag_top1": "box_entree",
+      "hcann_path": "ca3",
+      "hcann_ambiguous": false,
+      "hcann_hit": false,
+      "rag_hit": false,
+      "hcann_confused": true,
+      "rag_confused": true,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": true,
+      "hcann_top": [
+        {
+          "id": "box_entree",
+          "score": 2.9905
+        },
+        {
+          "id": "box_cour",
+          "score": 2.9754
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.8409
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "box_entree",
+          "score": 0.9905
+        },
+        {
+          "id": "box_cour",
+          "score": 0.9754
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.8409
+        }
+      ],
+      "lexical_top1": "box_cour",
+      "lexical_hit": true,
+      "lexical_confused": false,
+      "lexical_pair_at_2": true,
+      "lexical_top": [
+        {
+          "id": "box_cour",
+          "score": 1.0
+        },
+        {
+          "id": "box_entree",
+          "score": 1.0
+        },
+        {
+          "id": "vet_luna",
+          "score": 0.2857
+        }
+      ],
+      "merge_top1": "box_entree",
+      "merge_hit": false,
+      "merge_confused": true,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "box_entree",
+          "score": 1.0
+        },
+        {
+          "id": "vet_momo",
+          "score": 0.2857
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.2857
+        }
+      ]
+    },
+    {
+      "pair_id": "delivery_box",
+      "target_id": "box_cour",
+      "twin_id": "box_entree",
+      "identity": "courtyard",
+      "query": "degraded_image",
+      "systems": {
+        "rag": {
+          "top1": "box_cour",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "box_cour",
+              "score": 0.6788
+            },
+            {
+              "id": "box_entree",
+              "score": 0.6768
+            },
+            {
+              "id": "distract_red",
+              "score": 0.6457
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.0
+            },
+            {
+              "id": "distract_note",
+              "score": 0.0
+            },
+            {
+              "id": "distract_red",
+              "score": 0.0
+            }
+          ]
+        },
+        "merge": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.0
+            },
+            {
+              "id": "distract_note",
+              "score": 0.0
+            },
+            {
+              "id": "distract_red",
+              "score": 0.0
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "box_cour",
+          "committed": false,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ambiguous_twins",
+          "top": [
+            {
+              "id": "box_cour",
+              "score": 0.6788
+            },
+            {
+              "id": "box_entree",
+              "score": 0.6768
+            },
+            {
+              "id": "distract_red",
+              "score": 0.6457
+            }
+          ]
+        }
+      },
+      "hcann_top1": "box_cour",
+      "rag_top1": "box_cour",
+      "hcann_path": "ambiguous_twins",
+      "hcann_ambiguous": true,
+      "hcann_hit": true,
+      "rag_hit": true,
+      "hcann_confused": false,
+      "rag_confused": false,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": true,
+      "hcann_top": [
+        {
+          "id": "box_cour",
+          "score": 0.6788
+        },
+        {
+          "id": "box_entree",
+          "score": 0.6768
+        },
+        {
+          "id": "distract_red",
+          "score": 0.6457
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "box_cour",
+          "score": 0.6788
+        },
+        {
+          "id": "box_entree",
+          "score": 0.6768
+        },
+        {
+          "id": "distract_red",
+          "score": 0.6457
+        }
+      ],
+      "lexical_top1": "distract_park",
+      "lexical_hit": false,
+      "lexical_confused": false,
+      "lexical_pair_at_2": false,
+      "lexical_top": [
+        {
+          "id": "distract_park",
+          "score": 0.0
+        },
+        {
+          "id": "distract_note",
+          "score": 0.0
+        },
+        {
+          "id": "distract_red",
+          "score": 0.0
+        }
+      ],
+      "merge_top1": "distract_park",
+      "merge_hit": false,
+      "merge_confused": false,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "distract_park",
+          "score": 0.0
+        },
+        {
+          "id": "distract_note",
+          "score": 0.0
+        },
+        {
+          "id": "distract_red",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "pair_id": "shop_return",
+      "target_id": "shop_retour_cle",
+      "twin_id": "shop_retour_sac",
+      "identity": "keys",
+      "query": "shared_caption",
+      "systems": {
+        "rag": {
+          "top1": "shop_retour_sac",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "shop_retour_sac",
+              "score": 0.6751
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6539
+            },
+            {
+              "id": "shop_jeudi_facture",
+              "score": 0.6484
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "shop_retour_sac",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "shop_retour_sac",
+              "score": 1.0
+            },
+            {
+              "id": "shop_retour_cle",
+              "score": 1.0
+            },
+            {
+              "id": "shop_jeudi_facture",
+              "score": 0.5
+            }
+          ]
+        },
+        "merge": {
+          "top1": "shop_retour_cle",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "shop_retour_cle",
+              "score": 1.0
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.5
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1667
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "shop_retour_cle",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ca3",
+          "top": [
+            {
+              "id": "shop_retour_cle",
+              "score": 2.6481
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 2.6751
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6539
+            }
+          ]
+        }
+      },
+      "hcann_top1": "shop_retour_cle",
+      "rag_top1": "shop_retour_sac",
+      "hcann_path": "ca3",
+      "hcann_ambiguous": false,
+      "hcann_hit": true,
+      "rag_hit": false,
+      "hcann_confused": false,
+      "rag_confused": true,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": false,
+      "hcann_top": [
+        {
+          "id": "shop_retour_cle",
+          "score": 2.6481
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 2.6751
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.6539
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "shop_retour_sac",
+          "score": 0.6751
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.6539
+        },
+        {
+          "id": "shop_jeudi_facture",
+          "score": 0.6484
+        }
+      ],
+      "lexical_top1": "shop_retour_sac",
+      "lexical_hit": false,
+      "lexical_confused": true,
+      "lexical_pair_at_2": true,
+      "lexical_top": [
+        {
+          "id": "shop_retour_sac",
+          "score": 1.0
+        },
+        {
+          "id": "shop_retour_cle",
+          "score": 1.0
+        },
+        {
+          "id": "shop_jeudi_facture",
+          "score": 0.5
+        }
+      ],
+      "merge_top1": "shop_retour_cle",
+      "merge_hit": true,
+      "merge_confused": false,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "shop_retour_cle",
+          "score": 1.0
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.5
+        },
+        {
+          "id": "distract_park",
+          "score": 0.1667
+        }
+      ]
+    },
+    {
+      "pair_id": "shop_return",
+      "target_id": "shop_retour_cle",
+      "twin_id": "shop_retour_sac",
+      "identity": "keys",
+      "query": "identity_cue",
+      "systems": {
+        "rag": {
+          "top1": "shop_retour_cle",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "shop_retour_cle",
+              "score": 0.6953
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.6561
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6438
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "shop_retour_cle",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "shop_retour_cle",
+              "score": 1.0
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.8571
+            },
+            {
+              "id": "shop_jeudi_facture",
+              "score": 0.4286
+            }
+          ]
+        },
+        "merge": {
+          "top1": "shop_retour_cle",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "shop_retour_cle",
+              "score": 1.0
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.4286
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1429
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "shop_retour_cle",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "identity",
+          "top": [
+            {
+              "id": "shop_retour_cle",
+              "score": 2.6953
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 2.3704
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6438
+            }
+          ]
+        }
+      },
+      "hcann_top1": "shop_retour_cle",
+      "rag_top1": "shop_retour_cle",
+      "hcann_path": "identity",
+      "hcann_ambiguous": false,
+      "hcann_hit": true,
+      "rag_hit": true,
+      "hcann_confused": false,
+      "rag_confused": false,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": true,
+      "hcann_top": [
+        {
+          "id": "shop_retour_cle",
+          "score": 2.6953
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 2.3704
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.6438
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "shop_retour_cle",
+          "score": 0.6953
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.6561
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.6438
+        }
+      ],
+      "lexical_top1": "shop_retour_cle",
+      "lexical_hit": true,
+      "lexical_confused": false,
+      "lexical_pair_at_2": true,
+      "lexical_top": [
+        {
+          "id": "shop_retour_cle",
+          "score": 1.0
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.8571
+        },
+        {
+          "id": "shop_jeudi_facture",
+          "score": 0.4286
+        }
+      ],
+      "merge_top1": "shop_retour_cle",
+      "merge_hit": true,
+      "merge_confused": false,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "shop_retour_cle",
+          "score": 1.0
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.4286
+        },
+        {
+          "id": "distract_park",
+          "score": 0.1429
+        }
+      ]
+    },
+    {
+      "pair_id": "shop_return",
+      "target_id": "shop_retour_cle",
+      "twin_id": "shop_retour_sac",
+      "identity": "keys",
+      "query": "image+shared_caption",
+      "systems": {
+        "rag": {
+          "top1": "shop_retour_cle",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "shop_retour_cle",
+              "score": 0.9569
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.9567
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.9518
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "shop_retour_sac",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "shop_retour_sac",
+              "score": 1.0
+            },
+            {
+              "id": "shop_retour_cle",
+              "score": 1.0
+            },
+            {
+              "id": "shop_jeudi_facture",
+              "score": 0.5
+            }
+          ]
+        },
+        "merge": {
+          "top1": "shop_retour_cle",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "shop_retour_cle",
+              "score": 1.0
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.5
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1667
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "shop_retour_cle",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ca3",
+          "top": [
+            {
+              "id": "shop_retour_cle",
+              "score": 2.9569
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 2.9567
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.9518
+            }
+          ]
+        }
+      },
+      "hcann_top1": "shop_retour_cle",
+      "rag_top1": "shop_retour_cle",
+      "hcann_path": "ca3",
+      "hcann_ambiguous": false,
+      "hcann_hit": true,
+      "rag_hit": true,
+      "hcann_confused": false,
+      "rag_confused": false,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": true,
+      "hcann_top": [
+        {
+          "id": "shop_retour_cle",
+          "score": 2.9569
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 2.9567
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.9518
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "shop_retour_cle",
+          "score": 0.9569
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.9567
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.9518
+        }
+      ],
+      "lexical_top1": "shop_retour_sac",
+      "lexical_hit": false,
+      "lexical_confused": true,
+      "lexical_pair_at_2": true,
+      "lexical_top": [
+        {
+          "id": "shop_retour_sac",
+          "score": 1.0
+        },
+        {
+          "id": "shop_retour_cle",
+          "score": 1.0
+        },
+        {
+          "id": "shop_jeudi_facture",
+          "score": 0.5
+        }
+      ],
+      "merge_top1": "shop_retour_cle",
+      "merge_hit": true,
+      "merge_confused": false,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "shop_retour_cle",
+          "score": 1.0
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.5
+        },
+        {
+          "id": "distract_park",
+          "score": 0.1667
+        }
+      ]
+    },
+    {
+      "pair_id": "shop_return",
+      "target_id": "shop_retour_cle",
+      "twin_id": "shop_retour_sac",
+      "identity": "keys",
+      "query": "degraded_image",
+      "systems": {
+        "rag": {
+          "top1": "shop_retour_cle",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": false,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "shop_retour_cle",
+              "score": 0.6444
+            },
+            {
+              "id": "shop_jeudi_facture",
+              "score": 0.6442
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6438
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.0
+            },
+            {
+              "id": "distract_note",
+              "score": 0.0
+            },
+            {
+              "id": "distract_red",
+              "score": 0.0
+            }
+          ]
+        },
+        "merge": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.0
+            },
+            {
+              "id": "distract_note",
+              "score": 0.0
+            },
+            {
+              "id": "distract_red",
+              "score": 0.0
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "shop_retour_cle",
+          "committed": false,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "ambiguous_twins",
+          "top": [
+            {
+              "id": "shop_retour_cle",
+              "score": 0.6444
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 0.6207
+            },
+            {
+              "id": "shop_jeudi_facture",
+              "score": 0.6442
+            }
+          ]
+        }
+      },
+      "hcann_top1": "shop_retour_cle",
+      "rag_top1": "shop_retour_cle",
+      "hcann_path": "ambiguous_twins",
+      "hcann_ambiguous": true,
+      "hcann_hit": true,
+      "rag_hit": true,
+      "hcann_confused": false,
+      "rag_confused": false,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": false,
+      "hcann_top": [
+        {
+          "id": "shop_retour_cle",
+          "score": 0.6444
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 0.6207
+        },
+        {
+          "id": "shop_jeudi_facture",
+          "score": 0.6442
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "shop_retour_cle",
+          "score": 0.6444
+        },
+        {
+          "id": "shop_jeudi_facture",
+          "score": 0.6442
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.6438
+        }
+      ],
+      "lexical_top1": "distract_park",
+      "lexical_hit": false,
+      "lexical_confused": false,
+      "lexical_pair_at_2": false,
+      "lexical_top": [
+        {
+          "id": "distract_park",
+          "score": 0.0
+        },
+        {
+          "id": "distract_note",
+          "score": 0.0
+        },
+        {
+          "id": "distract_red",
+          "score": 0.0
+        }
+      ],
+      "merge_top1": "distract_park",
+      "merge_hit": false,
+      "merge_confused": false,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "distract_park",
+          "score": 0.0
+        },
+        {
+          "id": "distract_note",
+          "score": 0.0
+        },
+        {
+          "id": "distract_red",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "pair_id": "shop_return",
+      "target_id": "shop_retour_sac",
+      "twin_id": "shop_retour_cle",
+      "identity": "bag",
+      "query": "shared_caption",
+      "systems": {
+        "rag": {
+          "top1": "shop_retour_sac",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": false,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "shop_retour_sac",
+              "score": 0.6751
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6539
+            },
+            {
+              "id": "shop_jeudi_facture",
+              "score": 0.6484
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "shop_retour_sac",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "shop_retour_sac",
+              "score": 1.0
+            },
+            {
+              "id": "shop_retour_cle",
+              "score": 1.0
+            },
+            {
+              "id": "shop_jeudi_facture",
+              "score": 0.5
+            }
+          ]
+        },
+        "merge": {
+          "top1": "shop_retour_cle",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "shop_retour_cle",
+              "score": 1.0
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.5
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1667
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "shop_retour_cle",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "ca3",
+          "top": [
+            {
+              "id": "shop_retour_cle",
+              "score": 2.6481
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 2.6751
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6539
+            }
+          ]
+        }
+      },
+      "hcann_top1": "shop_retour_cle",
+      "rag_top1": "shop_retour_sac",
+      "hcann_path": "ca3",
+      "hcann_ambiguous": false,
+      "hcann_hit": false,
+      "rag_hit": true,
+      "hcann_confused": true,
+      "rag_confused": false,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": false,
+      "hcann_top": [
+        {
+          "id": "shop_retour_cle",
+          "score": 2.6481
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 2.6751
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.6539
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "shop_retour_sac",
+          "score": 0.6751
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.6539
+        },
+        {
+          "id": "shop_jeudi_facture",
+          "score": 0.6484
+        }
+      ],
+      "lexical_top1": "shop_retour_sac",
+      "lexical_hit": true,
+      "lexical_confused": false,
+      "lexical_pair_at_2": true,
+      "lexical_top": [
+        {
+          "id": "shop_retour_sac",
+          "score": 1.0
+        },
+        {
+          "id": "shop_retour_cle",
+          "score": 1.0
+        },
+        {
+          "id": "shop_jeudi_facture",
+          "score": 0.5
+        }
+      ],
+      "merge_top1": "shop_retour_cle",
+      "merge_hit": false,
+      "merge_confused": true,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "shop_retour_cle",
+          "score": 1.0
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.5
+        },
+        {
+          "id": "distract_park",
+          "score": 0.1667
+        }
+      ]
+    },
+    {
+      "pair_id": "shop_return",
+      "target_id": "shop_retour_sac",
+      "twin_id": "shop_retour_cle",
+      "identity": "bag",
+      "query": "identity_cue",
+      "systems": {
+        "rag": {
+          "top1": "shop_retour_sac",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": false,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "shop_retour_sac",
+              "score": 0.6902
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6198
+            },
+            {
+              "id": "shop_retour_cle",
+              "score": 0.6155
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "shop_retour_sac",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "shop_retour_sac",
+              "score": 1.0
+            },
+            {
+              "id": "shop_retour_cle",
+              "score": 0.8571
+            },
+            {
+              "id": "shop_jeudi_facture",
+              "score": 0.4286
+            }
+          ]
+        },
+        "merge": {
+          "top1": "shop_retour_cle",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "shop_retour_cle",
+              "score": 1.0
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.4286
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1429
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "shop_retour_sac",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "identity",
+          "top": [
+            {
+              "id": "shop_retour_sac",
+              "score": 2.6902
+            },
+            {
+              "id": "shop_retour_cle",
+              "score": 2.3298
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6198
+            }
+          ]
+        }
+      },
+      "hcann_top1": "shop_retour_sac",
+      "rag_top1": "shop_retour_sac",
+      "hcann_path": "identity",
+      "hcann_ambiguous": false,
+      "hcann_hit": true,
+      "rag_hit": true,
+      "hcann_confused": false,
+      "rag_confused": false,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": false,
+      "hcann_top": [
+        {
+          "id": "shop_retour_sac",
+          "score": 2.6902
+        },
+        {
+          "id": "shop_retour_cle",
+          "score": 2.3298
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.6198
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "shop_retour_sac",
+          "score": 0.6902
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.6198
+        },
+        {
+          "id": "shop_retour_cle",
+          "score": 0.6155
+        }
+      ],
+      "lexical_top1": "shop_retour_sac",
+      "lexical_hit": true,
+      "lexical_confused": false,
+      "lexical_pair_at_2": true,
+      "lexical_top": [
+        {
+          "id": "shop_retour_sac",
+          "score": 1.0
+        },
+        {
+          "id": "shop_retour_cle",
+          "score": 0.8571
+        },
+        {
+          "id": "shop_jeudi_facture",
+          "score": 0.4286
+        }
+      ],
+      "merge_top1": "shop_retour_cle",
+      "merge_hit": false,
+      "merge_confused": true,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "shop_retour_cle",
+          "score": 1.0
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.4286
+        },
+        {
+          "id": "distract_park",
+          "score": 0.1429
+        }
+      ]
+    },
+    {
+      "pair_id": "shop_return",
+      "target_id": "shop_retour_sac",
+      "twin_id": "shop_retour_cle",
+      "identity": "bag",
+      "query": "image+shared_caption",
+      "systems": {
+        "rag": {
+          "top1": "shop_retour_sac",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "shop_retour_sac",
+              "score": 0.9595
+            },
+            {
+              "id": "shop_retour_cle",
+              "score": 0.9553
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.9528
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "shop_retour_sac",
+          "committed": true,
+          "confused": false,
+          "hit": true,
+          "pair_at_2": true,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "shop_retour_sac",
+              "score": 1.0
+            },
+            {
+              "id": "shop_retour_cle",
+              "score": 1.0
+            },
+            {
+              "id": "shop_jeudi_facture",
+              "score": 0.5
+            }
+          ]
+        },
+        "merge": {
+          "top1": "shop_retour_cle",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "shop_retour_cle",
+              "score": 1.0
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.5
+            },
+            {
+              "id": "distract_park",
+              "score": 0.1667
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "shop_retour_cle",
+          "committed": true,
+          "confused": true,
+          "hit": false,
+          "pair_at_2": true,
+          "path": "ca3",
+          "top": [
+            {
+              "id": "shop_retour_cle",
+              "score": 2.9553
+            },
+            {
+              "id": "shop_retour_sac",
+              "score": 2.9595
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.9528
+            }
+          ]
+        }
+      },
+      "hcann_top1": "shop_retour_cle",
+      "rag_top1": "shop_retour_sac",
+      "hcann_path": "ca3",
+      "hcann_ambiguous": false,
+      "hcann_hit": false,
+      "rag_hit": true,
+      "hcann_confused": true,
+      "rag_confused": false,
+      "hcann_pair_at_2": true,
+      "rag_pair_at_2": true,
+      "hcann_top": [
+        {
+          "id": "shop_retour_cle",
+          "score": 2.9553
+        },
+        {
+          "id": "shop_retour_sac",
+          "score": 2.9595
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.9528
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "shop_retour_sac",
+          "score": 0.9595
+        },
+        {
+          "id": "shop_retour_cle",
+          "score": 0.9553
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.9528
+        }
+      ],
+      "lexical_top1": "shop_retour_sac",
+      "lexical_hit": true,
+      "lexical_confused": false,
+      "lexical_pair_at_2": true,
+      "lexical_top": [
+        {
+          "id": "shop_retour_sac",
+          "score": 1.0
+        },
+        {
+          "id": "shop_retour_cle",
+          "score": 1.0
+        },
+        {
+          "id": "shop_jeudi_facture",
+          "score": 0.5
+        }
+      ],
+      "merge_top1": "shop_retour_cle",
+      "merge_hit": false,
+      "merge_confused": true,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "shop_retour_cle",
+          "score": 1.0
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.5
+        },
+        {
+          "id": "distract_park",
+          "score": 0.1667
+        }
+      ]
+    },
+    {
+      "pair_id": "shop_return",
+      "target_id": "shop_retour_sac",
+      "twin_id": "shop_retour_cle",
+      "identity": "bag",
+      "query": "degraded_image",
+      "systems": {
+        "rag": {
+          "top1": "shop_jeudi_facture",
+          "committed": true,
+          "confused": false,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "rag_clip",
+          "top": [
+            {
+              "id": "shop_jeudi_facture",
+              "score": 0.6456
+            },
+            {
+              "id": "shop_retour_cle",
+              "score": 0.6455
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6443
+            }
+          ]
+        },
+        "lexical": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "lexical",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.0
+            },
+            {
+              "id": "distract_note",
+              "score": 0.0
+            },
+            {
+              "id": "distract_red",
+              "score": 0.0
+            }
+          ]
+        },
+        "merge": {
+          "top1": "distract_park",
+          "committed": true,
+          "confused": false,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "merge",
+          "top": [
+            {
+              "id": "distract_park",
+              "score": 0.0
+            },
+            {
+              "id": "distract_note",
+              "score": 0.0
+            },
+            {
+              "id": "distract_red",
+              "score": 0.0
+            }
+          ]
+        },
+        "hcann": {
+          "top1": "shop_jeudi_facture",
+          "committed": false,
+          "confused": false,
+          "hit": false,
+          "pair_at_2": false,
+          "path": "ambiguous_twins",
+          "top": [
+            {
+              "id": "shop_jeudi_facture",
+              "score": 0.6456
+            },
+            {
+              "id": "shop_mardi_colis",
+              "score": 0.6443
+            },
+            {
+              "id": "shop_retour_cle",
+              "score": 0.6455
+            }
+          ]
+        }
+      },
+      "hcann_top1": "shop_jeudi_facture",
+      "rag_top1": "shop_jeudi_facture",
+      "hcann_path": "ambiguous_twins",
+      "hcann_ambiguous": true,
+      "hcann_hit": false,
+      "rag_hit": false,
+      "hcann_confused": false,
+      "rag_confused": false,
+      "hcann_pair_at_2": false,
+      "rag_pair_at_2": false,
+      "hcann_top": [
+        {
+          "id": "shop_jeudi_facture",
+          "score": 0.6456
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.6443
+        },
+        {
+          "id": "shop_retour_cle",
+          "score": 0.6455
+        }
+      ],
+      "rag_top": [
+        {
+          "id": "shop_jeudi_facture",
+          "score": 0.6456
+        },
+        {
+          "id": "shop_retour_cle",
+          "score": 0.6455
+        },
+        {
+          "id": "shop_mardi_colis",
+          "score": 0.6443
+        }
+      ],
+      "lexical_top1": "distract_park",
+      "lexical_hit": false,
+      "lexical_confused": false,
+      "lexical_pair_at_2": false,
+      "lexical_top": [
+        {
+          "id": "distract_park",
+          "score": 0.0
+        },
+        {
+          "id": "distract_note",
+          "score": 0.0
+        },
+        {
+          "id": "distract_red",
+          "score": 0.0
+        }
+      ],
+      "merge_top1": "distract_park",
+      "merge_hit": false,
+      "merge_confused": false,
+      "merge_pair_at_2": false,
+      "merge_top": [
+        {
+          "id": "distract_park",
+          "score": 0.0
+        },
+        {
+          "id": "distract_note",
+          "score": 0.0
+        },
+        {
+          "id": "distract_red",
+          "score": 0.0
+        }
+      ]
+    }
+  ]
+}

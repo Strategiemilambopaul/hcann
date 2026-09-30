@@ -3,40 +3,65 @@ from typing import List
 
 @dataclass
 class HCANNConfig:
-    # 🌍 Multimodal & Sémantique (VLEM)
+    # Multimodal & neocortex
     use_vision: bool = True
     use_language: bool = True
     semantic_dim: int = 256
     clip_model: str = "openai/clip-vit-base-patch32"
-    use_mock_encoder: bool = True  # Éviter le téléchargement CLIP si espace disque insuffisant
-    
-    # 🧠 Hippocampe & Scaffold (Vector-HaSH)
+    use_mock_encoder: bool = True
+
+    # Échafaudage spatial (Vector-HaSH)
     grid_periods: List[int] = None
-    hpc_size: int = 256
-    hpc_threshold: float = 0.5
-    scaffold_lr: float = 0.01
-    hetero_lr: float = 0.001
-    
-    # 🧩 Cortex & Attracteurs (VLEM)
+    hpc_size: int = 256  # alias dg_dim pour compat graphe hebbien
+
+    # Cortex entorhinal (EC) — SDR
+    ec_dim: int = 512
+    ec_sparsity: float = 0.04  # fraction de neurones actifs
+
+    # Gyrus denté (DG) — pattern separation
+    dg_dim: int = 256
+    dg_sparsity: float = 0.08
+    dg_expansion_factor: int = 4
+
+    # CA3 Modern Hopfield
+    hopfield_beta: float = 8.0
+    hopfield_steps: int = 5
+    max_patterns: int = 2000
+
+    # CA1 — match/mismatch
+    ca1_novelty_threshold: float = 0.35
+
+    # Subiculum — apprentissage local
+    hebb_lr: float = 0.01
+    stdp_lr: float = 0.005
+
+    # Mémoire de travail (néocortex)
     wm_slots: int = 7
     wm_dim: int = 256
-    entorhinal_dim: int = 256
-    attractor_dim: int = 128  # par attribut (where/what/when)
-    attractor_steps: int = 5
-    
-    # 🕸️ Consolidation & Graphe (HeLa-Mem)
+
+    # Graphe hebbien
     hebbian_lr: float = 0.02
     hebbian_decay: float = 0.995
     spreading_strength: float = 0.1
     hub_threshold: int = 10
     prune_weight_thresh: float = 0.1
-    prune_age_thresh: float = 86400 * 7  # 7 jours
-    
-    # ⚙️ Entraînement
+    prune_age_thresh: float = 86400 * 7
+    max_nodes: int = 2000
+
+    # Entraînement & dreaming
     batch_size: int = 32
     epochs_per_task: int = 5
     consolidation_freq: int = 10
-    
+    dream_cycles: int = 3
+    dream_batch_size: int = 16
+    enable_dreaming: bool = True
+
+    stream_disable_remote_text_encoder: bool = True
+
     def __post_init__(self):
         if self.grid_periods is None:
             self.grid_periods = [3, 5, 7]
+        if self.dg_dim != self.hpc_size:
+            self.hpc_size = self.dg_dim
+        if self.wm_dim != self.semantic_dim:
+            self.wm_dim = self.semantic_dim

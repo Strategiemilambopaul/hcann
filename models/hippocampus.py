@@ -1,65 +1,94 @@
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 import numpy as np
 
+from .dentate_gyrus import DentateGyrus
+from .ca3_hopfield import CA3ModernHopfield
+from .ca1 import CA1Comparator
+from .subiculum import SubiculumGateway
+
+
 class GridCellModule(nn.Module):
-    """Vector-HaSH: Module de cellules de grille sur tore 2D"""
+    """Vector-HaSH : cellules de grille sur tore 2D."""
+
     def __init__(self, period: int):
         super().__init__()
         self.period = period
-        # Phase 2D pour chaque module (x, y)
-        self.register_buffer('phase', torch.zeros(1, 2))
-        
+        self.register_buffer("phase", torch.zeros(1, 2))
+
     def forward(self, velocity: torch.Tensor = None) -> torch.Tensor:
         if velocity is not None:
+            if self.phase.size(0) != velocity.size(0):
+                self.phase = self.phase[:1].expand(velocity.size(0), -1).clone()
             self.phase = (self.phase + velocity) % self.period
         freq = 2 * np.pi / self.period
-        # Sinus et cosinus pour chaque dimension de la phase (2D → 4D)
         return torch.cat([
-            torch.sin(self.phase * freq), 
-            torch.cos(self.phase * freq)
-        ], dim=-1)  # Shape: [1, 4]
+            torch.sin(self.phase * freq),
+            torch.cos(self.phase * freq),
+        ], dim=-1)
 
-class HippocampalScaffold(nn.Module):
-    """Vector-HaSH: Scaffold fixe + projections aléatoires + retour appris"""
+    def reset_phase(self):
+        self.phase.zero_()
+
+
+class TrisynapticHippocampus(nn.Module):
+    """Boucle trisynaptique : DG -> CA3 -> CA1 -> Subiculum + échafaudage spatial."""
+
     def __init__(self, config):
         super().__init__()
         self.config = config
         self.grid_modules = nn.ModuleList([GridCellModule(p) for p in config.grid_periods])
-        
-        # Chaque module retourne 4 dimensions (sin/cos pour x/y)
-        grid_dim = len(config.grid_periods) * 4
-        # Projection fixe aléatoire Grille → Hippocampe
-        self.W_grid_to_hpc = nn.Linear(grid_dim, config.hpc_size, bias=False)
-        self._init_fixed_projection()
-        
-        # Retour appris une fois puis figé (Hebb-like)
-        self.W_hpc_to_grid = nn.Linear(config.hpc_size, grid_dim, bias=False)
-        
-        # Attracteurs symétriques (VLEM)
-        self.W_attractor = nn.Parameter(torch.randn(config.hpc_size, config.hpc_size))
-        self.W_attractor = nn.Parameter((self.W_attractor + self.W_attractor.T) / 2)
-        
-    def _init_fixed_projection(self):
-        with torch.no_grad():
-            nn.init.normal_(self.W_grid_to_hpc.weight, std=1.0)
-            self.W_grid_to_hpc.weight.requires_grad = False
-            
-    def forward(self, velocity: torch.Tensor = None, steps: int = 3) -> torch.Tensor:
-        # Path integration
+        self.dg = DentateGyrus(config)
+        self.ca3 = CA3ModernHopfield(config)
+        self.ca1 = CA1Comparator(config)
+        self.subiculum = SubiculumGateway(config)
+
+    def encode_grid(self, velocity: torch.Tensor = None) -> torch.Tensor:
         grid_states = [mod(velocity) for mod in self.grid_modules]
-        g = torch.cat(grid_states, dim=-1)
-        
-        # Projection vers hippocampe
-        h = F.relu(self.W_grid_to_hpc(g) - self.config.hpc_threshold)
-        
-        # Dynamique d'attracteur (nettoyage)
-        for _ in range(steps):
-            h = torch.tanh(h @ self.W_attractor)
-            
-        return h, g
-    
+        return torch.cat(grid_states, dim=-1)
+
+    def forward(
+        self,
+        sdr_ec: torch.Tensor,
+        sem_dense: torch.Tensor,
+        velocity: torch.Tensor = None,
+        store: bool = True,
+        episode_keys: list | None = None,
+    ) -> dict:
+        grid_code = self.encode_grid(velocity)
+        dg_code = self.dg(sdr_ec, grid_code)
+
+        if store:
+            if episode_keys:
+                for i, key in enumerate(episode_keys):
+                    if key is not None:
+                        self.ca3.store(dg_code[i], key=str(key))
+                    else:
+                        self.ca3.store(dg_code[i : i + 1])
+            else:
+                self.ca3.store(dg_code)
+
+        ca3_state = self.ca3.complete(dg_code)
+        decoded, novelty, is_novel = self.ca1(ca3_state, sem_dense)
+        cortical = self.subiculum(ca3_state)
+
+        return {
+            "ca3_state": ca3_state,
+            "dg_code": dg_code,
+            "grid_code": grid_code,
+            "decoded": decoded,
+            "novelty": novelty,
+            "is_novel": is_novel,
+            "cortical": cortical,
+        }
+
     def reset_phases(self):
         for mod in self.grid_modules:
-            mod.phase.zero_()
+            mod.reset_phase()
+
+    def reset_memory(self):
+        self.ca3.reset()
+
+
+# Alias rétrocompatibilité
+HippocampalScaffold = TrisynapticHippocampus

@@ -1,0 +1,135 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{geometry}
+\usepackage{microtype}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\geometry{top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm}
+\hypersetup{hidelinks,pdftitle={Documentation mathematique globale HCANN}}
+
+\title{Documentation Globale de l'Implémentation HCANN}
+\author{Projet HCANN-Agent}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Ce document est une \textbf{vue d'ensemble} de l'implémentation HCANN.  
+Il évite volontairement les redondances mathématiques et renvoie les détails complets vers les trois documents autonomes: \texttt{cortex.tex}, \texttt{hippocampus.tex}, \texttt{hcann.tex}.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Contexte général}
+L'architecture HCANN (\textit{Hippocampo-Cortical Artificial Neural Network}) est conçue comme une mémoire multimodale bio-inspirée.  
+Le découpage en blocs suit une logique de séparation des fonctions:
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Cortex}: représentation sémantique et contexte court terme;
+    \item \textbf{Hippocampe}: encodage rapide, dynamique de scaffold et attracteurs;
+    \item \textbf{HCANN global}: orchestration rapide/lente et projections hétéro-associatives.
+\end{itemize}
+
+\section{Convention de lecture}
+\begin{itemize}[leftmargin=*]
+    \item $B$: taille du batch.
+    \item $\mathbf{S}$: représentation sémantique corticale.
+    \item $\mathbf{H}$: représentation hippocampique rapide.
+    \item \textbf{Principe}: ce fichier décrit le flux global; les dérivations détaillées restent dans les trois fichiers spécialisés.
+\end{itemize}
+
+\section{Cartographie minimale des fonctions}
+{\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{longtable}{>{\raggedright\arraybackslash}p{2.4cm} >{\raggedright\arraybackslash}p{4.2cm} >{\raggedright\arraybackslash}p{3.0cm} >{\raggedright\arraybackslash}p{4.2cm}}
+\toprule
+\textbf{Fichier} & \textbf{Fonction} & \textbf{Entrées} & \textbf{Sorties} \\
+\midrule
+\endhead
+\texttt{cortex.py} &
+\texttt{MultimodalEncoder.forward(images,texts)} &
+images $(B,C,H,W)$,\\ texts (batch texte) &
+$\mathbf{S}$ (embedding sémantique) \\
+\texttt{cortex.py} &
+\texttt{WorkingMemory.forward(x)} &
+$\mathbf{x}$ &
+\texttt{read}, poids des slots \\
+\texttt{cortex.py} &
+\texttt{WorkingMemory.diversity\_loss()} &
+slots internes &
+scalaire $\mathcal{L}_{div}$ \\
+\texttt{cortex.py} &
+\texttt{EntorhinalGateway.forward(attractor,wm)} &
+état attracteur + état WM &
+projection vers espace hippocampique \\
+\texttt{hippocampus.py} &
+\texttt{GridCellModule.forward(velocity)} &
+$\mathbf{u}$ &
+code grille \\
+\texttt{hippocampus.py} &
+\texttt{HippocampalScaffold.forward(velocity,steps)} &
+vitesse + nombre d'itérations &
+$\mathbf{H}$ et état grille concaténé \\
+\texttt{hippocampus.py} &
+\texttt{HippocampalScaffold.reset\_phases()} &
+aucune &
+phases remises à zéro \\
+\texttt{hcann.py} &
+\texttt{HCANN.fast\_encode(images,texts,velocity)} &
+modalités + vitesse &
+$\mathbf{H}_{fast}$, $\mathbf{S}$, $\mathbf{M}$ \\
+\texttt{hcann.py} &
+\texttt{HCANN.slow\_consolidate(hpc\_target,sem\_input)} &
+$\mathbf{H}_{target}, \mathbf{S}_{in}$ &
+perte $\mathcal{L}_{hetero}$ \\
+\bottomrule
+\end{longtable}
+}
+
+\section{Synthèse inter-blocs}
+Le flux d'information principal est:
+\begin{enumerate}[leftmargin=*]
+    \item Encodage multimodal cortical $\rightarrow$ embedding sémantique;
+    \item Projection vers l'espace hippocampique + état scaffold;
+    \item Fusion rapide pour la trace épisodique;
+    \item Consolidation lente par reconstruction hippocampe$\rightarrow$cortex.
+\end{enumerate}
+
+Cette organisation permet de préserver la cohérence entre inspiration neuroscientifique (CLS, grille, attracteurs) et contraintes d'ingénierie (modularité, testabilité, exécution incrémentale).
+
+\section{Équation pivot (sans redondance)}
+Pour garder une vue compacte, on retient uniquement l'équation centrale de couplage:
+\[
+\mathbf{H}_{fast}=\mathbf{H}_{grid}+W_{s\to h}\mathbf{S}.
+\]
+Les développements complets (avec étapes intermédiaires, dimensions et correspondance code) sont documentés dans:
+\begin{itemize}[leftmargin=*]
+    \item \texttt{cortex.tex} (encodage, mémoire de travail, passerelle);
+    \item \texttt{hippocampus.tex} (grid cells, attracteurs, scaffold);
+    \item \texttt{hcann.tex} (orchestration fast/slow, perte de consolidation).
+\end{itemize}
+
+\section{Guide de compilation}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Mode autonome recommandé}: compiler séparément
+    \texttt{cortex.tex}, \texttt{hippocampus.tex}, \texttt{hcann.tex}.
+    \item \textbf{Raison}: chaque fichier contient déjà son propre \texttt{\textbackslash documentclass} et tous les packages nécessaires.
+    \item \textbf{Rôle de ce fichier}: fournir une vue intégrée, sans répéter les preuves détaillées.
+\end{itemize}
+
+\section*{Note d'usage}
+Ce document est compilable tel quel et sert de page de navigation globale.  
+Les documents \texttt{cortex.tex}, \texttt{hippocampus.tex} et \texttt{hcann.tex} constituent les références détaillées pour la démonstration mathématique.
+
+\end{document}

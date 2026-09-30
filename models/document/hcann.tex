@@ -1,0 +1,196 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{geometry}
+\usepackage{microtype}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\geometry{top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm}
+\hypersetup{hidelinks,pdftitle={Documentation HCANN}}
+
+\title{Documentation de l'Architecture HCANN}
+\author{Projet HCANN-Agent}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Architecture HCANN complète (\texttt{hcann.py})}
+
+\subsection{Objectif du fichier}
+Le fichier \texttt{hcann.py} orchestre les blocs cortex et hippocampe dans une architecture unifiée à deux régimes :
+\begin{itemize}
+    \item \textbf{phase rapide} (\textit{fast encode}) : encodage épisodique multimodal ;
+    \item \textbf{phase lente} (\textit{slow consolidate}) : reconstruction sémantique et consolidation.
+\end{itemize}
+
+\subsection{Principe neuro-inspiré global}
+HCANN s'appuie sur l'intuition des \textit{Complementary Learning Systems} (CLS) :
+\begin{itemize}
+    \item \textbf{voie rapide} (analogue hippocampique) : acquisition immédiate de traces contextuelles ;
+    \item \textbf{voie lente} (analogue corticale) : intégration progressive vers des représentations plus stables ;
+    \item \textbf{couplage bidirectionnel} : projections sens$\rightarrow$hpc et hpc$\rightarrow$sens pour l'hétéro-association.
+\end{itemize}
+Ce schéma cherche à réduire l'interférence catastrophique tout en conservant une mise à jour continue des connaissances.
+
+\subsection{Composants instanciés}
+\begin{itemize}
+    \item \texttt{encoder} : \texttt{MultimodalEncoder} (cortex) ;
+    \item \texttt{wm} : \texttt{WorkingMemory} ;
+    \item \texttt{hippocampus} : \texttt{HippocampalScaffold} ;
+    \item \texttt{entorhinal} : \texttt{EntorhinalGateway} ;
+    \item \texttt{W\_sens\_to\_hpc} : projection sémantique $\rightarrow$ hippocampe ;
+    \item \texttt{W\_hpc\_to\_sens} : projection hippocampe $\rightarrow$ sémantique.
+\end{itemize}
+
+\subsection{Phase rapide : \texttt{fast\_encode}}
+Pour un batch multimodal, le flux est :
+\begin{align}
+\mathbf{s} &= \mathrm{Encoder}(\text{images}, \text{textes}),\\
+(\mathbf{m}, \alpha) &= \mathrm{WM}(\mathbf{s}),\\
+\mathbf{h}_{sens} &= W_{s\to h}\mathbf{s},\\
+\mathbf{h}_{grid} &= \mathrm{Hippocampus}(\mathbf{u}),\\
+\mathbf{h}_{fast} &= \mathbf{h}_{grid} + \mathbf{h}_{sens}.
+\end{align}
+
+Si la vitesse $\mathbf{u}$ n'est pas fournie, le code impose :
+\begin{equation}
+\mathbf{u}=\mathbf{0}\in\mathbb{R}^{B\times 2},
+\end{equation}
+de sorte que les dimensions batch restent cohérentes.
+
+\paragraph{Sorties}
+\texttt{fast\_encode} retourne :
+\begin{itemize}
+    \item $\mathbf{h}_{fast}$ : représentation hippocampique fusionnée ;
+    \item $\mathbf{s}$ : embedding sémantique cortical ;
+    \item $\mathbf{m}$ : état de mémoire de travail.
+\end{itemize}
+
+\subsection{Phase lente : \texttt{slow\_consolidate}}
+La consolidation est formulée comme une reconstruction inverse :
+\begin{align}
+\hat{\mathbf{s}} &= W_{h\to s}\mathbf{h}_{target},\\
+\mathcal{L}_{hetero} &= \mathrm{MSE}\big(\hat{\mathbf{s}}, \mathrm{stopgrad}(\mathbf{s}_{in})\big).
+\end{align}
+
+Le \textit{detach} (\texttt{stopgrad}) sur $\mathbf{s}_{in}$ évite de rétropropager dans l'encodeur sémantique pendant cette phase, ce qui stabilise l'apprentissage.
+
+\subsection{Optimisation séparée (inspiration CLS)}
+Deux optimiseurs distincts sont définis :
+\begin{itemize}
+    \item \texttt{scaffold\_opt} (SGD) : sous-espace hippocampique/projections structurelles ;
+    \item \texttt{cortex\_opt} (Adam) : paramètres corticaux impliqués dans la consolidation.
+\end{itemize}
+
+\subsection{Résumé opérationnel}
+\begin{enumerate}
+    \item Encodage rapide d'un épisode dans l'espace hippocampique (\texttt{fast\_encode}) ;
+    \item Stockage/association externe (graphe hebbien, hors de ce fichier) ;
+    \item Réactivation et mise à jour sémantique via \texttt{slow\_consolidate}.
+\end{enumerate}
+
+\subsection{Détail mathématique fonction par fonction}
+
+\paragraph{\texttt{HCANN.\_\_init\_\_}}
+Initialise les sous-modules:
+\[
+\mathcal{E}=\text{encoder},\quad \mathcal{H}=\text{hippocampus},\quad \mathcal{W}=\text{working memory}.
+\]
+Projections hétéro-associatives:
+\[
+W_{s\to h}\in\mathbb{R}^{d_h\times d_s},\qquad
+W_{h\to s}\in\mathbb{R}^{d_s\times d_h}.
+\]
+Deux optimiseurs sont instanciés pour séparer les dynamiques rapide/lente.
+
+\paragraph{\texttt{HCANN.fast\_encode}}
+Entrées: image/texte optionnels, vitesse $U$ optionnelle.  
+Étapes:
+\begin{align}
+\mathbf{S} &= \mathcal{E}(\text{images},\text{textes}) \in \mathbb{R}^{B\times d_s},\\
+(\mathbf{M},\alpha) &= \mathcal{W}(\mathbf{S}),\\
+\mathbf{H}_{sens} &= W_{s\to h}\mathbf{S}^\top \; \text{(forme batch équivalente)},\\
+\mathbf{H}_{grid} &= \mathcal{H}(U),\\
+\mathbf{H}_{fast} &= \mathbf{H}_{grid} + \mathbf{H}_{sens}.
+\end{align}
+Si $U$ absent:
+\[
+U\leftarrow \mathbf{0}_{B\times2}.
+\]
+Sorties:
+\[
+(\mathbf{H}_{fast},\mathbf{S},\mathbf{M}).
+\]
+
+\paragraph{\texttt{HCANN.slow\_consolidate}}
+Entrées: $\mathbf{H}_{target}\in\mathbb{R}^{B\times d_h}$, $\mathbf{S}_{in}\in\mathbb{R}^{B\times d_s}$.
+\begin{align}
+\hat{\mathbf{S}} &= W_{h\to s}\mathbf{H}_{target}^\top \; \text{(forme batch équivalente)},\\
+\mathcal{L}_{hetero} &= \frac{1}{B d_s}\left\|\hat{\mathbf{S}}-\mathrm{stopgrad}(\mathbf{S}_{in})\right\|_2^2.
+\end{align}
+Le \texttt{detach} sur $\mathbf{S}_{in}$ force la phase lente à apprendre la reconstruction hippocampe$\rightarrow$cortex sans modifier la cible d'encodage.
+
+\paragraph{Lecture computationnelle de la séparation CLS}
+Dans le code, la séparation est matérialisée par:
+\begin{itemize}
+    \item un calcul \texttt{fast\_encode} à chaque épisode (voie rapide);
+    \item une optimisation \texttt{cortex\_opt} via \texttt{slow\_consolidate} à fréquence contrôlée (voie lente);
+    \item des projections inverses $W_{s\to h}$ et $W_{h\to s}$ assurant le couplage.
+\end{itemize}
+
+\subsection{Interface détaillée des fonctions}
+
+\paragraph{\texttt{HCANN.fast\_encode(images=None, texts=None, velocity=None)}}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Entrées}
+    \begin{itemize}
+        \item \texttt{images}: batch visuel (optionnel);
+        \item \texttt{texts}: batch textuel (optionnel);
+        \item \texttt{velocity}: $(B,2)$, optionnel.
+    \end{itemize}
+    \item \textbf{Sorties}
+    \begin{itemize}
+        \item \texttt{hpc\_fast}: $(B,d_h)$;
+        \item \texttt{sem}: $(B,d_s)$;
+        \item \texttt{wm\_state}: $(B,d_w)$.
+    \end{itemize}
+\end{itemize}
+
+\paragraph{\texttt{HCANN.slow\_consolidate(hpc\_target, sem\_input)}}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Entrées}
+    \begin{itemize}
+        \item \texttt{hpc\_target}: $(B,d_h)$;
+        \item \texttt{sem\_input}: $(B,d_s)$.
+    \end{itemize}
+    \item \textbf{Sortie}
+    \begin{itemize}
+        \item perte scalaire \texttt{loss\_hetero} (MSE).
+    \end{itemize}
+\end{itemize}
+
+\subsection{Déroulement calculatoire complet}
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Encodage cortical} : $(\text{images},\text{textes})\rightarrow \mathbf{S}$.
+    \item \textbf{Contexte court terme} : $\mathbf{S}\rightarrow (\mathbf{M},\alpha)$ via mémoire de travail.
+    \item \textbf{Projection sens$\rightarrow$hpc} : $\mathbf{H}_{sens}=W_{s\to h}\mathbf{S}$.
+    \item \textbf{Scaffold hippocampique} : $\mathbf{H}_{grid}=\mathcal{H}(U)$.
+    \item \textbf{Fusion rapide} : $\mathbf{H}_{fast}=\mathbf{H}_{grid}+\mathbf{H}_{sens}$.
+    \item \textbf{Consolidation lente} : $\hat{\mathbf{S}}=W_{h\to s}\mathbf{H}_{target}$.
+    \item \textbf{Erreur de reconstruction} : $\mathcal{L}_{hetero}=\mathrm{MSE}(\hat{\mathbf{S}},\mathrm{stopgrad}(\mathbf{S}_{in}))$.
+\end{enumerate}
+
+\subsection{Correspondance précise formule $\leftrightarrow$ implémentation}
+\begin{itemize}[leftmargin=*]
+    \item $U=\mathbf{0}_{B\times2}$ si absent: création explicite d'un tenseur nul dans \texttt{fast\_encode}.
+    \item $\mathbf{H}_{grid}$: issu de \texttt{self.hippocampus(velocity)}.
+    \item $\mathbf{H}_{sens}$: issu de \texttt{self.W\_sens\_to\_hpc(sem)}.
+    \item $\mathcal{L}_{hetero}$: implémentée par \texttt{nn.functional.mse\_loss(pred\_sem, sem\_input.detach())}.
+\end{itemize}
+
+\end{document}

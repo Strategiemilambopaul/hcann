@@ -1,0 +1,226 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{geometry}
+\usepackage{microtype}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\geometry{top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm}
+\hypersetup{hidelinks,pdftitle={Documentation Consolidation HCANN}}
+
+\title{Documentation du Module de Consolidation}
+\author{Projet HCANN-Agent}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Module Mémoire (\texttt{consolidation.py})}
+
+\subsection{Objectif du module}
+Ce module implémente la mémoire épisodique associative de HCANN au moyen d'un graphe hebbien dynamique:
+\begin{itemize}
+    \item \textbf{stockage d'épisodes} sous forme de n\oe uds indexés;
+    \item \textbf{mise à jour des liens} par apprentissage hebbien avec décroissance;
+    \item \textbf{récupération} via similarité cosinus + propagation d'activation;
+    \item \textbf{consolidation} des hubs et oubli adaptatif.
+\end{itemize}
+
+\subsection{Composants principaux}
+\begin{itemize}
+    \item \texttt{HebbianMemoryGraph}: structure de données et opérations graphe;
+    \item \texttt{HebbianConsolidation}: wrapper de haut niveau pour l'agent et l'entraînement.
+\end{itemize}
+
+\subsection{Vue théorique (graphe pondéré dynamique)}
+Le système mémoire est modélisé par un graphe non orienté pondéré:
+\begin{equation}
+G_t = (V_t, E_t, W_t),
+\end{equation}
+où:
+\begin{itemize}
+    \item $V_t$ est l'ensemble des épisodes actifs à l'instant $t$;
+    \item $E_t$ est l'ensemble des arêtes d'association;
+    \item $W_t \in \mathbb{R}^{N\times N}$ contient les poids synaptiques (\texttt{edges}).
+\end{itemize}
+
+Chaque n\oe ud $i$ est associé à un état latent hippocampique $\mathbf{e}_i \in \mathbb{R}^{d_h}$.  
+Le degré pondéré (force) d'un n\oe ud est:
+\begin{equation}
+\deg_w(i)=\sum_{j=1}^{N} W_{ij}.
+\end{equation}
+La détection des hubs est une approximation par degré binaire:
+\begin{equation}
+\deg_\theta(i)=\sum_{j=1}^{N}\mathbb{1}[W_{ij}>\theta], \quad
+i \in \mathcal{H} \Leftrightarrow \deg_\theta(i) > \tau_h.
+\end{equation}
+
+\subsection{1) Structure du graphe}
+Pour $N$ n\oe uds actifs:
+\begin{itemize}
+    \item matrice d'embeddings $E \in \mathbb{R}^{N \times d_h}$ (\texttt{node\_embeddings});
+    \item matrice des poids hebbiens $W \in \mathbb{R}^{N \times N}$ (\texttt{edges});
+    \item méta-données par n\oe ud: timestamp, nombre d'accès, drapeau \texttt{consolidated}.
+\end{itemize}
+
+\subsection{2) Mise à jour hebbienne}
+La mise à jour des connexions suit:
+\begin{equation}
+W_{t+1} = \lambda W_t + \Delta W,
+\end{equation}
+où $\lambda=\texttt{hebbian\_decay}$ et $\Delta W$ ajoute un renforcement symétrique pour les paires co-activées:
+\begin{equation}
+\Delta W_{ij} = \Delta W_{ji} = \eta.
+\end{equation}
+Interprétation théorie$\rightarrow$calcul:
+\begin{itemize}
+    \item \textbf{théorie}: décroissance homogène de toutes les synapses (\textit{forgetting});
+    \item \textbf{computation}: opération dense \texttt{self.edges *= hebbian\_decay};
+    \item \textbf{théorie}: potentiel d'association entre épisodes co-activés;
+    \item \textbf{computation}: \texttt{edges[idx1, idx2] += weight} et symétrique.
+\end{itemize}
+
+\subsection{3) Retrieval par spreading activation}
+À partir d'une requête $\mathbf{q}$:
+\begin{enumerate}[leftmargin=*]
+    \item score de base par similarité cosinus:
+    \begin{equation}
+    s_i = \cos(\mathbf{q}, \mathbf{e}_i);
+    \end{equation}
+    \item propagation locale pour les n\oe uds activés:
+    \begin{equation}
+    \tilde{s}_j = s_j + \sum_{i \in \mathcal{A}} \alpha W_{ij},
+    \end{equation}
+    avec $\alpha=\texttt{spreading\_strength}$;
+    \item sélection des \texttt{top-k} selon $\tilde{s}$.
+\end{enumerate}
+
+Sous forme matricielle, en notant $M$ un masque des n\oe uds actifs (score de base $>\theta_b$):
+\begin{equation}
+\tilde{\mathbf{s}} = \mathbf{s} + \alpha\,(M \odot \mathbf{s})\,W.
+\end{equation}
+Le code actuel implémente cette propagation de façon explicite par boucles locales sur les voisins non nuls.
+
+\subsection{4) Détection de hubs et consolidation}
+Un hub est un n\oe ud de degré supérieur à \texttt{hub\_threshold}.  
+Le wrapper \texttt{HebbianConsolidation.consolidate}:
+\begin{itemize}
+    \item détecte les hubs;
+    \item récupère leurs épisodes voisins;
+    \item applique éventuellement un callback LLM pour produire un résumé;
+    \item marque les hubs consolidés;
+    \item déclenche l'oubli adaptatif.
+\end{itemize}
+
+Modélisation de la consolidation d'un hub $h$:
+\begin{equation}
+\mathcal{N}(h)=\{j \mid W_{hj}>\theta_e\}, \qquad
+\text{summary}_h = f_{\text{LLM}}(\{x_j\}_{j \in \mathcal{N}(h)}),
+\end{equation}
+où $x_j$ représente les données épisodiques associées au n\oe ud $j$.
+
+\subsection{5) Oubli adaptatif}
+Un n\oe ud est candidat à suppression si:
+\begin{equation}
+(\text{poids total} < \tau_w)\ \land\ (\text{âge} > \tau_t)\ \land\ (\text{accès} = 0),
+\end{equation}
+avec $\tau_w=\texttt{prune\_weight\_thresh}$ et $\tau_t=\texttt{prune\_age\_thresh}$.
+
+\subsection{Rendu computationnel (algorithmes)}
+\paragraph{Algorithme A: insertion d'un épisode}
+\begin{enumerate}[leftmargin=*]
+    \item Vérifier capacité $N<C$ sinon lancer l'oubli adaptatif;
+    \item écrire l'embedding dans \texttt{node\_embeddings[idx]};
+    \item initialiser timestamp et compteur d'accès;
+    \item mettre à jour dictionnaires d'indexation.
+\end{enumerate}
+Coût: $O(1)$ amorti hors oubli.
+
+\paragraph{Algorithme B: retrieval 2 phases}
+\begin{enumerate}[leftmargin=*]
+    \item Calcul cosinus requête$\leftrightarrow$tous les n\oe uds actifs;
+    \item pour chaque n\oe ud activé, parcourir ses voisins et booster les scores;
+    \item extraire \texttt{top-k} via \texttt{torch.topk}.
+\end{enumerate}
+Coût dominant:
+\begin{equation}
+O(Nd_h) + O\!\left(\sum_{i \in \mathcal{A}} |\mathcal{N}(i)|\right) + O(N \log k).
+\end{equation}
+
+\paragraph{Algorithme C: consolidation périodique}
+\begin{enumerate}[leftmargin=*]
+    \item Détecter les hubs par degrés seuilés;
+    \item agréger les voisins des hubs non consolidés;
+    \item produire un résumé (optionnel) puis marquer consolidé;
+    \item appliquer l'oubli adaptatif.
+\end{enumerate}
+
+\subsection{Correspondance théorie $\leftrightarrow$ code}
+\begin{itemize}
+    \item \textbf{objet théorique} $G_t$ $\rightarrow$ \texttt{nodes + edges + id\_to\_index};
+    \item \textbf{poids synaptiques} $W$ $\rightarrow$ \texttt{self.edges};
+    \item \textbf{degré / hubs} $\deg_\theta$ $\rightarrow$ \texttt{detect\_hubs()};
+    \item \textbf{activation propagée} $\tilde{\mathbf{s}}$ $\rightarrow$ \texttt{spreading\_activation()};
+    \item \textbf{stabilité/plasticité} $(\lambda,\eta)$ $\rightarrow$ decay global + incréments locaux.
+\end{itemize}
+
+\subsection{Correspondance implémentation}
+\begin{itemize}
+    \item \texttt{add\_node}: insertion d'un épisode et indexation;
+    \item \texttt{update\_hebbian\_weights}: decay global puis renforcement pairwise;
+    \item \texttt{spreading\_activation}: scoring 2 phases (direct + propagation);
+    \item \texttt{detect\_hubs}: calcul de degré sur seuil de connexion;
+    \item \texttt{adaptive\_forgetting}: suppression multi-critères;
+    \item \texttt{consolidate}: orchestration consolidation + oubli.
+\end{itemize}
+
+\subsection{Interface détaillée}
+
+\paragraph{\texttt{HebbianMemoryGraph.add\_node(node\_id, data, embedding)}}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Entrées}: identifiant n\oe ud, dictionnaire de données, embedding NumPy $(d_h)$.
+    \item \textbf{Effet}: ajoute le n\oe ud (ou déclenche un oubli adaptatif si capacité atteinte).
+\end{itemize}
+
+\paragraph{\texttt{HebbianMemoryGraph.update\_hebbian\_weights(node\_id\_1, node\_id\_2, weight)}}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Entrées}: deux identifiants et une force de renforcement.
+    \item \textbf{Effet}: applique décroissance globale puis renforcement symétrique des arêtes.
+\end{itemize}
+
+\paragraph{\texttt{HebbianMemoryGraph.spreading\_activation(query\_embedding, k=5)}}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Entrées}: requête NumPy $(d_h)$, nombre de résultats.
+    \item \textbf{Sortie}: liste d'épisodes enrichis (\texttt{id}, \texttt{score}, \texttt{data}, etc.).
+\end{itemize}
+
+\paragraph{\texttt{HebbianConsolidation.retrieve(query\_embedding, k=5)}}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Rôle}: alias haut niveau vers \texttt{spreading\_activation}.
+\end{itemize}
+
+\paragraph{\texttt{HebbianConsolidation.consolidate(llm\_callback=None)}}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Entrée}: callback optionnel prenant une liste d'épisodes.
+    \item \textbf{Sortie}: liste des identifiants de hubs consolidés.
+\end{itemize}
+
+\paragraph{\texttt{HebbianConsolidation.get\_stats()}}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Sortie}: dictionnaire de métriques (\texttt{total\_nodes}, \texttt{total\_edges}, \texttt{hubs}, \texttt{consolidated}).
+\end{itemize}
+
+\subsection{Résumé opérationnel}
+\begin{enumerate}[leftmargin=*]
+    \item Ajouter un épisode avec son embedding hippocampique;
+    \item renforcer les connexions avec les épisodes liés;
+    \item récupérer les souvenirs pertinents par propagation;
+    \item consolider périodiquement les hubs;
+    \item élaguer les traces obsolètes pour contenir la mémoire.
+\end{enumerate}
+
+\end{document}

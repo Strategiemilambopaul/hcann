@@ -1,0 +1,229 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{geometry}
+\usepackage{microtype}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\geometry{top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm}
+\hypersetup{hidelinks,pdftitle={Documentation Cortex HCANN}}
+
+\title{Documentation du Bloc Cortex}
+\author{Projet HCANN-Agent }
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Bloc Cortex (\texttt{cortex.py})}
+
+\subsection{Objectif du bloc}
+Le bloc cortex regroupe trois sous-modules:
+\begin{itemize}
+    \item \textbf{MultimodalEncoder}: projection des modalités vision/texte dans un espace sémantique commun;
+    \item \textbf{WorkingMemory}: mémoire de travail à slots avec lecture/écriture douce;
+    \item \textbf{EntorhinalGateway}: passerelle cortex$\leftrightarrow$hippocampe par attention.
+\end{itemize}
+
+\subsection{Inspiration neuroscientifique}
+Le bloc cortex est inspiré de plusieurs fonctions attribuées au néocortex et au cortex entorhinal dans la littérature:
+\begin{itemize}
+    \item \textbf{Néocortex associatif}: intégration de modalités hétérogènes vers une représentation plus abstraite et stable;
+    \item \textbf{Mémoire de travail}: maintien transitoire d'un petit nombre d'items pertinents pour le traitement courant;
+    \item \textbf{Passerelle entorhinale}: interface fonctionnelle entre représentations corticales et dynamique hippocampique.
+\end{itemize}
+L'implémentation ne cherche pas à reproduire la biophysique fine des circuits, mais à conserver leur rôle algorithmique (fusion, maintien contextuel, routage vers l'hippocampe).
+
+\subsection{1) Encodeur multimodal}
+
+Soient $\mathbf{v}\in\mathbb{R}^{512}$ (feature vision CLIP) et $\mathbf{t}\in\mathbb{R}^{512}$ (feature texte CLIP).  
+Le module applique des projections linéaires:
+\begin{align}
+\mathbf{z}_v &= \mathrm{Normalize}(W_v\mathbf{v} + b_v), \\
+\mathbf{z}_t &= \mathrm{Normalize}(W_t\mathbf{t} + b_t),
+\end{align}
+avec $W_v, W_t \in \mathbb{R}^{d_s \times 512}$, où $d_s=\texttt{semantic\_dim}$.
+
+La fusion multimodale est une moyenne simple:
+\begin{equation}
+\mathbf{z} =
+\begin{cases}
+\mathbf{z}_v & \text{si vision seule,}\\
+\mathbf{z}_t & \text{si texte seul,}\\
+\frac{1}{2}(\mathbf{z}_v+\mathbf{z}_t) & \text{si vision + texte.}
+\end{cases}
+\end{equation}
+
+\paragraph{Mode mock}
+Quand \texttt{use\_mock\_encoder=True}, les features CLIP réelles sont remplacées par des vecteurs aléatoires normalisés, tout en conservant les dimensions batch et la même interface. Cela accélère les tests sans téléchargement de modèles.
+
+\subsection{2) Working Memory à slots}
+
+On note:
+\begin{itemize}
+    \item $\mathbf{x}\in\mathbb{R}^{B\times d_w}$ l'entrée batch;
+    \item $S\in\mathbb{R}^{N_s\times d_w}$ la matrice des slots (\texttt{wm\_slots} slots).
+\end{itemize}
+
+Lecture par attention:
+\begin{align}
+A &= \frac{\mathbf{x}S^\top}{\sqrt{d_w}},\\
+W &= \mathrm{softmax}(A),\\
+\mathbf{r} &= WS.
+\end{align}
+
+Écriture douce (slot gagnant par échantillon):
+\begin{equation}
+S_{k^\star} \leftarrow 0.95\,S_{k^\star} + 0.05\,\mathbf{x}_i,
+\end{equation}
+où $k^\star=\arg\max_k W_{ik}$.
+
+\paragraph{Perte de diversité}
+Pour éviter la redondance entre slots:
+\begin{equation}
+\mathcal{L}_{div}
+= \left\| \tilde{S}\tilde{S}^\top - I \right\|_F^2,
+\end{equation}
+avec $\tilde{S}$ la version normalisée de $S$.
+
+\subsection{3) Passerelle entorhinale}
+
+Le module \texttt{EntorhinalGateway} implémente une attention simplifiée:
+\begin{align}
+\mathbf{q} &= W_q \mathbf{a},\\
+[\mathbf{k},\mathbf{v}] &= \mathrm{split}(W_{kv}\mathbf{m}),\\
+\alpha &= \mathrm{softmax}\!\left(\frac{\mathbf{q}\mathbf{k}^\top}{\sqrt{d_k}}\right),\\
+\mathbf{h} &= W_o(\alpha \mathbf{v}),
+\end{align}
+où $\mathbf{a}$ est l'état attracteur cortical et $\mathbf{m}$ l'état de mémoire de travail.
+
+\subsection{Correspondance implémentation}
+\begin{itemize}
+    \item \texttt{MultimodalEncoder.forward}: extraction CLIP + projection + normalisation + fusion;
+    \item \texttt{WorkingMemory.forward}: attention sur slots + mise à jour incrémentale;
+    \item \texttt{EntorhinalGateway.forward}: cross-attention cortex$\rightarrow$hippocampe.
+\end{itemize}
+
+\subsection{Détail mathématique fonction par fonction}
+
+\paragraph{\texttt{MultimodalEncoder.\_\_init\_\_}}
+Initialise les projections:
+\[
+W_v, W_t \in \mathbb{R}^{d_s \times 512}, \quad b_v,b_t\in\mathbb{R}^{d_s}.
+\]
+Si \texttt{use\_mock\_encoder=False}, CLIP est chargé puis figé.
+
+\paragraph{\texttt{MultimodalEncoder.\_freeze\_clip}}
+Pour chaque paramètre $\theta$ du backbone CLIP:
+\[
+\theta.\texttt{requires\_grad} \leftarrow \texttt{False}.
+\]
+En pratique, cela bloque la rétropropagation sur CLIP et réserve l'apprentissage aux têtes de projection.
+
+\paragraph{\texttt{MultimodalEncoder.forward}}
+Soit un batch de taille $B$.  
+Vision: $\mathbf{V}\in\mathbb{R}^{B\times512}$, texte: $\mathbf{T}\in\mathbb{R}^{B\times512}$.
+\begin{align}
+\mathbf{Z}_v &= \mathrm{norm}(\mathbf{V}W_v^\top + b_v),\\
+\mathbf{Z}_t &= \mathrm{norm}(\mathbf{T}W_t^\top + b_t),\\
+\mathbf{Z} &= \frac{1}{n_m}\sum_{m=1}^{n_m}\mathbf{Z}_m,
+\end{align}
+où $n_m\in\{1,2\}$ est le nombre de modalités présentes.
+
+\paragraph{\texttt{MultimodalEncoder.\_mock\_forward}}
+Remplace $\mathbf{V}$ et/ou $\mathbf{T}$ par des gaussiennes:
+\[
+\tilde{\mathbf{V}},\tilde{\mathbf{T}} \sim \mathcal{N}(0,I),
+\]
+puis applique les mêmes projections.  
+Le code force la cohérence des dimensions batch en alignant la taille texte sur la taille image quand les deux sont fournies.
+
+\paragraph{\texttt{WorkingMemory.forward}}
+Entrée $\mathbf{X}\in\mathbb{R}^{B\times d_w}$, slots $S\in\mathbb{R}^{N_s\times d_w}$.
+\begin{align}
+A &= \frac{\mathbf{X}S^\top}{\sqrt{d_w}} \in \mathbb{R}^{B\times N_s},\\
+W &= \mathrm{softmax}(A),\\
+\mathbf{R} &= WS \in \mathbb{R}^{B\times d_w}.
+\end{align}
+Écriture (sans gradient):
+\[
+S_{k^\star(i)} \leftarrow 0.95\,S_{k^\star(i)} + 0.05\,\mathbf{X}_i.
+\]
+
+\paragraph{\texttt{WorkingMemory.diversity\_loss}}
+Si $\hat{S}$ est la version normalisée de $S$:
+\[
+\mathcal{L}_{div} = \left\| \hat{S}\hat{S}^\top - I \right\|_F^2.
+\]
+Le terme pénalise les slots colinéaires et favorise la spécialisation.
+
+\paragraph{\texttt{EntorhinalGateway.forward}}
+Avec état attracteur $\mathbf{a}$ et état mémoire de travail $\mathbf{m}$:
+\begin{align}
+\mathbf{q} &= W_q\mathbf{a},\\
+[\mathbf{k},\mathbf{v}] &= \mathrm{split}(W_{kv}\mathbf{m}),\\
+\alpha &= \mathrm{softmax}\!\left(\frac{\mathbf{q}\mathbf{k}^\top}{\sqrt{d_k}}\right),\\
+\mathbf{h} &= W_o(\alpha\mathbf{v}).
+\end{align}
+La sortie $\mathbf{h}$ est projetée dans l'espace hippocampique (\texttt{hpc\_size}).
+
+\subsection{Interface détaillée des fonctions}
+
+\paragraph{\texttt{MultimodalEncoder.forward(images=None, texts=None)}}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Entrées}
+    \begin{itemize}
+        \item \texttt{images}: \texttt{torch.Tensor} de forme $(B, C, H, W)$, optionnel;
+        \item \texttt{texts}: liste de $B$ chaînes (ou structure équivalente), optionnel.
+    \end{itemize}
+    \item \textbf{Sortie}
+    \begin{itemize}
+        \item embedding sémantique \texttt{torch.Tensor} de forme $(B, d_s)$.
+    \end{itemize}
+    \item \textbf{Erreur métier}
+    \begin{itemize}
+        \item si aucune modalité n'est fournie, l'implémentation lève une exception.
+    \end{itemize}
+\end{itemize}
+
+\paragraph{\texttt{WorkingMemory.forward(x)}}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Entrée}: \texttt{x} de forme $(B,d_w)$.
+    \item \textbf{Sorties}:
+    \begin{itemize}
+        \item \texttt{read}: $(B,d_w)$, contenu lu depuis les slots;
+        \item \texttt{w}: $(B,N_s)$, poids d'attention sur slots.
+    \end{itemize}
+\end{itemize}
+
+\paragraph{\texttt{WorkingMemory.diversity\_loss()}}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Entrée}: aucune (utilise les slots internes).
+    \item \textbf{Sortie}: scalaire \texttt{torch.Tensor} ($\mathcal{L}_{div}$).
+\end{itemize}
+
+\paragraph{\texttt{EntorhinalGateway.forward(attractor\_state, wm\_state)}}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Entrées}
+    \begin{itemize}
+        \item \texttt{attractor\_state}: état attracteur cortical;
+        \item \texttt{wm\_state}: état mémoire de travail.
+    \end{itemize}
+    \item \textbf{Sortie}: projection vers l'espace hippocampique, dimension finale \texttt{hpc\_size}.
+\end{itemize}
+
+\subsection{Traçage calculatoire (formules $\leftrightarrow$ code)}
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Extraction des features} : CLIP (vision/texte) ou vecteurs mock aléatoires.
+    \item \textbf{Projection linéaire} : multiplication affine par \texttt{vision\_proj} et \texttt{text\_proj}.
+    \item \textbf{Normalisation} : \texttt{F.normalize(..., dim=-1)} pour stabiliser l'échelle.
+    \item \textbf{Fusion} : moyenne arithmétique des modalités présentes.
+    \item \textbf{Mémoire de travail} : calcul attention $A$, poids $W$, lecture $R=WS$.
+    \item \textbf{Écriture slot} : mise à jour EMA du slot gagnant (\texttt{argmax} sur $W$).
+\end{enumerate}
+
+\end{document}

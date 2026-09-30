@@ -1,0 +1,206 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{geometry}
+\usepackage{microtype}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\geometry{top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm}
+\hypersetup{hidelinks,pdftitle={Documentation Hippocampe HCANN}}
+
+\title{Documentation du Bloc Hippocampe}
+\author{Projet HCANN-Agent}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Bloc Hippocampe (\texttt{hippocampus.py})}
+
+\subsection{Objectif du bloc}
+Le bloc hippocampique implémente un \textit{scaffold} de type Vector-HaSH, dédié à l'encodage rapide des épisodes. Il combine :
+\begin{itemize}
+    \item une intégration de mouvement via des modules de \textit{grid cells} ;
+    \item une projection fixe vers un espace hippocampique de grande dimension ;
+    \item une dynamique d'attracteur pour stabiliser les états internes.
+\end{itemize}
+
+\subsection{Inspiration neuroscientifique}
+Le design est inspiré de propriétés fonctionnelles de la formation hippocampique :
+\begin{itemize}
+    \item \textbf{Grid cells} (cortex entorhinal médian) : codage périodique des transitions latentes ;
+    \item \textbf{Séparation structure--contenu} : dissociation entre dynamique interne du support (\textit{scaffold}) et contenu épisodique ;
+    \item \textbf{Attracteurs hippocampiques} : stabilisation des traces mnésiques face au bruit.
+\end{itemize}
+L'approche reste algorithmique : elle vise la plausibilité fonctionnelle et la robustesse computationnelle, sans simulation biophysique fine.
+
+\subsection{1) Module de cellules de grille}
+Chaque module de période $P$ maintient une phase 2D $\boldsymbol{\phi}_t$ et applique :
+\begin{equation}
+\boldsymbol{\phi}_{t+1} = (\boldsymbol{\phi}_t + \mathbf{u}_t)\bmod P,
+\end{equation}
+où $\mathbf{u}_t\in\mathbb{R}^2$ représente la vitesse (ou transition latente).
+
+Le codage périodique d'un module est défini par :
+\begin{equation}
+g(\boldsymbol{\phi})=
+\left[
+\sin\!\left(\tfrac{2\pi}{P}\boldsymbol{\phi}\right),
+\cos\!\left(\tfrac{2\pi}{P}\boldsymbol{\phi}\right)
+\right]\in\mathbb{R}^{4}.
+\end{equation}
+
+\paragraph{Détail d'implémentation}
+Le code adapte dynamiquement la taille batch de \texttt{phase} avant l'addition avec $\mathbf{u}_t$, afin d'éviter les incohérences de dimensions entre mini-lots successifs.
+
+\subsection{2) Scaffold hippocampique}
+Avec $M$ modules, l'état de grille concaténé est :
+\begin{equation}
+\mathbf{g} = [g_1,\dots,g_M] \in \mathbb{R}^{4M}.
+\end{equation}
+
+La projection hippocampique fixe (\texttt{W\_grid\_to\_hpc}) est ensuite appliquée :
+\begin{equation}
+\mathbf{h}_0 = \mathrm{ReLU}(W_{g\to h}\mathbf{g}-\theta_h),
+\end{equation}
+où $W_{g\to h}$ est initialisé aléatoirement puis figé, et $\theta_h=\texttt{hpc\_threshold}$.
+
+\subsection{3) Dynamique d'attracteur}
+L'état hippocampique est raffiné par itérations :
+\begin{equation}
+\mathbf{h}^{(k+1)} = \tanh\!\left(\mathbf{h}^{(k)} W_A\right), \quad k=0,\dots,K-1.
+\end{equation}
+
+La matrice d'attracteur est symétrisée dans l'implémentation :
+\begin{equation}
+W_A \leftarrow \frac{W_A + W_A^\top}{2}.
+\end{equation}
+
+\subsection{Sorties du bloc}
+Le module \texttt{HippocampalScaffold.forward} retourne :
+\begin{itemize}
+    \item $\mathbf{h}$ : état hippocampique stabilisé (dimension \texttt{hpc\_size}) ;
+    \item $\mathbf{g}$ : état concaténé des modules de grille (support structurel).
+\end{itemize}
+
+\subsection{Correspondance implémentation}
+\begin{itemize}
+    \item \texttt{GridCellModule.forward} : mise à jour de phase et encodage sinus/cosinus ;
+    \item \texttt{HippocampalScaffold.\_init\_fixed\_projection} : initialisation gaussienne et gel de la projection ;
+    \item \texttt{HippocampalScaffold.forward} : path integration $\rightarrow$ projection $\rightarrow$ attracteur.
+\end{itemize}
+
+\subsection{Détail mathématique fonction par fonction}
+
+\paragraph{\texttt{GridCellModule.\_\_init\_\_}}
+Chaque module porte:
+\[
+P \in \mathbb{N}^+, \qquad \boldsymbol{\phi}\in\mathbb{R}^{1\times2}.
+\]
+La phase $\boldsymbol{\phi}$ est stockée comme buffer persistant.
+
+\paragraph{\texttt{GridCellModule.forward}}
+Pour un batch de vitesses $U\in\mathbb{R}^{B\times2}$:
+\[
+\boldsymbol{\phi}\leftarrow (\boldsymbol{\phi}+U)\bmod P.
+\]
+Ensuite, codage trigonométrique:
+\[
+g(\boldsymbol{\phi})=
+\left[
+\sin\!\left(\frac{2\pi}{P}\boldsymbol{\phi}\right),
+\cos\!\left(\frac{2\pi}{P}\boldsymbol{\phi}\right)
+\right]\in\mathbb{R}^{B\times4}.
+\]
+Le redimensionnement dynamique de \texttt{phase} garantit la compatibilité entre batches successifs.
+
+\paragraph{\texttt{HippocampalScaffold.\_\_init\_\_}}
+Si $M$ modules:
+\[
+d_g = 4M,\qquad W_{g\to h}\in\mathbb{R}^{d_h\times d_g},\quad d_h=\texttt{hpc\_size}.
+\]
+La projection grille$\rightarrow$hippocampe est fixée après initialisation.
+
+\paragraph{\texttt{HippocampalScaffold.\_init\_fixed\_projection}}
+Initialisation gaussienne:
+\[
+W_{g\to h}[i,j]\sim\mathcal{N}(0,\sigma^2),
+\]
+puis:
+\[
+W_{g\to h}.\texttt{requires\_grad}\leftarrow\texttt{False}.
+\]
+
+\paragraph{\texttt{HippocampalScaffold.forward}}
+Pour une entrée vitesse $U$:
+\begin{align}
+\mathbf{g} &= \mathrm{concat}\left(g_1(U),\dots,g_M(U)\right)\in\mathbb{R}^{B\times d_g},\\
+\mathbf{h}_0 &= \mathrm{ReLU}(W_{g\to h}\mathbf{g}^\top - \theta_h)^\top.
+\end{align}
+Puis dynamique d'attracteur en $K$ itérations:
+\[
+\mathbf{h}^{(k+1)}=\tanh(\mathbf{h}^{(k)}W_A),\quad k=0,\dots,K-1.
+\]
+Sorties:
+\[
+(\mathbf{h}^{(K)},\mathbf{g}).
+\]
+
+\paragraph{\texttt{HippocampalScaffold.reset\_phases}}
+Réinitialise toutes les phases:
+\[
+\forall m\in\{1,\dots,M\},\quad \boldsymbol{\phi}_m\leftarrow \mathbf{0}.
+\]
+
+\subsection{Interface détaillée des fonctions}
+
+\paragraph{\texttt{GridCellModule.forward(velocity=None)}}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Entrée}: \texttt{velocity} de forme $(B,2)$, optionnelle.
+    \item \textbf{Sortie}: état de grille $(B,4)$.
+    \item \textbf{État interne}: \texttt{phase} est persistant et mis à jour à chaque appel.
+\end{itemize}
+
+\paragraph{\texttt{HippocampalScaffold.forward(velocity=None, steps=3)}}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Entrées}
+    \begin{itemize}
+        \item \texttt{velocity}: $(B,2)$;
+        \item \texttt{steps}: nombre d'itérations attracteur.
+    \end{itemize}
+    \item \textbf{Sorties}
+    \begin{itemize}
+        \item \texttt{h}: état hippocampique $(B,d_h)$;
+        \item \texttt{g}: état grille concaténé $(B,d_g)$.
+    \end{itemize}
+\end{itemize}
+
+\paragraph{\texttt{HippocampalScaffold.reset\_phases()}}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Entrée}: aucune.
+    \item \textbf{Effet}: remise à zéro de toutes les phases des modules de grille.
+\end{itemize}
+
+\subsection{Déroulement du calcul (pas à pas)}
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Mise à jour de phase}: addition vitesse + modulo période.
+    \item \textbf{Codage périodique}: conversion phase $\rightarrow$ sinus/cosinus.
+    \item \textbf{Concaténation multi-modules}: construction de $\mathbf{g}\in\mathbb{R}^{B\times d_g}$.
+    \item \textbf{Projection fixe}: \texttt{Linear} figée grille$\rightarrow$hippocampe.
+    \item \textbf{Seuil non linéaire}: \texttt{ReLU(.-hpc\_threshold)}.
+    \item \textbf{Nettoyage attracteur}: itérations de \texttt{tanh(h @ W\_attractor)}.
+\end{enumerate}
+
+\subsection{Dimensions et cohérence batch}
+Pour éviter les erreurs de forme lors des mini-lots variables:
+\begin{itemize}[leftmargin=*]
+    \item la phase interne est automatiquement redimensionnée à $B$;
+    \item chaque module retourne 4 dimensions;
+    \item la concaténation donne $d_g=4M$ avec $M=\lvert\texttt{grid\_periods}\rvert$.
+\end{itemize}
+
+\end{document}

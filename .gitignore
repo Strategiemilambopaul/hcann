@@ -1,1 +1,43 @@
-Nothing should be ignored based on the provided file changes. The only added file is `test_hcann_agent.py`, which appears to be a Python source code file and should not be ignored.
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc.*
+.pytest_cache/
+.env/
+env/
+venv/
+.venv/
+flickr30k-images/
+
+# Matplotlib
+.mplconfig/
+tmp_mpl/
+tmp_mpl*/
+
+# LaTeX
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+*.nav
+*.snm
+*.vrb
+
+# PDF générés localement (sources .tex conservées)
+/cortex.pdf
+/hc.log
+document/hc.pdf
+document/main.pdf
+models/document/*.pdf
+memory/document/*.pdf
+MemoryQA/
+checkpoints/
+~$*
