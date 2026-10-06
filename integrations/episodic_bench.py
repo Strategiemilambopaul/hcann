@@ -11,6 +11,9 @@ from typing import Any, Protocol
 
 from PIL import Image
 
+from integrations.episodic_scenes import trace_fields
+from integrations.episodic_trace import build_episode_meta
+
 
 class EpisodicStore(Protocol):
     """Contrat minimal pour mesurer une IA sur des épisodes vécus."""
@@ -175,11 +178,13 @@ class LexicalStore:
         self._eps: list[dict] = []
 
     def encode(self, episode_id, text, image=None, created_at=None, extra=None):
+        meta = build_episode_meta(episode_id, text or "", created_at, extra)
         self._eps.append(
             {
                 "id": str(episode_id),
                 "text": text or "",
                 "created_at": created_at or "",
+                "trace": meta["trace"],
                 "order": len(self._eps),
             }
         )
@@ -201,6 +206,7 @@ class LexicalStore:
                     "path": "lexical",
                     "text": ep["text"],
                     "created_at": ep["created_at"],
+                    "trace": ep.get("trace"),
                 }
             )
         return out
@@ -219,6 +225,7 @@ class MergeStore:
     def encode(self, episode_id, text, image=None, created_at=None, extra=None):
         eid = str(episode_id)
         caption = text or ""
+        meta = build_episode_meta(eid, caption, created_at, extra)
         for ep in self._eps:
             if _text_jaccard(caption, ep["text"]) >= self.min_jaccard:
                 ep["text"] = (ep["text"] + " " + caption).strip()
@@ -230,6 +237,7 @@ class MergeStore:
                 "id": eid,
                 "text": caption,
                 "created_at": created_at or "",
+                "trace": meta["trace"],
                 "order": len(self._eps),
                 "merged_ids": [eid],
             }
@@ -253,6 +261,7 @@ class MergeStore:
                     "path": "merge",
                     "text": ep["text"],
                     "created_at": ep["created_at"],
+                    "trace": ep.get("trace"),
                     "merged_ids": list(ep["merged_ids"]),
                 }
             )
@@ -411,7 +420,7 @@ def ingest(store: EpisodicStore, pairs: list[dict], distractors: list[dict]) -> 
     for pair in pairs:
         for side in ("a", "b"):
             ep = pair[side]
-            extra = {"identity": ep["identity"]}
+            extra = trace_fields(ep)
             store.encode(
                 ep["id"],
                 ep["text"],
@@ -421,7 +430,13 @@ def ingest(store: EpisodicStore, pairs: list[dict], distractors: list[dict]) -> 
             )
             n += 1
     for d in distractors:
-        store.encode(d["id"], d["text"], image=d.get("image"), created_at=d.get("created_at"))
+        store.encode(
+            d["id"],
+            d["text"],
+            image=d.get("image"),
+            created_at=d.get("created_at"),
+            extra=trace_fields(d),
+        )
         n += 1
     return n
 
@@ -501,7 +516,7 @@ def evaluate_pair(stores: dict[str, EpisodicStore], pair: dict, k: int, degraded
 def ingest_visits(store: EpisodicStore, visits: list[dict]) -> int:
     n = 0
     for ep in visits:
-        extra = {"identity": ep["identity"]} if ep.get("identity") else None
+        extra = trace_fields(ep)
         store.encode(
             ep["id"],
             ep["text"],

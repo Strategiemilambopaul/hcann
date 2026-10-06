@@ -54,6 +54,27 @@ def test_summarize_system_rates():
     assert s["n_uncommitted"] == 1
 
 
+def test_ingest_keeps_caption_and_stores_trace():
+    store = LexicalStore()
+    ingest(store, twin_pairs(), distractors())
+    momo = next(ep for ep in store._eps if ep["id"] == "vet_momo")
+    assert momo["text"].endswith("This is Momo.")
+    assert "bring Momo" not in momo["text"]
+    trace = momo["trace"]
+    assert trace["trace_id"] == "vet_momo"
+    assert trace["entity_id"] == "paul"
+    assert trace["place"] == "vet clinic"
+    assert trace["participants"] == ["paul", "Momo"]
+    assert trace["intent"] == "bring Momo to the vet"
+    assert trace["outcome"] == "Momo checked"
+    assert trace["timestamp"] == "2026-04-02T09:30:00"
+    hits = store.recall(
+        query_text="Cat at the vet clinic sitting on the table. This is Momo.", k=1
+    )
+    assert hits[0]["id"] == "vet_momo"
+    assert hits[0]["trace"]["outcome"] == "Momo checked"
+
+
 def test_lexical_identity_picks_named_twin():
     store = LexicalStore()
     ingest(store, twin_pairs(), distractors())

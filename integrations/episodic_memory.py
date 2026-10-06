@@ -16,6 +16,7 @@ import torch
 from PIL import Image
 from torchvision import transforms
 
+from integrations.episodic_trace import build_episode_meta
 from models.hcann import HCANN
 from train.baselines.rag_baseline import RagBaseline
 from train.continual_learner import ContinualLearner
@@ -377,6 +378,7 @@ def _node_payload(item: dict, path: str) -> dict:
         "path": path,
         "text": text,
         "created_at": created_at,
+        "trace": data.get("trace"),
         "semantic_score": item.get("semantic_score"),
         "dg_score": item.get("dg_score"),
         "lex_overlap": item.get("lex_overlap"),
@@ -481,9 +483,7 @@ class EpisodicMemory:
         """Enregistre un épisode (image + texte + date) dans le graphe."""
         eid = str(episode_id)
         imgs = image_to_batch(image, self.device) if image is not None else None
-        meta = {"text": text, "created_at": created_at}
-        if extra:
-            meta.update(extra)
+        meta = build_episode_meta(eid, text, created_at, extra)
         self.learner.train_step(
             images=imgs,
             texts=[text],
@@ -614,6 +614,7 @@ class EpisodicMemory:
                     "path": "rag_clip",
                     "text": data.get("text", ""),
                     "created_at": data.get("created_at"),
+                    "trace": data.get("trace"),
                     "semantic_score": score,
                 }
             )

@@ -56,8 +56,6 @@ class HCANNConfig:
     dream_batch_size: int = 16
     enable_dreaming: bool = True
 
-    stream_disable_remote_text_encoder: bool = True
-
     def __post_init__(self):
         if self.grid_periods is None:
             self.grid_periods = [3, 5, 7]

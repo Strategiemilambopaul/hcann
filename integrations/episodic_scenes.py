@@ -55,6 +55,115 @@ def make_base(kind: str) -> Image.Image:
     return img
 
 
+# Même entité pour tout le journal fondateur. L'isolation entre entités est une étape suivante.
+TRACE_BY_ID: dict[str, dict] = {
+    "shop_mardi_colis": {
+        "entity_id": "paul",
+        "place": "white shop",
+        "participants": ["paul", "Mme X"],
+        "context": "errand",
+        "intent": "leave a package",
+        "outcome": "package left on Tuesday",
+    },
+    "shop_jeudi_facture": {
+        "entity_id": "paul",
+        "place": "white shop",
+        "participants": ["paul", "Mme X"],
+        "context": "errand",
+        "intent": "leave an invoice",
+        "outcome": "invoice left on Thursday",
+    },
+    "vet_momo": {
+        "entity_id": "paul",
+        "place": "vet clinic",
+        "participants": ["paul", "Momo"],
+        "context": "checkup",
+        "intent": "bring Momo to the vet",
+        "outcome": "Momo checked",
+    },
+    "vet_luna": {
+        "entity_id": "paul",
+        "place": "vet clinic",
+        "participants": ["paul", "Luna"],
+        "context": "checkup",
+        "intent": "bring Luna to the vet",
+        "outcome": "Luna checked",
+    },
+    "box_entree": {
+        "entity_id": "paul",
+        "place": "building entrance",
+        "participants": ["paul"],
+        "context": "delivery",
+        "intent": "receive a parcel",
+        "outcome": "box left at the entrance",
+    },
+    "box_cour": {
+        "entity_id": "paul",
+        "place": "courtyard",
+        "participants": ["paul"],
+        "context": "delivery",
+        "intent": "receive a parcel",
+        "outcome": "box left in the courtyard",
+    },
+    "shop_retour_cle": {
+        "entity_id": "paul",
+        "place": "white shop",
+        "participants": ["paul"],
+        "context": "pickup",
+        "intent": "pick up the keys",
+        "outcome": "keys collected",
+    },
+    "shop_retour_sac": {
+        "entity_id": "paul",
+        "place": "white shop",
+        "participants": ["paul"],
+        "context": "pickup",
+        "intent": "pick up the bag",
+        "outcome": "bag collected",
+    },
+    "distract_blue": {
+        "entity_id": "paul",
+        "place": "office",
+        "participants": ["paul"],
+        "context": "meeting",
+        "intent": "attend a meeting",
+        "outcome": "blue circle noted",
+    },
+    "distract_red": {
+        "entity_id": "paul",
+        "place": "kitchen",
+        "participants": ["paul"],
+        "context": "home",
+        "intent": "note the room",
+        "outcome": "red square noted",
+    },
+    "distract_note": {
+        "entity_id": "paul",
+        "place": "desk",
+        "participants": ["paul"],
+        "context": "reminder",
+        "intent": "write a reminder",
+        "outcome": "sticky note written",
+    },
+    "distract_park": {
+        "entity_id": "paul",
+        "place": "park",
+        "participants": ["paul"],
+        "context": "walk",
+        "intent": "walk outside",
+        "outcome": "afternoon walk done",
+    },
+}
+
+
+def trace_fields(ep: dict) -> dict:
+    """Champs de trace pour `extra`. La légende (`text`) n'est pas réécrite."""
+    fields = dict(TRACE_BY_ID.get(ep["id"], {"entity_id": "paul"}))
+    if ep.get("identity"):
+        fields["identity"] = ep["identity"]
+    return fields
+
+
 def twin_pairs() -> list[dict]:
     shop = make_base("shop")
     cat = make_base("cat")

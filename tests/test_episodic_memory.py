@@ -31,6 +31,37 @@ def _small_memory(tie_margin: float = 0.05) -> EpisodicMemory:
     return EpisodicMemory(model, learner, device, tie_margin=tie_margin)
 
 
+def test_encode_stores_trace_apart_from_caption():
+    mem = _small_memory()
+    mem.encode(
+        "ep_a",
+        "Cat named Momo at the clinic.",
+        created_at="2026-04-02",
+        extra={
+            "identity": "Momo",
+            "entity_id": "paul",
+            "place": "vet clinic",
+            "participants": ["paul", "Momo"],
+            "intent": "bring Momo to the vet",
+            "outcome": "Momo checked",
+        },
+    )
+    data = mem.graph.nodes["ep_a"]["data"]
+    assert data["text"] == "Cat named Momo at the clinic."
+    assert data["identity"] == "Momo"
+    trace = data["trace"]
+    assert trace["entity_id"] == "paul"
+    assert trace["place"] == "vet clinic"
+    assert trace["participants"] == ["paul", "Momo"]
+    assert trace["intent"] == "bring Momo to the vet"
+    assert trace["outcome"] == "Momo checked"
+    assert trace["event"] == "Cat named Momo at the clinic."
+    assert trace["links"] == []
+    hits = mem.recall(query_text="Cat named Momo at the clinic.", k=1)
+    assert hits[0]["id"] == "ep_a"
+    assert hits[0]["trace"]["place"] == "vet clinic"
+
+
 def test_encode_recall_deja_vu_smoke():
     mem = _small_memory()
     mem.encode("ep_a", "Cat named Momo at the clinic.", created_at="2026-04-02")

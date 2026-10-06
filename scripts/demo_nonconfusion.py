@@ -108,6 +108,9 @@ def main() -> int:
     lexical = LexicalStore()
     merged = MergeStore()
     n_ep = ingest(hcann, pairs, extras)
+    sample = memory.graph.nodes[pairs[0]["a"]["id"]]["data"]["trace"]
+    if not sample.get("entity_id") or not sample.get("place"):
+        raise RuntimeError("trace schema missing on the journal")
     ingest(lexical, pairs, extras)
     ingest(merged, pairs, extras)
     stores = {"rag": rag, "lexical": lexical, "merge": merged, "hcann": hcann}
@@ -128,6 +131,7 @@ def main() -> int:
         "tiebreak": args.tiebreak,
         "seed": args.seed,
         "n_episodes": n_ep,
+        "trace_schema": ["entity_id", "place", "participants", "intent", "outcome"],
         "summary": summary,
         "rows": rows,
     }

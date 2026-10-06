@@ -1,9 +1,7 @@
 # HCANN — journal d’épisodes vécus
 
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-L’unité de mémoire n’est pas un document (RAG) ni un fait de chat. C’est un **épisode** : image + texte + temps.
+L’unité de mémoire est un **épisode** : image + texte + temps, avec une trace structurée à côté de la légende.
 
 Le geste distinctif : **ne pas fusionner deux visites trop proches**. Identité dans la requête → `identity`. Sinon complétion CA3 si les attracteurs sont séparés, sinon paire `ambiguous_twins`. Le cosine RAG choisit un jumeau.
 
@@ -41,7 +39,7 @@ mem.encode(
 )
 print(mem.deja_vu(text="Cat at the vet clinic. This is Momo.", image=img))
 hits = mem.recall(query_text="Cat at the vet clinic")
-# path : semantic | identity | ambiguous_twins
+# path : semantic | identity | ca3 | ambiguous_twins
 ```
 
 ## Ce que le code est
@@ -53,9 +51,5 @@ hits = mem.recall(query_text="Cat at the vet clinic")
 - **Graphe** `memory/consolidation.py`
 
 Tests : `python -m pytest tests/test_episodic_memory.py tests/test_episodic_bench.py tests/test_trisynaptic.py tests/test_semantic_boosted.py`.
-
-## Licence
-
-MIT — [LICENSE](LICENSE).
 
 Les contributions passent par une branche et une pull request.

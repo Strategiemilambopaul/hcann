@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Telecharge CLIP (605 Mo) avec reprise automatique — a lancer avant main.py --use-clip."""
+"""Telecharge CLIP (605 Mo) avec reprise automatique — avant les demos --use-clip."""
 
 import os
 import sys
@@ -109,7 +109,7 @@ def main():
         download_file(name, os.path.join(OUTPUT_DIR, name))
         if i + 1 < len(FILES):
             time.sleep(2)
-    print("[CLIP] Termine. Relance: python main.py --flickr --use-clip --epochs-per-task 2")
+    print("[CLIP] Termine. Relance: python scripts/demo_nonconfusion.py --use-clip")
 
 
 if __name__ == "__main__":

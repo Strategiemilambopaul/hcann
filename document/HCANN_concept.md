@@ -1,6 +1,6 @@
 # HCANN — le concept
 
-HCANN (Hippocampal-Cortical Adaptive Neural Network) est un **journal d’épisodes vécus**. L’unité n’est pas un document (RAG) ni un fait de conversation (Mem0, Zep). C’est un épisode : **image + texte + temps**.
+HCANN (Hippocampo-Cortical Artificial Neural Network) est un **journal d’épisodes vécus**. L’unité est un épisode : **image + texte + temps**, plus une trace structurée (entité, lieu, participants, intention, résultat) stockée à côté de la légende.
 
 Le geste distinctif n’est pas de mieux répondre à des questions factuelles. C’est de **ne pas fusionner deux visites trop proches**.
 
@@ -34,7 +34,7 @@ hits = mem.recall(query_text="Cat at the vet clinic")
 ## Ce n’est pas
 
 - Un SOTA Memory-QA (PENSIEVE et consorts restent hors sujet).
-- Un produit MaaS. Le [business plan](Business_Plan_HCANN.md) décrit une ambition ; ce n’est pas la preuve.
+- Un produit. Le dépôt mesure un journal. Il ne livre pas de service.
 - De la *pattern separation* magique dans le gyrus denté. **La preuve** est la politique de rappel (jumeaux inférés, identité, CA3 `complete_among`, paire ambiguë), pas un SOTA hippocampique.
 - Un hit unique garanti sur légende générique. Sans indice, CA3 ne parie que si les attracteurs DG sont assez séparés (marge 0,2). Sinon la paire reste ambiguë.
 
@@ -77,4 +77,4 @@ Le **mètre** (n’importe quelle IA, pas seulement HCANN) : [episodic_unit.md](
 
 - Les jumeaux ne sont plus étiquetés à l’encodage. Un jumeau = cosine CLIP élevé **et** légendes quasi doubles (Jaccard). Deux visites au même magasin avec des légendes différentes ne collapsent pas. `pair_id` reste optionnel si on l’écrit dans les métadonnées.
 - `models/` : CA3 Hopfield est **branché** sur le rappel jumeaux (`complete_among`) et mesuré à part en complétion (`complete` sur motifs DG), pas réécrit. DG / CA1 restent le substrat.
-- Memory-QA, le mode stream, `main.py` sont d’**autres expériences**. Ils ne fondent pas le concept.
+- Memory-QA, le mode stream et `main.py` ont été retirés du dépôt. Le concept repose sur le journal et le banc jumeaux.
