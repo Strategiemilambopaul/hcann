@@ -253,8 +253,15 @@ class HebbianMemoryGraph(nn.Module):
         base_scores = self._mask_invalid(base_scores, allowed_ids)
 
         threshold = 0.2
+        edge = self.edges[:n, :n]
+        strong = edge * (edge > 0.05).to(edge.dtype)
         fired = (base_scores > threshold).float()
-        propagated = self.edges[:n, :n] @ fired
+        propagated = strong.transpose(0, 1) @ fired
+        if allowed_ids is not None:
+            for i in range(n):
+                nid = self.node_ids[i] if i < len(self.node_ids) else None
+                if nid not in allowed_ids:
+                    propagated[i] = 0
         boosted = base_scores + self.config.spreading_strength * propagated
         boosted = self._mask_invalid(boosted, allowed_ids)
 
