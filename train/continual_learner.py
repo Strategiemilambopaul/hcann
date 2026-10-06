@@ -1,8 +1,23 @@
 import torch
 from models.hcann import HCANN
 from memory.consolidation import HebbianConsolidation
+from memory.episodes import EpisodeIndex
 from memory.replay_buffer import EpisodicBuffer
 from memory.dreaming import DreamingPhase
+
+
+def _batch_len(images, texts, episode_id) -> int:
+    if episode_id is not None:
+        return len(episode_id)
+    if isinstance(texts, (list, tuple)):
+        if len(texts) == 1 and isinstance(texts[0], (list, tuple)):
+            return len(texts[0])
+        return len(texts)
+    if texts is not None:
+        return 1
+    if images is not None and hasattr(images, "shape"):
+        return int(images.shape[0])
+    return 1
 
 
 class ContinualLearner:
@@ -15,6 +30,8 @@ class ContinualLearner:
         self.step_count = 0
         self._prev_episode_id: str | None = None
         self.track_baselines = track_baselines
+        self.episodic_mode = bool(getattr(config, "episodic_mode", False))
+        self.episodes = EpisodeIndex(config) if self.episodic_mode else None
 
     def train_step(
         self,
@@ -26,9 +43,20 @@ class ContinualLearner:
     ):
         """Encodage rapide -> graphe hebbien -> dreaming périodique (sans backprop)."""
         self.model.train()
+        planned_ids = None
+        episode_keys = episode_id
+        if self.episodic_mode:
+            n = _batch_len(images, texts, episode_id)
+            planned_ids = []
+            for i in range(n):
+                if episode_id is not None:
+                    planned_ids.append(str(episode_id[i]))
+                else:
+                    planned_ids.append(f"train_{self.step_count + i}")
+            episode_keys = planned_ids
 
-        hpc, sem, wm, novelty, dg_code, _ = self.model.fast_encode(
-            images, texts, velocity, episode_keys=episode_id
+        hpc, sem, wm, novelty, dg_code, hpc_out = self.model.fast_encode(
+            images, texts, velocity, episode_keys=episode_keys
         )
 
         batch_size = hpc.size(0)
@@ -36,23 +64,40 @@ class ContinualLearner:
             hpc_np = hpc[i].detach().cpu().numpy()
             sem_np = sem[i].detach().cpu().numpy()
             dg_np = dg_code[i].detach().cpu().numpy()
-            retrieved = self.graph.retrieve(hpc_np, k=3)
-            current_id = str(episode_id[i]) if episode_id else f"train_{self.step_count}"
+            if planned_ids is not None:
+                current_id = planned_ids[i]
+            else:
+                current_id = str(episode_id[i]) if episode_id else f"train_{self.step_count}"
+            retrieved = self.graph.retrieve(hpc_np, k=3, touch=False)
             node_data = {"step": self.step_count}
             if metadata and i < len(metadata):
                 node_data.update(metadata[i])
             if texts is not None:
                 text_i = texts[i] if isinstance(texts, (list, tuple)) else texts
                 node_data["text"] = text_i
-            node_data["novelty"] = novelty[i].item() if novelty.numel() else 0.0
+            nov_i = novelty[i].item() if novelty.numel() else 0.0
+            node_data["novelty"] = nov_i
+            novelty_mem = nov_i
+            if hpc_out is not None and "novelty_mem" in hpc_out:
+                novelty_mem = float(hpc_out["novelty_mem"][i].item())
+            if self.episodes is not None:
+                seg = self.episodes.add_event(current_id, novelty_mem)
+                node_data["segment_id"] = seg["segment_id"]
+                node_data["event_idx"] = seg["event_idx"]
+                node_data["novelty_mem"] = novelty_mem
+                if seg["boundary"]:
+                    self.model.hippocampus.temporal_ctx.boundary()
             self.graph.add_node(
                 current_id, node_data, hpc_np, sem_embedding=sem_np, dg_embedding=dg_np
             )
 
-            related_ids = [r.get("id") for r in retrieved if r.get("id")]
+            related_ids = [
+                r.get("id") for r in retrieved
+                if r.get("id") and str(r.get("id")) != current_id
+            ]
             if related_ids:
                 self.graph.update_connections(current_id, related_ids, strength=0.12)
-            sem_retrieved = self.graph.retrieve_semantic(sem_np, k=4)
+            sem_retrieved = self.graph.retrieve_semantic(sem_np, k=4, touch=False)
             sem_related = [
                 r.get("id") for r in sem_retrieved
                 if r.get("id") and str(r.get("id")) != current_id
@@ -63,16 +108,23 @@ class ContinualLearner:
                 self.graph.update_connections(
                     current_id, [self._prev_episode_id], strength=0.08
                 )
+                if self.episodic_mode:
+                    self.graph.link_next(self._prev_episode_id, current_id, 0.08)
             self._prev_episode_id = current_id
 
+            buf_meta = {
+                "step": self.step_count,
+                "episode_id": current_id,
+                "novelty": nov_i,
+            }
+            if "segment_id" in node_data:
+                buf_meta["segment_id"] = node_data["segment_id"]
+                buf_meta["event_idx"] = node_data["event_idx"]
+                buf_meta["novelty_mem"] = node_data["novelty_mem"]
             self.buffer.push(
                 sem[i],
                 hpc[i],
-                metadata={
-                    "step": self.step_count,
-                    "episode_id": current_id,
-                    "novelty": novelty[i].item() if novelty.numel() else 0.0,
-                },
+                metadata=buf_meta,
             )
             self.model.ca1.hebb_update(hpc[i], sem[i])
             self.step_count += 1

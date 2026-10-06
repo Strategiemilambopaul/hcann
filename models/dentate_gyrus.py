@@ -10,7 +10,8 @@ class DentateGyrus(nn.Module):
         super().__init__()
         self.config = config
         grid_dim = len(config.grid_periods) * 4
-        input_dim = config.ec_dim + grid_dim
+        self.ctx_dim = int(getattr(config, "ctx_dim", 0))
+        input_dim = config.ec_dim + grid_dim + self.ctx_dim
         self.register_buffer(
             "W_expansion",
             torch.randn(input_dim, config.dg_dim) / (input_dim ** 0.5),
@@ -24,8 +25,18 @@ class DentateGyrus(nn.Module):
         out.scatter_(-1, topk.indices, topk.values)
         return F.normalize(out, dim=-1, p=2)
 
-    def forward(self, sdr_ec: torch.Tensor, grid_code: torch.Tensor) -> torch.Tensor:
-        """Concat EC + grille -> code DG séparé [B, dg_dim]."""
-        combined = torch.cat([sdr_ec, grid_code], dim=-1)
+    def forward(
+        self,
+        sdr_ec: torch.Tensor,
+        grid_code: torch.Tensor,
+        ctx_code: torch.Tensor | None = None,
+    ) -> torch.Tensor:
+        """Concat EC + grille (+ contexte temporel) -> code DG séparé [B, dg_dim]."""
+        parts = [sdr_ec, grid_code]
+        if self.ctx_dim > 0:
+            if ctx_code is None:
+                ctx_code = sdr_ec.new_zeros(sdr_ec.size(0), self.ctx_dim)
+            parts.append(ctx_code)
+        combined = torch.cat(parts, dim=-1)
         expanded = F.relu(combined @ self.W_expansion)
         return self._topk_sparse(expanded)

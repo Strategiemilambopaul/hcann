@@ -41,6 +41,7 @@ class CA1Comparator(nn.Module):
             sem_target = sem_target.unsqueeze(0)
         ca3_n = F.normalize(ca3_state, dim=-1, eps=1e-8)
         sem_n = F.normalize(sem_target, dim=-1, eps=1e-8)
+        self.decoder.weight.mul_(getattr(self.config, "ca1_decay", 0.999))
         delta = eta * torch.mm(sem_n.T, ca3_n)
         self.decoder.weight.add_(delta)
         return delta.norm().item()

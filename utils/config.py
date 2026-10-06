@@ -56,6 +56,18 @@ class HCANNConfig:
     dream_batch_size: int = 16
     enable_dreaming: bool = True
 
+    # Mémoire épisodique (défauts = comportement historique de models/)
+    episodic_mode: bool = False
+    ctx_dim: int = 0
+    ctx_rho: float = 0.9
+    ctx_jump: float = 0.5
+    mem_novelty_threshold: float = 0.25
+    seg_k: float = 1.5
+    seg_ema: float = 0.9
+    min_event_len: int = 3
+    ca1_decay: float = 0.999
+    dream_seq_len: int = 4
+
     def __post_init__(self):
         if self.grid_periods is None:
             self.grid_periods = [3, 5, 7]

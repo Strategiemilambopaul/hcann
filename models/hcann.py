@@ -25,7 +25,7 @@ class HCANN(nn.Module):
             ca3_state, sem, wm_state, novelty, dg_code, extras dict
         """
         sem = self.encoder(images, texts)
-        wm_state, _ = self.wm(sem)
+        wm_state, _ = self.wm(sem, write=store)
         sdr_ec = self.ec(sem)
 
         if velocity is None:

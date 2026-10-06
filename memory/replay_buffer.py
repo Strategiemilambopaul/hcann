@@ -32,6 +32,18 @@ class EpisodicBuffer:
             'ts': [b['ts'] for b in batch]
         }
     
+    def sample_sequences(self, n_seq: int, seq_len: int) -> List[List[Dict]]:
+        """Fenêtres contiguës dans l'ordre d'insertion (pas un tirage i.i.d.)."""
+        if n_seq <= 0 or seq_len <= 0:
+            return []
+        items = list(self.buffer)
+        if len(items) < seq_len:
+            return []
+        starts = list(range(len(items) - seq_len + 1))
+        if len(starts) > n_seq:
+            starts = sorted(random.sample(starts, n_seq))
+        return [items[s : s + seq_len] for s in starts]
+
     def get_recent(self, n: int = 10) -> List[Dict]:
         """Retourne les n épisodes les plus récents"""
         return list(self.buffer)[-n:]

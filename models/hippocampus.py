@@ -6,6 +6,7 @@ from .dentate_gyrus import DentateGyrus
 from .ca3_hopfield import CA3ModernHopfield
 from .ca1 import CA1Comparator
 from .subiculum import SubiculumGateway
+from .temporal_context import TemporalContext
 
 
 class GridCellModule(nn.Module):
@@ -39,6 +40,7 @@ class TrisynapticHippocampus(nn.Module):
         self.config = config
         self.grid_modules = nn.ModuleList([GridCellModule(p) for p in config.grid_periods])
         self.dg = DentateGyrus(config)
+        self.temporal_ctx = TemporalContext(config)
         self.ca3 = CA3ModernHopfield(config)
         self.ca1 = CA1Comparator(config)
         self.subiculum = SubiculumGateway(config)
@@ -56,7 +58,12 @@ class TrisynapticHippocampus(nn.Module):
         episode_keys: list | None = None,
     ) -> dict:
         grid_code = self.encode_grid(velocity)
-        dg_code = self.dg(sdr_ec, grid_code)
+        ctx_code = self.temporal_ctx.step(sem_dense, advance=store)
+        dg_code = self.dg(sdr_ec, grid_code, ctx_code)
+        familiarity = self.ca3.max_pattern_similarity(dg_code)
+        mem_threshold = float(getattr(self.config, "mem_novelty_threshold", 0.25))
+        novelty_mem = 1.0 - familiarity
+        is_novel_mem = novelty_mem > mem_threshold
 
         if store:
             if episode_keys:
@@ -79,6 +86,10 @@ class TrisynapticHippocampus(nn.Module):
             "decoded": decoded,
             "novelty": novelty,
             "is_novel": is_novel,
+            "familiarity": familiarity,
+            "novelty_mem": novelty_mem,
+            "is_novel_mem": is_novel_mem,
+            "ctx_code": ctx_code,
             "cortical": cortical,
         }
 
@@ -86,8 +97,12 @@ class TrisynapticHippocampus(nn.Module):
         for mod in self.grid_modules:
             mod.reset_phase()
 
+    def reset_context(self) -> None:
+        self.temporal_ctx.reset()
+
     def reset_memory(self):
         self.ca3.reset()
+        self.reset_context()
 
 
 # Alias rétrocompatibilité

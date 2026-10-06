@@ -158,15 +158,18 @@ class WorkingMemory(nn.Module):
         self.slots = nn.Parameter(torch.zeros(config.wm_slots, config.wm_dim))
         self.scale = config.wm_dim ** -0.5
         
-    def forward(self, x: torch.Tensor) -> tuple:
+    def forward(self, x: torch.Tensor, write: bool = True) -> tuple:
         attn = torch.matmul(x, self.slots.T) * self.scale
         w = F.softmax(attn, dim=-1)
         read = torch.matmul(w, self.slots)
-        # Écriture douce (mise à jour du slot le plus proche)
-        with torch.no_grad():
-            best = torch.argmax(w, dim=-1)
-            for i in range(x.size(0)):
-                self.slots[best[i]] = 0.95 * self.slots[best[i]] + 0.05 * x[i]
+        if write:
+            with torch.no_grad():
+                best = torch.argmax(w, dim=-1)
+                x_det = x.detach()
+                slots = self.slots.data
+                for i in range(x_det.size(0)):
+                    b = int(best[i].item())
+                    slots[b].mul_(0.95).add_(x_det[i], alpha=0.05)
         return read, w
     
     def diversity_loss(self) -> torch.Tensor:
