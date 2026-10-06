@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-09T11:30:15",
+  "timestamp": "2026-10-01T00:59:25",
   "unit": "episodic_nonconfusion",
   "encoder": "clip",
   "k": 5,
@@ -9,6 +9,13 @@
   "tiebreak": "auto",
   "seed": 0,
   "n_episodes": 12,
+  "trace_schema": [
+    "entity_id",
+    "place",
+    "participants",
+    "intent",
+    "outcome"
+  ],
   "summary": {
     "n_queries": 32,
     "systems": {
