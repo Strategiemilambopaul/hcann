@@ -65,6 +65,8 @@ class HCANNConfig:
     seg_k: float = 1.5
     seg_ema: float = 0.9
     min_event_len: int = 3
+    seg_signal: str = "dg"
+    reencode_boundary: bool = True
     ca1_decay: float = 0.999
     dream_seq_len: int = 4
 

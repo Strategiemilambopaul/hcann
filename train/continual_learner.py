@@ -69,6 +69,11 @@ class ContinualLearner:
             else:
                 current_id = str(episode_id[i]) if episode_id else f"train_{self.step_count}"
             retrieved = self.graph.retrieve(hpc_np, k=3, touch=False)
+            sem_retrieved = self.graph.retrieve_semantic(sem_np, k=4, touch=False)
+            if sem_retrieved:
+                novelty_sem = 1.0 - float(sem_retrieved[0]["score"])
+            else:
+                novelty_sem = 0.0
             node_data = {"step": self.step_count}
             if metadata and i < len(metadata):
                 node_data.update(metadata[i])
@@ -80,13 +85,33 @@ class ContinualLearner:
             novelty_mem = nov_i
             if hpc_out is not None and "novelty_mem" in hpc_out:
                 novelty_mem = float(hpc_out["novelty_mem"][i].item())
+            signal = getattr(self.config, "seg_signal", "dg")
+            if signal == "sem":
+                seg_value = novelty_sem
+            elif signal == "mix":
+                seg_value = 0.5 * (float(novelty_mem) + novelty_sem)
+            else:
+                seg_value = novelty_mem
             if self.episodes is not None:
-                seg = self.episodes.add_event(current_id, novelty_mem)
+                seg = self.episodes.add_event(current_id, seg_value)
                 node_data["segment_id"] = seg["segment_id"]
                 node_data["event_idx"] = seg["event_idx"]
                 node_data["novelty_mem"] = novelty_mem
+                node_data["novelty_sem"] = novelty_sem
+                if hpc_out is not None and "ctx_code" in hpc_out:
+                    node_data["ctx_code"] = hpc_out["ctx_code"][i].detach().cpu().numpy().reshape(-1)
                 if seg["boundary"]:
                     self.model.hippocampus.temporal_ctx.boundary()
+                    if bool(getattr(self.config, "reencode_boundary", True)) and hpc_out is not None:
+                        dg_new = self.model.hippocampus.reencode_at_context(
+                            hpc_out["sdr_ec"][i].detach(),
+                            hpc_out["grid_code"][i].detach(),
+                            current_id,
+                        )
+                        dg_np = dg_new[0].detach().cpu().numpy()
+                        node_data["ctx_code"] = (
+                            self.model.hippocampus.temporal_ctx.context.detach().cpu().numpy().reshape(-1)
+                        )
             self.graph.add_node(
                 current_id, node_data, hpc_np, sem_embedding=sem_np, dg_embedding=dg_np
             )
@@ -97,7 +122,6 @@ class ContinualLearner:
             ]
             if related_ids:
                 self.graph.update_connections(current_id, related_ids, strength=0.12)
-            sem_retrieved = self.graph.retrieve_semantic(sem_np, k=4, touch=False)
             sem_related = [
                 r.get("id") for r in sem_retrieved
                 if r.get("id") and str(r.get("id")) != current_id

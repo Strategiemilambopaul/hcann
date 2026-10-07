@@ -9,6 +9,9 @@ import torch
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from memory.consolidation import HebbianMemoryGraph
+from models.hcann import HCANN
+from tests.conftest import bind_text_table
+from train.continual_learner import ContinualLearner
 from utils.config import HCANNConfig
 
 
@@ -72,3 +75,90 @@ def test_spreading_matches_edge_threshold_oracle():
         assert [h["id"] for h in got] == [e[0] for e in expected]
         for hit, (_, score) in zip(got, expected):
             assert abs(hit["score"] - score) < 1e-6
+
+
+def _scene_cfg(**overrides) -> HCANNConfig:
+    cfg = HCANNConfig()
+    cfg.use_mock_encoder = True
+    cfg.enable_dreaming = False
+    cfg.episodic_mode = True
+    cfg.ec_dim = 32
+    cfg.dg_dim = 16
+    cfg.hpc_size = 16
+    cfg.semantic_dim = 16
+    cfg.wm_dim = 16
+    cfg.max_patterns = 80
+    cfg.max_nodes = 80
+    cfg.ctx_dim = 16
+    for key, value in overrides.items():
+        setattr(cfg, key, value)
+    return cfg
+
+
+def _scene_table(dim: int, n_scenes: int, per_scene: int, seed: int = 0):
+    gen = torch.Generator().manual_seed(seed)
+    centers = torch.nn.functional.normalize(torch.randn(n_scenes, dim, generator=gen), dim=-1)
+    mapping = {}
+    ids = []
+    for s in range(n_scenes):
+        for j in range(per_scene):
+            eid = f"s{s}e{j}"
+            mapping[eid] = centers[s].clone()
+            ids.append(eid)
+    return mapping, ids
+
+
+def _count_segments(signal: str) -> int:
+    cfg = _scene_cfg(seg_signal=signal)
+    device = torch.device("cpu")
+    model = HCANN(cfg).to(device)
+    mapping, ids = _scene_table(cfg.semantic_dim, 3, 10, seed=2)
+    bind_text_table(model, mapping)
+    learner = ContinualLearner(model, cfg, device)
+    for eid in ids:
+        learner.train_step(texts=[eid], episode_id=[eid])
+    return len(learner.episodes)
+
+
+def test_three_scene_segmentation_for_each_signal(capsys):
+    counts = {signal: _count_segments(signal) for signal in ("dg", "sem", "mix")}
+    print("seg_signal counts", counts)
+    for signal, count in counts.items():
+        assert abs(count - 3) <= 1, signal
+    closest = min(counts, key=lambda name: abs(counts[name] - 3))
+    print("seg_signal le plus proche de 3 scenes:", closest)
+
+
+def test_boundary_event_uses_the_new_context_without_extra_pattern():
+    cfg = _scene_cfg(seg_signal="sem", reencode_boundary=True)
+    device = torch.device("cpu")
+    model = HCANN(cfg).to(device)
+    mapping, ids = _scene_table(cfg.semantic_dim, 2, 6, seed=4)
+    bind_text_table(model, mapping)
+    learner = ContinualLearner(model, cfg, device)
+    before = model.ca3.num_patterns
+    for eid in ids:
+        learner.train_step(texts=[eid], episode_id=[eid])
+        assert model.ca3.num_patterns == before + 1 or model.ca3.num_patterns == learner.graph.num_valid
+        before = model.ca3.num_patterns
+    assert model.ca3.num_patterns == len(ids)
+    g = learner.graph.graph
+    boundary_id = None
+    for eid in ids:
+        if g.nodes[eid]["data"].get("event_idx") == 0 and g.nodes[eid]["data"].get("segment_id") != "seg_0":
+            boundary_id = eid
+            break
+    assert boundary_id is not None
+    bctx = torch.tensor(g.nodes[boundary_id]["data"]["ctx_code"], dtype=torch.float32)
+    prev_ids = [eid for eid in ids if g.nodes[eid]["data"]["segment_id"] == "seg_0"][-3:]
+    members = learner.episodes.members(g.nodes[boundary_id]["data"]["segment_id"])
+    next_ids = [eid for eid in members if eid != boundary_id][:3]
+    assert len(prev_ids) == 3 and len(next_ids) == 3
+
+    def _cos(other_id: str) -> float:
+        other = torch.tensor(g.nodes[other_id]["data"]["ctx_code"], dtype=torch.float32)
+        return float(torch.nn.functional.cosine_similarity(bctx, other, dim=0))
+
+    near = sum(_cos(eid) for eid in next_ids) / 3
+    far = sum(_cos(eid) for eid in prev_ids) / 3
+    assert near > far

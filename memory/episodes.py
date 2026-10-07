@@ -50,6 +50,12 @@ class EpisodeIndex:
         self._segments: dict[str, list[str]] = {self._current: []}
 
     def add_event(self, node_id: str, novelty_mem: float) -> dict:
+        """Ajoute un événement au segment courant.
+
+        L'événement surprenant ouvre le nouveau segment : il en est le
+        premier, avec event_idx = 0. Les événements d'avant restent dans
+        le segment qui se ferme.
+        """
         boundary = self.segmenter.update(novelty_mem)
         if boundary:
             self._seg_count += 1

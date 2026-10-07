@@ -90,8 +90,24 @@ class TrisynapticHippocampus(nn.Module):
             "novelty_mem": novelty_mem,
             "is_novel_mem": is_novel_mem,
             "ctx_code": ctx_code,
+            "sdr_ec": sdr_ec,
             "cortical": cortical,
         }
+
+    @torch.no_grad()
+    def reencode_at_context(self, sdr_ec: torch.Tensor, grid_code: torch.Tensor, episode_key: str) -> torch.Tensor:
+        """Recalcule le code DG avec le contexte courant et upsert CA3 sous la même clé."""
+        if sdr_ec.dim() == 1:
+            sdr_ec = sdr_ec.unsqueeze(0)
+        if grid_code.dim() == 1:
+            grid_code = grid_code.unsqueeze(0)
+        ctx_dim = self.temporal_ctx.ctx_dim
+        ctx_code = None
+        if ctx_dim > 0:
+            ctx_code = self.temporal_ctx.context.expand(sdr_ec.size(0), -1)
+        dg_code = self.dg(sdr_ec, grid_code, ctx_code)
+        self.ca3.store(dg_code[0], key=str(episode_key))
+        return dg_code
 
     def reset_phases(self):
         for mod in self.grid_modules:
