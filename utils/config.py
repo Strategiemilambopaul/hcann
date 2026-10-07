@@ -81,6 +81,24 @@ class HCANNConfig:
     recon_lr: float = 0.05
     recon_target: str = "attractor"
 
+    # Oubli unifié (episodic_mode)
+    forget_w_rec: float = 1.0
+    forget_w_sur: float = 1.0
+    forget_w_rcl: float = 1.5
+    forget_w_deg: float = 0.5
+    forget_w_red: float = 1.0
+    forget_tau: int = None
+    # 0.2 laissait half-recent≈0.64 sous 10% d'importants boostés ; 0.5 protège une demi-capacité.
+    protect_frac: float = 0.5
+    forget_frac: float = 0.05
+
+    # Sémantisation
+    schema_every: int = 1
+    schema_tau: float = 0.8
+    schema_min_support: int = 5
+    schema_min_segments: int = 2
+    schema_recall_floor: float = 0.6
+
     def __post_init__(self):
         if self.grid_periods is None:
             self.grid_periods = [3, 5, 7]
@@ -90,3 +108,5 @@ class HCANNConfig:
             self.wm_dim = self.semantic_dim
         if self.recall_weights is None:
             self.recall_weights = [2.0, 1.5, 3.0, 0.5, -1.5]
+        if self.forget_tau is None:
+            self.forget_tau = int(self.max_nodes)

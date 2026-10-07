@@ -84,5 +84,26 @@ class EpisodeIndex:
     def members(self, segment_id: str) -> list[str]:
         return list(self._segments.get(segment_id, []))
 
+    def remove(self, node_id: str) -> bool:
+        """Retire un événement. Un segment vide disparaît ; event_idx inchangés."""
+        node_id = str(node_id)
+        found = False
+        empty: list[str] = []
+        for sid, members in self._segments.items():
+            if node_id in members:
+                members.remove(node_id)
+                found = True
+            if not members:
+                empty.append(sid)
+        for sid in empty:
+            del self._segments[sid]
+        return found
+
+    def all_ids(self) -> list[str]:
+        out: list[str] = []
+        for members in self._segments.values():
+            out.extend(members)
+        return out
+
     def __len__(self) -> int:
         return len(self._segments)

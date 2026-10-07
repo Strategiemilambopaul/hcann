@@ -4,11 +4,13 @@ from __future__ import annotations
 
 import math
 import time
-from dataclasses import dataclass, field
-from typing import Any, Callable
+from dataclasses import dataclass
+from typing import Callable
 
 import torch
 import torch.nn.functional as F
+
+from memory.schemas import SchemaResult
 
 
 @dataclass
@@ -27,6 +29,7 @@ class RecallResult:
     level: str
     features: dict[str, float]
     key: str | None = None
+    schema_id: str | None = None
 
 
 def _sigmoid(x: float) -> float:
@@ -178,7 +181,7 @@ class EpisodicRecall:
         cue_dg: torch.Tensor | None = None,
     ) -> RecallResult:
         if not bool(getattr(self.config, "episodic_mode", False)):
-            return RecallResult([], 0.0, "inconnu", {}, None)
+            return RecallResult([], 0.0, "inconnu", {}, None, None)
         if cue_dg is not None:
             dg_code = cue_dg
             if not isinstance(dg_code, torch.Tensor):
@@ -195,7 +198,7 @@ class EpisodicRecall:
             conf = min(conf, float(getattr(self.config, "recall_lo", 0.4)) - 1e-3)
         level = self._level(conf)
         if level == "inconnu" or key is None:
-            return RecallResult([], conf, "inconnu", features, key)
+            return RecallResult([], conf, "inconnu", features, key, None)
 
         if scope == "chain":
             ids, step_margins = self._chain_from(key, follow)
@@ -205,10 +208,13 @@ class EpisodicRecall:
 
         events: list[RecalledEvent] = []
         running = 1.0
+        schema_id = None
         for i, nid in enumerate(ids):
             if i > 0 and step_margins:
                 running *= max(0.05, step_margins[i - 1] if i - 1 < len(step_margins) else 0.5)
             data = self._node_payload(nid)
+            if schema_id is None:
+                schema_id = data.get("schema_of")
             events.append(
                 RecalledEvent(
                     node_id=nid,
@@ -222,7 +228,7 @@ class EpisodicRecall:
         if touch and conf >= float(getattr(self.config, "recon_min_conf", 0.6)):
             self._reconsolidate(key, dg_code, completed, ids)
 
-        return RecallResult(events, conf, level, features, key)
+        return RecallResult(events, conf, level, features, key, schema_id)
 
     def _reconsolidate(self, key: str, cue_dg: torch.Tensor, attractor: torch.Tensor, ids: list[str]) -> None:
         target_mode = str(getattr(self.config, "recon_target", "attractor"))
@@ -231,6 +237,7 @@ class EpisodicRecall:
         self.model.ca3.reconsolidate(key, target, lr)
         g = self.graph.graph
         now = time.time()
+        clock = int(getattr(g, "clock", 0))
         for nid in ids:
             if nid not in g.nodes:
                 continue
@@ -238,6 +245,7 @@ class EpisodicRecall:
             node["access_count"] = node.get("access_count", 0) + 1
             data = node.setdefault("data", {})
             data["recall_count"] = int(data.get("recall_count", 0)) + 1
+            data["last_recall"] = clock
             node["timestamp"] = now
             idx = g.id_to_index.get(nid)
             if idx is not None:
@@ -264,6 +272,49 @@ class EpisodicRecall:
         with torch.no_grad():
             probs = torch.sigmoid(x @ w.reshape(-1, 1)).reshape(-1)
         return float(probs.mean().item())
+
+    def recall_general(
+        self,
+        cue_texts=None,
+        cue_images=None,
+        k: int = 1,
+    ) -> list[SchemaResult]:
+        """Rappel de schémas par cosinus sémantique ; s'abstient sous le seuil."""
+        if not bool(getattr(self.config, "episodic_mode", False)):
+            return []
+        _, sem, _, _, _, _ = self.model.fast_encode(
+            images=cue_images, texts=cue_texts, store=False, ctx_mode="none"
+        )
+        q = F.normalize(sem[0].detach().float(), dim=0)
+        g = self.graph.graph
+        floor = float(getattr(self.config, "schema_recall_floor", 0.6))
+        scored = []
+        for nid, node in g.nodes.items():
+            data = node.get("data") or {}
+            if data.get("type") != "schema":
+                continue
+            idx = g.id_to_index[nid]
+            s = F.normalize(g.sem_embeddings[idx].detach().float(), dim=0)
+            cos = float(torch.dot(q, s).item())
+            if cos >= floor:
+                scored.append((cos, nid, data))
+        scored.sort(key=lambda t: t[0], reverse=True)
+        out = []
+        for cos, nid, data in scored[: max(1, int(k))]:
+            proto_id = data.get("prototype_id")
+            proto = None
+            if proto_id and proto_id in g.nodes:
+                proto = g.nodes[proto_id].get("data")
+            out.append(
+                SchemaResult(
+                    schema_id=nid,
+                    support=int(data.get("support", 0)),
+                    prototype=proto,
+                    confidence=cos,
+                    members_sample=list(data.get("members", []))[:8],
+                )
+            )
+        return out
 
     def narrate(self, result: RecallResult, llm_callback: Callable[[list[dict]], str] | None = None) -> str:
         payloads = [e.data for e in result.events]

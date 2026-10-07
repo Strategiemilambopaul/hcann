@@ -13,6 +13,7 @@ class CA3ModernHopfield(nn.Module):
         self.register_buffer("patterns", torch.zeros(0, self.pattern_dim))
         self._count = 0
         self._key_to_idx: dict[str, int] = {}
+        self._eviction_handler = None
 
     @property
     def num_patterns(self) -> int:
@@ -41,10 +42,13 @@ class CA3ModernHopfield(nn.Module):
                     continue
 
             if self.num_patterns >= self.config.max_patterns:
-                self.patterns = self.patterns[1:]
-                self._key_to_idx = {
-                    k: v - 1 for k, v in self._key_to_idx.items() if v > 0
-                }
+                if self._eviction_handler is not None:
+                    self._eviction_handler()
+                if self.num_patterns >= self.config.max_patterns:
+                    self.patterns = self.patterns[1:]
+                    self._key_to_idx = {
+                        k: v - 1 for k, v in self._key_to_idx.items() if v > 0
+                    }
 
             idx = self.num_patterns
             self.patterns = torch.cat([self.patterns, row], dim=0)
@@ -157,6 +161,28 @@ class CA3ModernHopfield(nn.Module):
         self.patterns[idx] = self._normalize(mixed.unsqueeze(0)).squeeze(0)
         after = float((self.patterns[idx] * target_n).sum().item())
         return before, after
+
+    def set_eviction_handler(self, fn) -> None:
+        """Handler appelé quand CA3 est plein ; doit libérer via remove()."""
+        self._eviction_handler = fn
+
+    def keys(self) -> list[str]:
+        return list(self._key_to_idx.keys())
+
+    def remove(self, key: str) -> bool:
+        """Supprime le pattern nommé et réindexe les clés restantes."""
+        key = str(key)
+        if key not in self._key_to_idx:
+            return False
+        idx = self._key_to_idx[key]
+        if self.num_patterns == 0:
+            return False
+        self.patterns = torch.cat([self.patterns[:idx], self.patterns[idx + 1 :]], dim=0)
+        del self._key_to_idx[key]
+        self._key_to_idx = {
+            k: (v - 1 if v > idx else v) for k, v in self._key_to_idx.items()
+        }
+        return True
 
     def reset(self) -> None:
         self.patterns = torch.zeros(0, self.pattern_dim, device=self.patterns.device)

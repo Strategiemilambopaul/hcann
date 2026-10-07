@@ -13,17 +13,31 @@ class DreamingPhase:
         graph,
         config,
         n_cycles: Optional[int] = None,
+        memory_manager=None,
+        episodes=None,
+        schema_builder=None,
+        llm_callback=None,
     ) -> Dict:
         n_cycles = n_cycles or config.dream_cycles
         batch_size = config.dream_batch_size
         device = next(model.parameters()).device
+        episodic = bool(getattr(config, "episodic_mode", False))
 
         stats = {
             "patterns_replayed": 0,
             "hebb_delta_norm": 0.0,
             "stdp_updates": 0,
             "novelty_rate": 0.0,
+            "evicted": 0,
+            "forced_evictions": 0,
+            "reconciled": {},
         }
+
+        if episodic and memory_manager is not None:
+            stats["reconciled"] = memory_manager.reconcile(
+                graph.graph, model.ca3, episodes
+            )
+            stats["forced_evictions"] = int(memory_manager.forced_evictions)
 
         novelty_sum = 0.0
         novelty_count = 0
@@ -58,7 +72,6 @@ class DreamingPhase:
         sequences = []
         if hasattr(buffer, "sample_sequences"):
             sequences = buffer.sample_sequences(n_seq, seq_len)
-        episodic = bool(getattr(config, "episodic_mode", False))
         for window in sequences:
             ids = [item.get("meta", {}).get("episode_id") for item in window]
             for j in range(len(ids) - 1):
@@ -74,7 +87,16 @@ class DreamingPhase:
         if novelty_count > 0:
             stats["novelty_rate"] = novelty_sum / novelty_count
 
-        graph.consolidate(llm_callback=None)
+        graph.consolidate(llm_callback=llm_callback)
         if hasattr(graph.graph, "apply_hebbian_decay"):
             graph.graph.apply_hebbian_decay()
+
+        if episodic and schema_builder is not None:
+            created = schema_builder.maybe_build(graph.graph, llm_callback=llm_callback)
+            stats["schemas_created"] = len(created)
+
+        if episodic and memory_manager is not None:
+            evicted = memory_manager.enforce(graph.graph, model.ca3, episodes)
+            stats["evicted"] = len(evicted)
+            stats["forced_evictions"] = int(memory_manager.forced_evictions)
         return stats

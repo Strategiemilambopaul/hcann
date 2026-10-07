@@ -34,6 +34,13 @@ class HebbianMemoryGraph(nn.Module):
         self.id_to_index: Dict[str, int] = {}  # Mapping node_id -> index
         self._free: List[int] = []
         self.count = 0  # high-water mark
+        self.clock = 0
+        self.eviction_policy = None
+
+    def tick(self) -> int:
+        """Avance l'horloge logique d'un cran. Renvoie la nouvelle valeur."""
+        self.clock += 1
+        return self.clock
 
     @property
     def num_valid(self) -> int:
@@ -62,9 +69,13 @@ class HebbianMemoryGraph(nn.Module):
                 self.dg_embeddings[idx] = torch.from_numpy(dg_embedding).to(self.device)
             self.timestamps[idx] = time.time()
             prev_access = self.nodes[node_id].get("access_count", 0)
+            prev_data = self.nodes[node_id].get("data") or {}
+            merged = dict(data)
+            if "born" in prev_data and "born" not in merged:
+                merged["born"] = prev_data["born"]
             self.nodes[node_id] = {
                 "index": idx,
-                "data": data,
+                "data": merged,
                 "timestamp": time.time(),
                 "access_count": prev_access,
                 "consolidated": self.nodes[node_id].get("consolidated", False),
@@ -72,11 +83,18 @@ class HebbianMemoryGraph(nn.Module):
             return node_id
 
         if self.num_valid >= self.max_nodes:
-            self.adaptive_forgetting()
+            if self.eviction_policy is not None:
+                self.eviction_policy()
+            else:
+                self.adaptive_forgetting()
         idx = self._take_slot()
         if idx is None:
-            self._evict_lowest()
-            idx = self._take_slot()
+            if self.eviction_policy is not None:
+                self.eviction_policy()
+                idx = self._take_slot()
+            if idx is None:
+                self._evict_lowest()
+                idx = self._take_slot()
         if idx is None:
             raise RuntimeError("graphe plein : impossible d'évincer un nœud")
 
@@ -133,8 +151,21 @@ class HebbianMemoryGraph(nn.Module):
         best_idx = None
         best_key = None
         n = self.count
+        has_non_schema = False
         for i in range(n):
             if not bool(self.valid[i].item()):
+                continue
+            nid = self.node_ids[i]
+            data = (self.nodes.get(nid) or {}).get("data") or {}
+            if data.get("type") != "schema":
+                has_non_schema = True
+                break
+        for i in range(n):
+            if not bool(self.valid[i].item()):
+                continue
+            nid = self.node_ids[i]
+            data = (self.nodes.get(nid) or {}).get("data") or {}
+            if has_non_schema and data.get("type") == "schema":
                 continue
             value = float(self.edges[i, :n].sum().item()) + float(self.access_counts[i].item())
             key = (value, float(self.timestamps[i].item()))
@@ -186,6 +217,8 @@ class HebbianMemoryGraph(nn.Module):
             if not nid or nid not in self.nodes:
                 continue
             node = self.nodes[nid]
+            if (node.get("data") or {}).get("type") == "schema":
+                continue
             out.append({
                 "id": nid,
                 "weight": float(value),
@@ -231,6 +264,8 @@ class HebbianMemoryGraph(nn.Module):
             if touch:
                 self.nodes[node_id]["access_count"] = self.nodes[node_id].get("access_count", 0) + 1
                 self.access_counts[idx] += 1
+                data = self.nodes[node_id].setdefault("data", {})
+                data["last_recall"] = int(self.clock)
         return results
 
     def spreading_activation(
@@ -446,6 +481,14 @@ class HebbianMemoryGraph(nn.Module):
             del self.id_to_index[node_id]
         self._free.append(idx)
 
+    def remove_node(self, node_id: str) -> bool:
+        """Supprime un nœud nommé. Renvoie False s'il est absent."""
+        node_id = str(node_id)
+        if node_id not in self.id_to_index:
+            return False
+        self._remove_node_by_index(self.id_to_index[node_id])
+        return True
+
 
 class HebbianConsolidation:
     """Wrapper pour la consolidation hebbienne avec support LLM"""
@@ -523,14 +566,20 @@ class HebbianConsolidation:
         """Retrieval cosinus DG (voie hippocampique, requete texte)."""
         return self.graph.retrieve_dg(query_embedding, k, allowed_ids=allowed_ids, touch=touch)
         
+    def remove_node(self, node_id: str) -> bool:
+        return self.graph.remove_node(node_id)
+
+    def tick(self) -> int:
+        return self.graph.tick()
+
     def consolidate(self, llm_callback=None):
         """Déclenche la consolidation des hubs"""
         hubs = self.graph.detect_hubs()
         consolidated = []
-        
+        episodic = bool(getattr(self.config, "episodic_mode", False))
+
         for hub_id in hubs:
             if hub_id in self.graph.nodes and not self.graph.nodes[hub_id]['consolidated']:
-                # Récupérer les épisodes connectés
                 hub_idx = self.graph.id_to_index[hub_id]
                 neighbors = torch.where(self.graph.edges[hub_idx, :self.graph.count] > 0.05)[0].tolist()
                 related_episodes = []
@@ -540,18 +589,18 @@ class HebbianConsolidation:
                     nid = self.graph.node_ids[n]
                     if nid and nid in self.graph.nodes:
                         related_episodes.append(self.graph.nodes[nid]["data"])
-                
-                # Distillation via LLM si callback fourni
+
+                summary = None
                 if llm_callback and len(related_episodes) > 0:
                     summary = llm_callback(related_episodes)
                     self.graph.nodes[hub_id]['summary'] = summary
-                
+
+                if episodic and summary is None:
+                    continue
                 self.graph.nodes[hub_id]['consolidated'] = True
                 consolidated.append(hub_id)
-        
-        # Oubli adaptatif
+
         self.graph.adaptive_forgetting()
-        
         return consolidated
     
     def get_stats(self) -> dict:

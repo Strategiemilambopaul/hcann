@@ -2,9 +2,11 @@ import torch
 from models.hcann import HCANN
 from memory.consolidation import HebbianConsolidation
 from memory.episodes import EpisodeIndex
+from memory.forgetting import MemoryManager, warn_capacity
 from memory.recall import EpisodicRecall
 from memory.replay_buffer import EpisodicBuffer
 from memory.dreaming import DreamingPhase
+from memory.schemas import SchemaBuilder
 
 
 def _batch_len(images, texts, episode_id) -> int:
@@ -34,17 +36,28 @@ class ContinualLearner:
         self.episodic_mode = bool(getattr(config, "episodic_mode", False))
         self.episodes = EpisodeIndex(config) if self.episodic_mode else None
         self._prev_dg = None
+        self.memory_manager = MemoryManager(config) if self.episodic_mode else None
+        self.schema_builder = SchemaBuilder(config) if self.episodic_mode else None
         self._recall = (
             EpisodicRecall(model, self.graph, self.episodes, config)
             if self.episodic_mode
             else None
         )
+        if self.episodic_mode:
+            warn_capacity(config)
+            g = self.graph.graph
+
+            def _evict_policy():
+                self.memory_manager.enforce(g, self.model.ca3, self.episodes)
+
+            g.eviction_policy = _evict_policy
+            self.model.ca3.set_eviction_handler(_evict_policy)
 
     def recall(self, cue_texts=None, cue_images=None, scope="segment", follow=None, touch=True, cue_dg=None):
         """Délégation mince vers EpisodicRecall (None si episodic_mode est faux)."""
         if self._recall is None:
             from memory.recall import RecallResult
-            return RecallResult([], 0.0, "inconnu", {}, None)
+            return RecallResult([], 0.0, "inconnu", {}, None, None)
         return self._recall.recall(
             cue_texts=cue_texts,
             cue_images=cue_images,
@@ -53,6 +66,11 @@ class ContinualLearner:
             touch=touch,
             cue_dg=cue_dg,
         )
+
+    def recall_general(self, cue_texts=None, cue_images=None, k=1):
+        if self._recall is None:
+            return []
+        return self._recall.recall_general(cue_texts=cue_texts, cue_images=cue_images, k=k)
 
     def train_step(
         self,
@@ -89,6 +107,10 @@ class ContinualLearner:
                 current_id = planned_ids[i]
             else:
                 current_id = str(episode_id[i]) if episode_id else f"train_{self.step_count}"
+
+            if self.episodic_mode:
+                self.graph.tick()
+
             retrieved = self.graph.retrieve(hpc_np, k=3, touch=False)
             sem_retrieved = self.graph.retrieve_semantic(sem_np, k=4, touch=False)
             if sem_retrieved:
@@ -112,8 +134,6 @@ class ContinualLearner:
             elif signal == "mix":
                 seg_value = 0.5 * (float(novelty_mem) + novelty_sem)
             else:
-                # ctx_dim>0 : la familiarité CA3 est saturée par la dérive de contexte.
-                # On segmente alors sur la nouveauté sémantique (même unité que "sem").
                 if int(getattr(self.config, "ctx_dim", 0)) > 0:
                     seg_value = novelty_sem
                 else:
@@ -139,6 +159,19 @@ class ContinualLearner:
                         node_data["ctx_code"] = (
                             self.model.hippocampus.temporal_ctx.context.detach().cpu().numpy().reshape(-1)
                         )
+
+            if self.episodic_mode:
+                clock = int(self.graph.graph.clock)
+                existing = self.graph.graph.nodes.get(current_id)
+                if existing and "born" in (existing.get("data") or {}):
+                    node_data["born"] = existing["data"]["born"]
+                else:
+                    node_data["born"] = clock
+                node_data["surprise"] = float(max(0.0, min(1.0, float(seg_value))))
+                node_data.setdefault("recall_count", 0)
+                node_data.setdefault("last_recall", -1)
+                node_data.setdefault("type", "episode")
+
             self.graph.add_node(
                 current_id, node_data, hpc_np, sem_embedding=sem_np, dg_embedding=dg_np
             )
@@ -184,7 +217,13 @@ class ContinualLearner:
                 and self.step_count % self.config.consolidation_freq == 0
             ):
                 DreamingPhase.run_sleep_cycle(
-                    self.buffer, self.model, self.graph, self.config
+                    self.buffer,
+                    self.model,
+                    self.graph,
+                    self.config,
+                    memory_manager=self.memory_manager,
+                    episodes=self.episodes,
+                    schema_builder=self.schema_builder,
                 )
 
     def finalize_baselines(self) -> None:
