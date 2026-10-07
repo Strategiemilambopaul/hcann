@@ -122,6 +122,42 @@ class CA3ModernHopfield(nn.Module):
         q = self._normalize(query)
         return (q @ self._normalize(self.patterns).T).max(dim=-1).values
 
+    def nearest(self, state: torch.Tensor, k: int = 2) -> tuple[torch.Tensor, torch.Tensor]:
+        """Indices et cosinus des k patterns les plus proches."""
+        if self.num_patterns == 0:
+            empty = torch.zeros(0, dtype=torch.long, device=state.device)
+            return empty, torch.zeros(0, device=state.device)
+        if state.dim() == 1:
+            state = state.unsqueeze(0)
+        q = self._normalize(state)
+        cos = (q @ self._normalize(self.patterns).T).squeeze(0)
+        k_eff = min(int(k), self.num_patterns)
+        vals, idxs = torch.topk(cos, k_eff)
+        return idxs, vals
+
+    def key_of(self, idx: int) -> str | None:
+        """Clé d'épisode associée à un indice de pattern, si elle existe."""
+        for key, value in self._key_to_idx.items():
+            if value == int(idx):
+                return key
+        return None
+
+    @torch.no_grad()
+    def reconsolidate(self, key: str, target: torch.Tensor, lr: float) -> tuple[float, float]:
+        """Mélange le pattern nommé vers target. Renvoie (cos avant, cos après)."""
+        key = str(key)
+        if key not in self._key_to_idx:
+            return 0.0, 0.0
+        idx = self._key_to_idx[key]
+        if target.dim() == 1:
+            target = target.unsqueeze(0)
+        target_n = self._normalize(target.detach())[0]
+        before = float((self.patterns[idx] * target_n).sum().item())
+        mixed = (1.0 - float(lr)) * self.patterns[idx] + float(lr) * target_n
+        self.patterns[idx] = self._normalize(mixed.unsqueeze(0)).squeeze(0)
+        after = float((self.patterns[idx] * target_n).sum().item())
+        return before, after
+
     def reset(self) -> None:
         self.patterns = torch.zeros(0, self.pattern_dim, device=self.patterns.device)
         self._count = 0

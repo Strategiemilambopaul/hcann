@@ -17,7 +17,15 @@ class HCANN(nn.Module):
         self.hippocampus = TrisynapticHippocampus(config)
         self.wm = WorkingMemory(config)
 
-    def fast_encode(self, images=None, texts=None, velocity=None, store=True, episode_keys=None):
+    def fast_encode(
+        self,
+        images=None,
+        texts=None,
+        velocity=None,
+        store=True,
+        episode_keys=None,
+        ctx_mode: str | None = None,
+    ):
         """
         Phase rapide : néocortex -> EC (SDR) -> boucle trisynaptique.
 
@@ -32,7 +40,12 @@ class HCANN(nn.Module):
             velocity = torch.zeros(sem.size(0), 2, device=sem.device)
 
         hpc_out = self.hippocampus(
-            sdr_ec, sem, velocity=velocity, store=store, episode_keys=episode_keys
+            sdr_ec,
+            sem,
+            velocity=velocity,
+            store=store,
+            episode_keys=episode_keys,
+            ctx_mode=ctx_mode,
         )
 
         return (

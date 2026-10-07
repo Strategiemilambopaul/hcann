@@ -14,6 +14,8 @@ class EventSegmenter:
         self._ema: float | None = None
         self._var = 0.0
         self._since = 0
+        self._prev: float | None = None
+        self.delta = float(getattr(config, "seg_delta", 0.12))
 
     def update(self, novelty: float) -> bool:
         self._since += 1
@@ -21,11 +23,18 @@ class EventSegmenter:
         boundary = False
         if self._ema is not None:
             std = self._var ** 0.5
-            boundary = (
+            zscore = (
                 self._since >= self.min_len
                 and value > self._ema + self.k * std
                 and value > self.threshold
             )
+            jump = (
+                self._prev is not None
+                and self._since >= self.min_len
+                and value > self.threshold
+                and (value - self._prev) >= self.delta
+            )
+            boundary = zscore or jump
         if self._ema is None:
             self._ema = value
             self._var = 0.0
@@ -34,6 +43,7 @@ class EventSegmenter:
             keep = self.seg_ema
             self._var = keep * self._var + (1.0 - keep) * delta * delta
             self._ema = keep * self._ema + (1.0 - keep) * value
+        self._prev = value
         if boundary:
             self._since = 1
         return boundary

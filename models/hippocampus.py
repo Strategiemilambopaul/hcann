@@ -56,9 +56,16 @@ class TrisynapticHippocampus(nn.Module):
         velocity: torch.Tensor = None,
         store: bool = True,
         episode_keys: list | None = None,
+        ctx_mode: str | None = None,
     ) -> dict:
         grid_code = self.encode_grid(velocity)
-        ctx_code = self.temporal_ctx.step(sem_dense, advance=store)
+        if ctx_mode == "none":
+            ctx_dim = self.temporal_ctx.ctx_dim
+            ctx_code = sem_dense.new_zeros(sem_dense.size(0), ctx_dim)
+        elif ctx_mode == "current":
+            ctx_code = self.temporal_ctx.step(sem_dense, advance=False)
+        else:
+            ctx_code = self.temporal_ctx.step(sem_dense, advance=store)
         dg_code = self.dg(sdr_ec, grid_code, ctx_code)
         familiarity = self.ca3.max_pattern_similarity(dg_code)
         mem_threshold = float(getattr(self.config, "mem_novelty_threshold", 0.25))

@@ -66,9 +66,20 @@ class HCANNConfig:
     seg_ema: float = 0.9
     min_event_len: int = 3
     seg_signal: str = "dg"
+    seg_delta: float = 0.12
     reencode_boundary: bool = True
     ca1_decay: float = 0.999
     dream_seq_len: int = 4
+    recall_ctx_mode: str = "none"
+    recall_max_chain: int = 8
+    recall_succ_floor: float = 0.02
+    recall_hi: float = 0.7
+    recall_lo: float = 0.4
+    recall_fam_floor: float = 0.35
+    recall_weights: List[float] = None
+    recon_min_conf: float = 0.6
+    recon_lr: float = 0.05
+    recon_target: str = "attractor"
 
     def __post_init__(self):
         if self.grid_periods is None:
@@ -77,3 +88,5 @@ class HCANNConfig:
             self.hpc_size = self.dg_dim
         if self.wm_dim != self.semantic_dim:
             self.wm_dim = self.semantic_dim
+        if self.recall_weights is None:
+            self.recall_weights = [2.0, 1.5, 3.0, 0.5, -1.5]

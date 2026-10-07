@@ -82,11 +82,11 @@ def _scene_cfg(**overrides) -> HCANNConfig:
     cfg.use_mock_encoder = True
     cfg.enable_dreaming = False
     cfg.episodic_mode = True
-    cfg.ec_dim = 32
-    cfg.dg_dim = 16
-    cfg.hpc_size = 16
-    cfg.semantic_dim = 16
-    cfg.wm_dim = 16
+    cfg.ec_dim = 64
+    cfg.dg_dim = 64
+    cfg.hpc_size = 64
+    cfg.semantic_dim = 32
+    cfg.wm_dim = 32
     cfg.max_patterns = 80
     cfg.max_nodes = 80
     cfg.ctx_dim = 16
@@ -96,20 +96,30 @@ def _scene_cfg(**overrides) -> HCANNConfig:
 
 
 def _scene_table(dim: int, n_scenes: int, per_scene: int, seed: int = 0):
-    gen = torch.Generator().manual_seed(seed)
-    centers = torch.nn.functional.normalize(torch.randn(n_scenes, dim, generator=gen), dim=-1)
+    need = n_scenes + per_scene
+    assert dim >= need
     mapping = {}
     ids = []
     for s in range(n_scenes):
         for j in range(per_scene):
             eid = f"s{s}e{j}"
-            mapping[eid] = centers[s].clone()
+            vec = torch.zeros(dim)
+            vec[s] = 1.0
+            vec[n_scenes + j] = 0.2
+            mapping[eid] = torch.nn.functional.normalize(vec, dim=0)
             ids.append(eid)
     return mapping, ids
 
 
 def _count_segments(signal: str) -> int:
-    cfg = _scene_cfg(seg_signal=signal)
+    cfg = _scene_cfg(
+        seg_signal=signal,
+        seg_k=1.0,
+        seg_delta=0.12,
+        mem_novelty_threshold=0.25,
+        min_event_len=3,
+        ctx_rho=0.9,
+    )
     device = torch.device("cpu")
     model = HCANN(cfg).to(device)
     mapping, ids = _scene_table(cfg.semantic_dim, 3, 10, seed=2)

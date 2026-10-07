@@ -2,6 +2,7 @@ import torch
 from models.hcann import HCANN
 from memory.consolidation import HebbianConsolidation
 from memory.episodes import EpisodeIndex
+from memory.recall import EpisodicRecall
 from memory.replay_buffer import EpisodicBuffer
 from memory.dreaming import DreamingPhase
 
@@ -32,6 +33,26 @@ class ContinualLearner:
         self.track_baselines = track_baselines
         self.episodic_mode = bool(getattr(config, "episodic_mode", False))
         self.episodes = EpisodeIndex(config) if self.episodic_mode else None
+        self._prev_dg = None
+        self._recall = (
+            EpisodicRecall(model, self.graph, self.episodes, config)
+            if self.episodic_mode
+            else None
+        )
+
+    def recall(self, cue_texts=None, cue_images=None, scope="segment", follow=None, touch=True, cue_dg=None):
+        """Délégation mince vers EpisodicRecall (None si episodic_mode est faux)."""
+        if self._recall is None:
+            from memory.recall import RecallResult
+            return RecallResult([], 0.0, "inconnu", {}, None)
+        return self._recall.recall(
+            cue_texts=cue_texts,
+            cue_images=cue_images,
+            scope=scope,
+            follow=follow,
+            touch=touch,
+            cue_dg=cue_dg,
+        )
 
     def train_step(
         self,
@@ -91,7 +112,13 @@ class ContinualLearner:
             elif signal == "mix":
                 seg_value = 0.5 * (float(novelty_mem) + novelty_sem)
             else:
-                seg_value = novelty_mem
+                # ctx_dim>0 : la familiarité CA3 est saturée par la dérive de contexte.
+                # On segmente alors sur la nouveauté sémantique (même unité que "sem").
+                if int(getattr(self.config, "ctx_dim", 0)) > 0:
+                    seg_value = novelty_sem
+                else:
+                    seg_value = float(novelty_mem)
+            self._prev_dg = dg_np.copy()
             if self.episodes is not None:
                 seg = self.episodes.add_event(current_id, seg_value)
                 node_data["segment_id"] = seg["segment_id"]
